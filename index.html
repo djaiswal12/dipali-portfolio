@@ -1,0 +1,2344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&amp;family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <script src="./video-slot.js"></script>
+  <style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    html, body { margin: 0; padding: 0; background: #FBFAF7; }
+    * { box-sizing: border-box; }
+    ::selection { background: var(--plum); color: #FBFAF7; }
+    a { color: #1F211C; }
+    a:hover { color: var(--plum); }
+    .tilescale:hover { transform: scale(1.035); }
+    .flip-item .flip-back { opacity: 0; transition: opacity 0.35s ease; }
+    .flip-item:hover .flip-back { opacity: 1; }
+    /* Count-aware gallery cycling: a 2- or 3-view tile must not run a 4-slot
+       clock or it sits blank. Outgoing frame holds opaque until the incoming
+       one is fully up, so cumulative opacity never dips. */
+    @keyframes cyc4 { 0% { opacity: 0; } 3%, 29% { opacity: 1; } 33%, 100% { opacity: 0; } }
+    @keyframes cyc3 { 0% { opacity: 0; } 4%, 39% { opacity: 1; } 43%, 100% { opacity: 0; } }
+    @keyframes cyc2 { 0% { opacity: 0; } 6%, 57% { opacity: 1; } 61%, 100% { opacity: 0; } }
+    .cycle-item .cycle-img { opacity: 0; }
+    .cyc1 .cycle-img { opacity: 1; }
+    .cyc4 .cycle-img { animation: cyc4 12s infinite; }
+    .cyc4 .cycle-img:nth-child(2) { animation-delay: 3s; }
+    .cyc4 .cycle-img:nth-child(3) { animation-delay: 6s; }
+    .cyc4 .cycle-img:nth-child(4) { animation-delay: 9s; }
+    .cyc3 .cycle-img { animation: cyc3 9s infinite; }
+    .cyc3 .cycle-img:nth-child(2) { animation-delay: 3s; }
+    .cyc3 .cycle-img:nth-child(3) { animation-delay: 6s; }
+    .cyc2 .cycle-img { animation: cyc2 6s infinite; }
+    .cyc2 .cycle-img:nth-child(2) { animation-delay: 3s; }
+    .cyc4:hover .cycle-img { animation-duration: 6s; }
+    .cyc4:hover .cycle-img:nth-child(2) { animation-delay: 1.5s; }
+    .cyc4:hover .cycle-img:nth-child(3) { animation-delay: 3s; }
+    .cyc4:hover .cycle-img:nth-child(4) { animation-delay: 4.5s; }
+    .cyc3:hover .cycle-img { animation-duration: 4.5s; }
+    .cyc3:hover .cycle-img:nth-child(2) { animation-delay: 1.5s; }
+    .cyc3:hover .cycle-img:nth-child(3) { animation-delay: 3s; }
+    .cyc2:hover .cycle-img { animation-duration: 3s; }
+    .cyc2:hover .cycle-img:nth-child(2) { animation-delay: 1.5s; }
+    @keyframes duoFade { 0% { opacity: 0; } 5%, 45% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    .duo-item .duo-img { opacity: 0; transition: opacity 0.35s ease; }
+    .duo-item .duo-img:nth-child(1) { opacity: 1; }
+    .duo-item:hover .duo-img { animation: duoFade 4.4s infinite; }
+    .duo-item:hover .duo-img:nth-child(2) { animation-delay: 2.2s; }
+    @keyframes quadFade { 0% { opacity: 0; } 3%, 22% { opacity: 1; } 25%, 100% { opacity: 0; } }
+    .duo-item:hover .duo-img:nth-child(1):nth-last-child(4),
+    .duo-item:hover .duo-img:nth-child(2):nth-last-child(3),
+    .duo-item:hover .duo-img:nth-child(3):nth-last-child(2),
+    .duo-item:hover .duo-img:nth-child(4):nth-last-child(1) { animation: quadFade 8.8s infinite; }
+    .duo-item:hover .duo-img:nth-child(2):nth-last-child(3) { animation-delay: 2.2s; }
+    .duo-item:hover .duo-img:nth-child(3):nth-last-child(2) { animation-delay: 4.4s; }
+    .duo-item:hover .duo-img:nth-child(4):nth-last-child(1) { animation-delay: 6.6s; }
+    /* Own keyframes (not the shared trioFade) so hover trios keep their timing.
+       Outgoing frame holds opaque until the incoming one has fully faded in,
+       so cumulative opacity never dips and the tile is never blank. */
+    @keyframes autoFade { 0% { opacity: 0; } 4%, 37% { opacity: 1; } 41%, 100% { opacity: 0; } }
+    @keyframes autoDot { 0%, 33.3% { background: var(--accent); } 33.4%, 100% { background: #D8D4C8; } }
+    .auto-dot { animation: autoDot 9s infinite; }
+    .auto-cycle .auto-img { opacity: 0; animation: autoFade 9s infinite; }
+    .auto-cycle .auto-img:nth-child(1) { animation-delay: 0s; }
+    .auto-cycle .auto-img:nth-child(2) { animation-delay: 3s; }
+    .auto-cycle .auto-img:nth-child(3) { animation-delay: 6s; }
+    .auto-cycle.pinned .auto-img { opacity: 0; animation: none; }
+    .auto-cycle.pinned .auto-img.show-frame { opacity: 1; }
+    .solo-img { opacity: 1; }
+    @keyframes trioFade { 0% { opacity: 0; } 4%, 29% { opacity: 1; } 33%, 100% { opacity: 0; } }
+    .duo-item:hover .duo-img:nth-child(1):nth-last-child(3),
+    .duo-item:hover .duo-img:nth-child(2):nth-last-child(2),
+    .duo-item:hover .duo-img:nth-child(3):nth-last-child(1) { animation: trioFade 6.6s infinite; }
+    .duo-item:hover .duo-img:nth-child(2):nth-last-child(2) { animation-delay: 2.2s; }
+    .duo-item:hover .duo-img:nth-child(3):nth-last-child(1) { animation-delay: 4.4s; }
+    .duo-item.pinned .duo-img { opacity: 0; animation: none; }
+    .duo-item.pinned .duo-img.show-frame { opacity: 1; }
+    .cycle-item.pinned .cycle-img { opacity: 0; animation: none; }
+    .cycle-item.pinned .cycle-img.show-frame { opacity: 1; }
+    .navdrop:hover { background: #F4ECF3; color: var(--plum); }
+    @media (max-width: 980px) {
+      .phasewrap { grid-template-columns: minmax(0,1fr) !important; }
+      .phaserail { display: none !important; }
+    }
+    @media (max-width: 760px) {
+      .splitcols { grid-template-columns: minmax(0,1fr) !important; }
+      .chartwrap { padding-right: 72px !important; padding-left: 28px !important; }
+    }
+    input::placeholder, textarea::placeholder { color: #8A8C7E; }
+  </style>
+</helmet>
+
+<div style="background:#FBFAF7;min-height:100vh;color:#1F211C;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;--accent:{{ accentColor }};--plum:#5B2A5E;">
+
+  <!-- NAV -->
+  <div style="position:sticky;top:0;z-index:50;background:#FBFAF7;border-bottom:1px solid #dedad2;">
+    <div style="max-width:1240px;margin:0 auto;padding:clamp(14px,2vw,20px) clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div onClick="{{ goHome }}" style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,2vw,22px);letter-spacing:0.04em;cursor:pointer;font-weight:500;">DIPALI PATEL</div>
+      <div style="display:flex;align-items:center;gap:clamp(16px,3vw,36px);flex-wrap:wrap;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
+        <div onClick="{{ goHome }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ homeUnderline }};">Home</div>
+        <div onClick="{{ goAbout }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ aboutUnderline }};">About</div>
+        <div style="position:relative;" onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}">
+          <div onClick="{{ goWorkDefault }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ workUnderline }};">Work</div>
+          <sc-if value="{{ menuOpen }}">
+            <div style="position:absolute;top:100%;left:0;background:#FBFAF7;border:1px solid #dedad2;min-width:260px;padding:6px 0;box-shadow:0 12px 24px rgba(32,31,28,0.08);">
+              <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
+                <div onClick="{{ cat.select }}" style="padding:12px 18px;cursor:pointer;font-size:12.5px;letter-spacing:0.06em;" class="navdrop">{{ cat.label }}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <div onClick="{{ goContact }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ contactUnderline }};">Contact</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:fadeIn 0.6s ease;">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px) clamp(24px,4vw,40px);">
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(46px,9vw,120px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</div>
+        <div style="margin-top: 18px; max-width: 640px; font-size: clamp(16px,2vw,20px); line-height: 1.6; color: #8A8C7E; font-style: italic; font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif">
+          Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
+        </div>
+        <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
+          <div onClick="{{ goAbout }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
+          <div onClick="{{ goContact }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
+          <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
+            <div onClick="{{ cat.select }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
+              <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" style="width:100%;height:100%;"></image-slot></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;">
+                <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.6vw,24px);">{{ cat.label }}</div>
+                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
+          <div style="max-width:520px;">
+            <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,32px);margin-bottom:14px;">Nearly five years turning strategy into shelf-ready, screen-ready creative.</div>
+            <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">Currently Design Lead &amp; Marketing Specialist at Staedtler. OCAD University, Bachelor of Design. Based in Toronto.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
+            <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
+            <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
+            <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ABOUT -->
+  <sc-if value="{{ isAbout }}">
+    <div style="animation:fadeIn 0.6s ease;max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
+      <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">About</div>
+      <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</div>
+      <div style="display:inline-block;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:11px 20px;margin-bottom:36px;">Open to brand design &amp; art direction — fashion, apparel, lifestyle</div>
+
+      <div class="splitcols" style="display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr);gap:clamp(30px,5vw,64px);align-items:start;">
+        <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" style="width:100%;aspect-ratio:4/5;"></image-slot>
+        <div style="font-size:16px;line-height:1.75;color:#1F211C;display:flex;flex-direction:column;gap:20px;max-width:640px;">
+          <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
+          <p style="margin:0;">My work turns marketing strategy into creative people actually respond to. I specialize in integrated product launches, seasonal campaigns, and high-volume asset production — all while keeping brand consistency tight. I work closely with marketing, product, and sales teams so the creative lines up with business goals and retail timelines, and I bring a production background that keeps things efficient, clear, and accurate right down to the file.</p>
+          <p style="margin:0;">CPG and fashion ask for the same discipline: a seasonal calendar, a high volume of assets, retail timelines that don't move, and a brand that has to look like itself everywhere it shows up. My Staedtler and retail packaging work is proof I can run that — I'm looking to bring it to a fashion, apparel, or lifestyle brand next.</p>
+          <p style="margin:0;font-size:13.5px;color:#8A8C7E;letter-spacing:0.02em;">Bachelor of Design, OCAD University · Toronto, ON</p>
+        </div>
+      </div>
+
+      <div style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
+        <div style="max-width:520px;">
+          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,30px);margin-bottom:14px;">Work with me</div>
+          <div style="font-size:15px;line-height:1.7;color:#8A8C7E;">Looking for a designer who can hold a brand together across a hundred touchpoints — in fashion, apparel, or lifestyle? I'd love to hear from you.</div>
+          <div onClick="{{ goContact }}" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+          <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
+          <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
+          <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
+          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+        </div>
+      </div>
+
+      <div style="margin-top:clamp(50px,7vw,72px);">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:18px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Tools &amp; Craft</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <sc-for list="{{ skills }}" as="s" hint-placeholder-count="14">
+            <div style="font-size:12.5px;letter-spacing:0.03em;padding:8px 16px;border:1px solid #dedad2;color:#8A8C7E;">{{ s.name }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- WORK CATEGORY -->
+  <sc-if value="{{ isWork }}">
+    <div style="animation:fadeIn 0.6s ease;">
+    <sc-if value="{{ isGenericCategory }}">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</div>
+        <div style="margin-top:14px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
+        <div style="margin-top:24px;max-width:720px;font-size:15.5px;line-height:1.75;color:#1F211C;">{{ currentCategory.intro }}</div>
+      </div>
+
+      <sc-if value="{{ currentCategory.hasBeforeAfter }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Before / After</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
+            <div>
+              <image-slot id="ba-before-{{ currentCategory.slug }}" src="{{ currentCategory.beforeSrc }}" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
+            </div>
+            <div>
+              <image-slot id="ba-after-{{ currentCategory.slug }}" src="{{ currentCategory.afterSrc }}" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Gallery</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(14px,2vw,20px);">
+          <sc-for list="{{ currentCategory.galleryItems }}" as="g" hint-placeholder-count="6">
+            <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="gal-{{ currentCategory.slug }}-{{ $index }}" shape="rect" placeholder="Project image" style="width:100%;height:100%;"></image-slot></div></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ currentCategory.inProgress }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) 0;">
+          <div style="border:1px solid #dedad2;padding:clamp(28px,4vw,40px);font-size:15px;line-height:1.7;color:#8A8C7E;max-width:640px;">
+            {{ currentCategory.note }}
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ currentCategory.showSocialFeed }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Social Media Management</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
+                <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Instagram</div>
+                <a href="https://instagram.com" target="_blank" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                <sc-for list="{{ staedtlerIgTiles }}" as="t" hint-placeholder-count="6">
+                  <image-slot id="{{ t.slotId }}" src="{{ t.src }}" shape="rect" placeholder="Instagram" style="width:100%;aspect-ratio:1/1;"></image-slot>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
+                <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Facebook</div>
+                <a href="https://facebook.com" target="_blank" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                <sc-for list="{{ staedtlerFbTiles }}" as="t" hint-placeholder-count="6">
+                  <image-slot id="{{ t.slotId }}" src="{{ t.src }}" shape="rect" placeholder="Facebook" style="width:100%;aspect-ratio:1/1;"></image-slot>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ currentCategory.showCaseStudy }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) 0;border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Challenge</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.challenge }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);display:flex;justify-content:space-between;">
+        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- STAEDTLER — ROLE OVERVIEW -->
+    <sc-if value="{{ isStaedtlerPage }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="stae-hero" src="images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">STAEDTLER</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</div>
+        <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">One brand, every surface it touches — across the North American business.</div>
+        <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">I joined STAEDTLER as a packaging designer and now lead creative across the North American business. On any given week I'm producing new product artwork, building production-accurate mockups for buyer approval, designing retail and sales materials, running the brand's social channels, and executing launch campaigns end to end. The range is wide, but the job underneath it is always the same: make every touchpoint look like it came from the same brand.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Brand consistency</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;max-width:820px;">One brand, many surfaces.</div>
+        <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">A flyer made for a sales rep and an Amazon brand page built three months later still have to read as the same company. That's the part of the job I'm judged on — here's the same brand across five very different surfaces.</div>
+      </div>
+
+      <div style="width:100%;background:#F3F0E8;margin-top:clamp(32px,4.5vw,48px);padding:clamp(40px,5.5vw,72px) 0 clamp(44px,6vw,76px);">
+        <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(18px,2.4vw,28px);">
+            <sc-for list="{{ brandSurfaces }}" as="s" hint-placeholder-count="3">
+              <div style="min-width:0;">
+                <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:11px;">{{ s.label }}</div>
+                <div class="{{ s.containerClass }}" style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#FBFAF7;">
+                  <sc-for list="{{ s.frames }}" as="fr" hint-placeholder-count="1">
+                    <div class="{{ fr.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ fr.pointerEvents }};">
+                      <div class="{{ fr.zoomClass }}" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                        <image-slot id="{{ fr.slotId }}" src="{{ fr.src }}" shape="rect" placeholder="{{ fr.label }}" style="width:100%;height:100%;"></image-slot>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ s.multi }}">
+                  <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
+                    <sc-for list="{{ s.frames }}" as="fr" hint-placeholder-count="3">
+                      <div onClick="{{ fr.select }}" class="{{ fr.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ fr.dotColor }};animation-delay:{{ fr.delay }};transition:background 0.25s ease;"></div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ s.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:clamp(28px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(18px,2.4vw,28px);align-items:start;">
+            <div style="min-width:0;">
+              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:11px;">E-commerce</div>
+              <div style="border:1px solid #E0DCD2;background:#FBFAF7;overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid #E0DCD2;background:#F4F1EB;">
+                  <div style="display:flex;gap:6px;">
+                    <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                    <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                    <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                  </div>
+                  <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">amazon.com/staedtler</div>
+                </div>
+                <image-slot id="stae-ecom-browser" src="images/stae-ecom-browser.webp" shape="rect" placeholder="Amazon brand page" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Amazon brand page — artwork across the full catalog, shown as it appears live.</div>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:11px;">Email</div>
+              <div style="border:1px solid #E0DCD2;background:#FBFAF7;">
+                <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid #E0DCD2;">
+                  <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                  <div style="font-size:11.5px;color:#8A8C7E;letter-spacing:0.03em;">STAEDTLER — New product launch</div>
+                </div>
+                <div style="padding:14px;">
+                  <image-slot id="stae-email-body" src="images/stae-email-body.webp" shape="rect" placeholder="Promotional email" style="display:block;width:100%;aspect-ratio:4/5;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Promotional email — built for the mailing list, shown in an inbox.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">What I do here</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">The full scope.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+          <sc-for list="{{ capabilities }}" as="c" hint-placeholder-count="9">
+            <div style="background:#FBFAF7;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:9px;">
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:22px;color:var(--accent);line-height:1;">{{ c.n }}</div>
+              <div style="font-size:15px;letter-spacing:0.01em;color:#1F211C;">{{ c.title }}</div>
+              <div style="font-size:13.5px;line-height:1.6;color:#8A8C7E;">{{ c.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Production craft</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Mockups a buyer can hold.</div>
+        <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Before anything goes to manufacturing, buyers see a physical mockup — correctly sized, correctly finished, close enough to production that the approval means something. Building these is a different skill from designing the artwork, and it's the part that keeps launches on schedule.</div>
+      </div>
+
+      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+        <image-slot id="stae-mockup-hero" src="{{ staeMockupHeroSrc }}" shape="rect" placeholder="Mockups in-hand, at scale" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
+        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Production mockups — photographed in-hand, because that's how a buyer judges them.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:clamp(14px,2vw,20px);">
+          <sc-for list="{{ staeMockups }}" as="m" hint-placeholder-count="3">
+            <div style="width:100%;aspect-ratio:1/1;overflow:hidden;min-width:0;">
+              <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                <image-slot id="{{ m.slotId }}" src="{{ m.src }}" shape="rect" placeholder="Mockup detail" style="width:100%;height:100%;"></image-slot>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Social &amp; community</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The channels I run.</div>
+        <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Instagram, Facebook, and LinkedIn — content creation, scheduling, and community engagement. Campaigns, giveaways, and drawing contests all run through here.</div>
+
+        <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:22px;">
+          <sc-for list="{{ staeChannels }}" as="ch" hint-placeholder-count="3">
+            <a href="{{ ch.url }}" target="_blank" rel="noopener" style="font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;color:#1F211C;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:4px;">{{ ch.label }} →</a>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:clamp(28px,4vw,40px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.2vw,12px);">
+          <sc-for list="{{ staeFeed }}" as="p" hint-placeholder-count="9">
+            <div>
+              <a href="{{ p.url }}" target="_blank" rel="noopener" style="display:block;width:100%;aspect-ratio:1/1;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="stae-feed-{{ $index }}" src="images/stae-feed-{{ $index }}.webp" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </a>
+              <a href="{{ p.url }}" target="_blank" rel="noopener" style="margin-top:7px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;color:#8A8C7E;text-decoration:none;">
+                <span>{{ p.label }}</span>
+                <span style="letter-spacing:0.06em;text-transform:uppercase;">View →</span>
+              </a>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:14px;font-size:12px;color:#8A8C7E;">The feed — campaign, giveaway, and drawing-contest posts, read as one grid. Each tile links to the original post.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;padding-bottom:14px;border-bottom:1px solid #E5E2DA;">Growth — October 2024 to August 2026</div>
+
+        <div style="margin-top:clamp(34px,4.5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(28px,4vw,52px);">
+          <sc-for list="{{ growthStats }}" as="g" hint-placeholder-count="3">
+            <div>
+              <div style="font-family: 'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif; font-size: clamp(36px,4.6vw,64px); line-height: 0.95; color: #1F211C; letter-spacing: -0.01em">{{ g.value }}</div>
+              <div style="margin-top:14px;width:26px;height:2px;background:var(--accent);"></div>
+              <div style="margin-top:12px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;line-height:1.5;">{{ g.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:clamp(52px,7vw,88px);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
+            <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;">Indexed to 100 at October 2024</div>
+            <div style="font-size:11px;color:#8A8C7E;">Relative scale — not absolute counts</div>
+          </div>
+
+          <div class="chartwrap" style="position:relative;padding-right:104px;padding-left:34px;">
+            <div style="position:relative;width:100%;height:clamp(220px,28vw,320px);">
+              <svg viewBox="0 0 1000 320" preserveAspectRatio="none" style="display:block;width:100%;height:100%;overflow:visible;">
+                <line x1="0" y1="71.1" x2="1000" y2="71.1" stroke="#EFEDE6" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+                <line x1="0" y1="147.4" x2="1000" y2="147.4" stroke="#EFEDE6" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+                <line x1="0" y1="223.7" x2="1000" y2="223.7" stroke="#EFEDE6" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+                <line x1="0" y1="300" x2="1000" y2="300" stroke="#D8D4C8" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+                <line x1="913" y1="54.1" x2="913" y2="300" stroke="#D8D4C8" stroke-width="1" stroke-dasharray="3 4" vector-effect="non-scaling-stroke"></line>
+                <polyline points="0.0,300.0 43.5,296.3 87.0,293.3 130.4,290.2 173.9,286.1 217.4,283.2 260.9,277.9 304.3,275.4 347.8,272.9 391.3,271.1 434.8,266.9 478.3,264.7 521.7,258.0 565.2,253.0 608.7,249.9 652.2,245.3 695.7,240.6 739.1,237.4 782.6,234.1 826.1,231.6 869.6,228.8 913.0,222.1 956.5,214.4 1000.0,212.6" fill="none" stroke="#8A8C7E" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline>
+                <polyline points="0.0,300.0 43.5,293.4 87.0,287.1 130.4,280.3 173.9,264.3 217.4,247.8 260.9,238.7 304.3,233.1 347.8,228.9 391.3,223.1 434.8,203.9 478.3,183.6 521.7,179.0 565.2,173.2 608.7,161.3 652.2,152.5 695.7,148.9 739.1,142.8 782.6,130.2 826.1,111.5 869.6,98.0 913.0,54.1 956.5,33.2 1000.0,23.4" fill="none" stroke="#B5BE4A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline>
+                <circle cx="913" cy="54.1" r="4" fill="#B5BE4A" vector-effect="non-scaling-stroke"></circle>
+              </svg>
+              <div style="position:absolute;left:91.3%;top:16.9%;transform:translate(-100%,-100%);padding-right:14px;text-align:right;white-space:nowrap;">
+                <div style="font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;">June 2026</div>
+                <div style="margin-top:3px;font-size:11px;color:#8A8C7E;">Growth accelerates &mdash; strongest month on record</div>
+              </div>
+              <div style="position:absolute;left:calc(100% + 12px);top:7.3%;transform:translateY(-50%);white-space:nowrap;">
+                <div style="font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">Instagram</div>
+                <div style="margin-top:4px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:17px;line-height:1;color:#1F211C;">+362%</div>
+              </div>
+              <div style="position:absolute;left:calc(100% + 12px);top:66.4%;transform:translateY(-50%);white-space:nowrap;">
+                <div style="font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Facebook</div>
+                <div style="margin-top:4px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:17px;line-height:1;color:#1F211C;">+114%</div>
+              </div>
+              <div style="position:absolute;right:calc(100% + 10px);top:93.75%;transform:translateY(-50%);font-size:10.5px;color:#8A8C7E;">100</div>
+              <div style="position:absolute;right:calc(100% + 10px);top:69.9%;transform:translateY(-50%);font-size:10.5px;color:#C4C1B5;">200</div>
+              <div style="position:absolute;right:calc(100% + 10px);top:46.1%;transform:translateY(-50%);font-size:10.5px;color:#C4C1B5;">300</div>
+              <div style="position:absolute;right:calc(100% + 10px);top:22.2%;transform:translateY(-50%);font-size:10.5px;color:#C4C1B5;">400</div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">
+              <sc-for list="{{ growthAxis }}" as="a" hint-placeholder-count="5">
+                <div>{{ a.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:clamp(44px,6vw,72px);padding-top:clamp(28px,3.5vw,40px);border-top:1px solid #E5E2DA;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:clamp(24px,3.5vw,44px);">
+          <sc-for list="{{ growthSupporting }}" as="s" hint-placeholder-count="4">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(28px,3.4vw,42px);line-height:1;color:#1F211C;">{{ s.value }}</div>
+              <div style="margin-top:9px;font-size:11.5px;letter-spacing:0.07em;text-transform:uppercase;color:#8A8C7E;">{{ s.label }}</div>
+              <div style="margin-top:7px;font-size:12.5px;line-height:1.6;color:#8A8C7E;">{{ s.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:clamp(30px,4vw,44px);max-width:660px;font-size:14.5px;line-height:1.8;color:#1F211C;">I took over STAEDTLER's North American social channels in October 2024. Instagram has grown 4.6× since, while improving engagement rate — and the growth is still accelerating, with the strongest month on record in mid-2026.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Design team leadership</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The HSN card program.</div>
+        <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">I direct a design team producing finished card projects made with STAEDTLER products, created for sale on HSN. I brief the team, set the creative direction for each release, hold the brand and quality standards, and review the output before it goes out. The work has to function as a sellable craft object first and a brand piece second — both, every time.</div>
+      </div>
+
+      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+        <sc-if value="{{ hsnHeroVideoReady }}" hint-placeholder-val="{{ false }}">
+          <div style="width:100%;aspect-ratio:2/1;overflow:hidden;background:#F1EEE9;">
+            <video-slot id="stae-hsn-hero-video" src="videos/stae-hsn-hero.mp4" poster="images/stae-hsn-hero.webp" label="HSN card program — reel"></video-slot>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hsnHeroImageOnly }}" hint-placeholder-val="{{ true }}">
+          <image-slot id="stae-hsn-hero" src="images/stae-hsn-hero.webp" shape="rect" placeholder="HSN card — hero piece, styled" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
+        </sc-if>
+        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">HSN card program — the strongest piece, styled and shot as a finished object.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(14px,2vw,20px);">
+          <sc-for list="{{ staeHsn }}" as="h" hint-placeholder-count="6">
+            <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
+              <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                <image-slot id="stae-hsn-{{ $index }}" src="{{ h.src }}" shape="rect" placeholder="HSN card" style="width:100%;height:100%;"></image-slot>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">The range — cards produced by the team under my direction.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Featured work</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">Go deeper.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
+          <sc-for list="{{ staeFeatured }}" as="f" hint-placeholder-count="3">
+            <div onClick="{{ f.go }}" style="cursor:pointer;">
+              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="stae-featured-{{ f.key }}" src="images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ f.kicker }}</div>
+              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(20px,2vw,26px);">{{ f.label }}</div>
+              <div style="margin-top:8px;font-size:13.5px;line-height:1.6;color:#8A8C7E;">{{ f.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
+        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- INTEGRATED DIGITAL CAMPAIGN — NORIS 122 FLAGSHIP -->
+    <sc-if value="{{ isDigitalCampaign }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="noris-hero" src="{{ norisHeroSrc }}" shape="rect" placeholder="Noris 122 key visual" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Integrated Digital Campaign</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">STAEDTLER Noris<span style="font-size:0.5em;vertical-align:super;">®</span> 122</div>
+        <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">STAEDTLER · North American product launch</div>
+        <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">The Noris 122 brought STAEDTLER's most recognizable pencil to North America with an eraser tip and a sustainability story worth telling. The stripe is one of the most recognizable pencil liveries in the world, so the work was about earning the right to change anything at all — and the upcycled wood, under PEFC-certified sourcing, gave the launch its point of view. I led the creative from the first key visual through to the product arriving in teachers' hands.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(36px,5vw,52px) clamp(20px,4vw,48px) 0;">
+        <div style="border-top:1px solid #dedad2;border-bottom:1px solid #dedad2;padding:clamp(24px,3vw,32px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:24px;">
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Role</div>
+            <div style="font-size:14px;color:#1F211C;">Design Lead — concept through production</div>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Deliverables</div>
+            <div style="font-size:14px;color:#1F211C;">{{ deliverables }}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Channels</div>
+            <div style="font-size:14px;color:#1F211C;">Retail, e-commerce, email, social, influencer &amp; PR</div>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Timeframe</div>
+            <div style="font-size:14px;color:#1F211C;">Full launch cycle, North America</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width:100%;padding:clamp(48px,7vw,80px) 0 0;">
+        <image-slot id="noris-guidelines" src="{{ norisGuidelinesSrc }}" shape="rect" placeholder="Product design guidelines" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
+        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Product design guidelines — the livery, proportions, and claim placement every piece below was built against.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;display:grid;grid-template-columns:1fr;gap:0;">
+        <div class="phasewrap" style="display:grid;grid-template-columns:170px minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:start;">
+
+          <div class="phaserail" style="position:sticky;top:96px;display:flex;flex-direction:column;gap:2px;">
+            <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:12px;">Phases</div>
+            <sc-for list="{{ phases }}" as="p" hint-placeholder-count="7">
+              <div onClick="{{ p.go }}" style="cursor:pointer;display:flex;gap:9px;align-items:baseline;padding:7px 0;border-bottom:1px solid {{ p.railBorder }};">
+                <div style="font-size:10.5px;letter-spacing:0.06em;color:{{ p.railNum }};min-width:16px;">{{ p.n }}</div>
+                <div style="font-size:12px;line-height:1.35;color:{{ p.railColor }};">{{ p.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:clamp(56px,8vw,104px);">
+
+            <div data-phase="packaging">
+              <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nPackaging }} — Brand &amp; packaging</div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,42px);line-height:1.1;margin-bottom:16px;">Pack artwork.</div>
+              <div style="max-width:660px;font-size:15.5px;line-height:1.8;color:#1F211C;">Pack artwork built to sit correctly beside the existing Noris family, with the 122's new claims given room without crowding the livery.</div>
+              <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(14px,2vw,20px);">
+                <sc-for list="{{ norisPackaging }}" as="i" hint-placeholder-count="3">
+                  <div style="width:100%;aspect-ratio:3/4;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ i.slotId }}" src="{{ i.src }}" shape="rect" placeholder="Packaging, printed piece" style="width:100%;height:100%;"></image-slot></div></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Packaging — shot as printed pieces, real substrate and finish.</div>
+              <div onClick="{{ goProgression }}" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
+
+            <div data-phase="retail">
+              <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nRetail }} — Retail &amp; print</div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,42px);line-height:1.1;margin-bottom:16px;">In-store, at scale.</div>
+              <div style="max-width:660px;font-size:15.5px;line-height:1.8;color:#1F211C;">Pull-up Banners and promotional print — the same message holding up at standing distance and in the hand.</div>
+              <div style="margin-top:24px;">
+                
+                
+              </div>
+
+              <div style="margin-top:clamp(28px,3.5vw,40px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,20px);align-items:start;">
+                <sc-for list="{{ norisPrintTiles }}" as="tile" hint-placeholder-count="3">
+                  <div>
+                    <div class="{{ tile.containerClass }}" style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;">
+                      <sc-for list="{{ tile.frames }}" as="side" hint-placeholder-count="3">
+                        <div class="{{ side.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ side.pointerEvents }};"><image-slot id="{{ side.slotId }}" src="{{ side.src }}" shape="rect" placeholder="{{ side.label }}" style="width:100%;height:100%;"></image-slot></div>
+                      </sc-for>
+                    </div>
+                    <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
+                      <sc-for list="{{ tile.frames }}" as="side" hint-placeholder-count="3">
+                        <div onClick="{{ side.select }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ side.dotColor }};transition:background 0.25s ease;"></div>
+                      </sc-for>
+                    </div>
+                    <div style="margin-top:7px;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">{{ tile.caption }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Promotional print — hover any tile to cycle through its views.</div>
+            </div>
+
+            <sc-if value="{{ showDigital }}">
+            <div data-phase="digital">
+              <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nDigital }} — Digital &amp; e-commerce</div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,42px);line-height:1.1;margin-bottom:16px;">Where the purchase actually happens.</div>
+              <div style="max-width:660px;font-size:15.5px;line-height:1.8;color:#1F211C;">Digital advertising plus the Amazon brand page and product imagery — the work that has to convert with no one standing next to the shelf.</div>
+              <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:clamp(14px,2vw,20px);">
+                <sc-for list="{{ norisDigital }}" as="i" hint-placeholder-count="2">
+                  <div style="width:100%;aspect-ratio:1/1;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ i.slotId }}" src="{{ i.src }}" shape="rect" placeholder="Digital ad" style="width:100%;height:100%;"></image-slot></div></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Digital ads — sized per placement from one key visual.</div>
+
+              <div style="margin-top:clamp(32px,4vw,44px);width:100%;">
+                <div style="border:1px solid #E0DCD2;background:#FBFAF7;overflow:hidden;">
+                  <div style="display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid #E0DCD2;background:#F4F1EB;">
+                    <div style="display:flex;gap:6px;">
+                      <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                      <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                      <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                    </div>
+                    <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">amazon.com/staedtler-noris-122</div>
+                  </div>
+                  <div style="width:100%;aspect-ratio:4/3;overflow:hidden;"><image-slot id="noris-amazon-page" src="{{ norisAmazonPageSrc }}" shape="rect" placeholder="Amazon brand page — full scrolling export" style="width:100%;height:100%;"></image-slot></div>
+                </div>
+                <div style="margin-top:12px;font-size:12px;color:#8A8C7E;max-width:660px;">Amazon brand page — A+ content carrying the launch where the buying decision happens.</div>
+              </div>
+
+              <div style="margin-top:clamp(28px,3.5vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:clamp(14px,2vw,20px);">
+                <sc-for list="{{ norisAmazonProduct }}" as="i" hint-placeholder-count="3">
+                  <div style="width:100%;aspect-ratio:1/1;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ i.slotId }}" src="{{ i.src }}" shape="rect" placeholder="Amazon product image" style="width:100%;height:100%;"></image-slot></div></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Product imagery — claims legible at thumbnail size.</div>
+            </div>
+
+            </sc-if>
+
+            <div data-phase="launch">
+              <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nLaunch }} — The launch campaign</div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,42px);line-height:1.1;margin-bottom:16px;">From design to execution.</div>
+              <div style="max-width:660px;font-size:15.5px;line-height:1.8;color:#1F211C;">With the assets built, the launch moved into market: giveaways, creator partnerships, and an influencer program aimed at teachers — the people who put pencils in a hundred hands a day.</div>
+              <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(14px,2vw,20px);">
+                <sc-for list="{{ norisLaunch }}" as="post" hint-placeholder-count="2">
+                  <div>
+                    <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ post.slotId }}" src="{{ post.src }}" shape="rect" placeholder="Giveaway / creator content" style="width:100%;height:100%;"></image-slot></div></div>
+                    <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
+                      <a href="{{ post.url }}" target="_blank" rel="noopener" style="font-size:13px;color:#1F211C;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px;">{{ post.handle }}</a>
+                      <a href="{{ post.url }}" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;text-decoration:none;">View post →</a>
+                    </div>
+                    <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ post.note }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="margin-top:clamp(32px,4vw,44px);">
+                <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:12px;">Creator partnerships</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,20px);align-items:start;">
+                  <sc-for list="{{ norisCreators }}" as="creator" hint-placeholder-count="3">
+                    <div>
+                      <div style="width:100%;aspect-ratio:9/16;overflow:hidden;background:#F1EEE9;">
+                        <video-slot id="noris-creator-{{ $index }}" src="videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
+                      </div>
+                      <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
+                        <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size: 12.5px; color: #1F211C; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px">{{ creator.handle }}</a>
+                        View post →
+                      </div>
+                      <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ creator.note }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Creator partnerships — reel recaps, looping silently in place.</div>
+              </div>
+            </div>
+
+            <div data-phase="pr">
+              <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nPr }} — PR boxes</div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,42px);line-height:1.1;margin-bottom:16px;">The unboxing moment.</div>
+              <div style="max-width:660px;font-size:15.5px;line-height:1.8;color:#1F211C;">Designed boxes, contents, and the shipping program that sent them to teacher influencers across North America — built to be filmed, so the reveal had a sequence.</div>
+              <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(14px,2vw,20px);">
+                <sc-for list="{{ norisPr }}" as="i" hint-placeholder-count="4">
+                  <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ i.slotId }}" src="{{ i.src }}" shape="rect" placeholder="PR box, styled / in-hand" style="width:100%;height:100%;"></image-slot></div></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">PR boxes — shot as they'd be opened.</div>
+            </div>
+
+            <div data-phase="merch">
+              <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nMerch }} — Merchandise</div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,42px);line-height:1.1;margin-bottom:16px;">The lineup.</div>
+              <div style="max-width:660px;font-size:15.5px;line-height:1.8;color:#1F211C;">Tote bags, mugs, magnets, and t-shirts — the livery translated onto surfaces it was never drawn for.</div>
+              <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:clamp(14px,2vw,20px);">
+                <sc-for list="{{ norisMerch }}" as="i" hint-placeholder-count="4">
+                  <div style="width:100%;aspect-ratio:1/1;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ i.slotId }}" src="{{ i.src }}" shape="rect" placeholder="Merchandise" style="width:100%;height:100%;"></image-slot></div></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Merchandise — presented as a lineup.</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,96px) clamp(20px,4vw,48px) 0;">
+        <div style="border-top:1px solid #dedad2;padding-top:clamp(32px,4vw,44px);max-width:760px;">
+          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.8vw,32px);line-height:1.25;margin-bottom:14px;">One product, one voice, every channel it touched.</div>
+          <div style="font-size:15.5px;line-height:1.8;color:#8A8C7E;">The clearest example of how I work: hold the brand steady, build once and adapt deliberately, and stay with a product from the first visual through to someone opening a box on camera.</div>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
+        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- PASSION LANDING -->
+    <sc-if value="{{ isPassionLanding }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="passion-hero" src="{{ passionHeroSrc }}" shape="rect" placeholder="Personal work — strongest image, wide" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</div>
+        <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(52px,7vw,88px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:grid;gap:clamp(36px,5vw,64px);">
+        <div onClick="{{ goDidi }}" style="cursor:pointer;">
+          <div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:#F1EEE9;">
+            <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
+              <image-slot id="passion-tile-didi" src="{{ didiTileSrc }}" shape="rect" placeholder="DIDI — strongest product shot, wide" style="width:100%;height:100%;"></image-slot>
+            </div>
+          </div>
+          <div class="splitcols" style="margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,380px);gap:clamp(20px,3vw,44px);align-items:end;">
+            <div style="min-width:0;">
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">A brand, built end to end</div>
+              <div style="margin-top:8px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(30px,4.4vw,58px);line-height:1.02;">DIDI Tote Bags</div>
+            </div>
+            <div style="min-width:0;font-size:14.5px;line-height:1.7;color:#8A8C7E;">A handmade accessories brand — identity, artwork, product, packaging, shop, and photography, all mine.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(24px,3.5vw,44px);">
+          <sc-for list="{{ passionSmallProjects }}" as="p" hint-placeholder-count="2">
+            <div onClick="{{ p.go }}" style="cursor:pointer;min-width:0;">
+              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#F1EEE9;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
+                  <image-slot id="passion-tile-{{ p.key }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ p.kicker }}</div>
+              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.08;">{{ p.label }}</div>
+              <div style="margin-top:9px;font-size:14px;line-height:1.7;color:#8A8C7E;">{{ p.description }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- DIDI TOTE BAGS — CASE STUDY -->
+    <sc-if value="{{ isDidi }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="didi-hero" src="{{ didiHeroSrc }}" shape="rect" placeholder="DIDI — hero product photograph, wide" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Handmade accessories brand</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</div>
+        <div style="margin-top:18px;max-width:640px;font-size:clamp(16px,1.9vw,21px);line-height:1.6;font-style:italic;color:#8A8C7E;">Elevated totes carrying South Asian&ndash;inspired art — made by hand, from materials given a second life.</div>
+      </div>
+
+      <div style="max-width:1000px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,4vw,48px);">
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.8vw,52px);line-height:1.22;text-wrap:pretty;">&ldquo;Didi means sister. It's the name I've always been called &mdash; and, fittingly, what my sister calls me back.&rdquo;</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">01 &mdash; The brand</div>
+        <div class="splitcols" style="margin-top:8px;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,400px);gap:clamp(28px,4.5vw,64px);align-items:start;">
+          <div style="min-width:0;display:grid;gap:20px;">
+            <div style="font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">The brand takes its name from <em>didi</em> &mdash; sister, in my mother tongue. It's what I've always been called, and, fittingly, what my own sister calls me in return. The name carries the idea the whole brand is built on: that the things worth keeping are the ones made and passed between hands. Every bag is made that way &mdash; by hand, from materials given a second life, carrying artwork drawn from the traditions I grew up with.</div>
+            <div style="font-size:15px;line-height:1.8;color:#8A8C7E;text-wrap:pretty;">DIDI is a small brand of elevated tote bags featuring South Asian&ndash;inspired art and handmade jewelry. I designed and made every part of it &mdash; the identity, the artwork, the bags, the jewelry, the packaging, the shop, and the photography.</div>
+          </div>
+          <div style="min-width:0;border-left:2px solid var(--accent);padding-left:clamp(16px,2vw,24px);">
+            <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;">Everything, by me</div>
+            <div style="display:grid;gap:9px;">
+              <sc-for list="{{ didiScope }}" as="s" hint-placeholder-count="7">
+                <div style="font-size:13.5px;color:#1F211C;">{{ s.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">02 &mdash; Identity</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The system.</div>
+        <div style="margin-top:14px;max-width:620px;font-size:15px;line-height:1.8;color:#8A8C7E;">Logo, wordmark, palette, and type — built as a system so it holds across a hangtag, a label, and a shopfront photo.</div>
+
+        <div style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(178px,100%),1fr));gap:clamp(14px,1.8vw,20px);">
+          <sc-for list="{{ didiIdentity }}" as="d" hint-placeholder-count="4">
+            <div style="background:#FBFAF7;border:1px solid #E5E2DA;padding:clamp(16px,2vw,22px);min-width:0;">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#F1EEE9;">
+                <image-slot id="didi-identity-{{ d.key }}" src="{{ d.src }}" shape="rect" placeholder="{{ d.label }}" style="width:100%;height:100%;"></image-slot>
+              </div>
+              <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">{{ d.label }}</div>
+              <div style="margin-top:7px;font-size:13px;line-height:1.65;color:#8A8C7E;">{{ d.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">03 &mdash; Animation &amp; motion</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The mark in motion.</div>
+        <div style="margin-top:clamp(24px,3.5vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:clamp(16px,2.4vw,26px);">
+          <sc-for list="{{ didiMotion }}" as="m" hint-placeholder-count="2">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#F1EEE9;">
+                <video-slot id="didi-motion-{{ $index }}" src="{{ m.src }}" label="{{ m.label }}"></video-slot>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">{{ m.caption }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">04 &mdash; The product</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Screen-printed, stitched, strung.</div>
+      </div>
+
+      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+        <image-slot id="didi-product-hero" src="{{ didiProductHeroSrc }}" shape="rect" placeholder="Bags — full lineup, wide" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
+        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Product lineup &mdash; each bag a different print, the format held constant so the range reads as one brand.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(14px,2vw,20px);">
+          <sc-for list="{{ didiProduct }}" as="p" hint-placeholder-count="4">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#F1EEE9;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="didi-product-{{ $index }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">{{ p.caption }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="width:100%;background:#F3F0E8;margin-top:clamp(60px,8vw,100px);padding:clamp(44px,6vw,76px) 0;">
+        <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">05 &mdash; Craft &amp; process</div>
+          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Made, not ordered.</div>
+          <div style="margin-top:14px;max-width:640px;font-size:15px;line-height:1.8;color:#1F211C;">Screens pulled by hand, labels stitched in one at a time, jewelry strung at the same table, thank-you cards pressed from paper I made. Documented as it happened.</div>
+
+          <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:clamp(16px,2.4vw,26px);">
+            <sc-for list="{{ didiCraft }}" as="c" hint-placeholder-count="4">
+              <div style="min-width:0;">
+                <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#FBFAF7;">
+                  <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                    <image-slot id="didi-craft-{{ c.key }}" src="{{ c.src }}" shape="rect" placeholder="{{ c.label }}" style="width:100%;height:100%;"></image-slot>
+                  </div>
+                </div>
+                <div style="margin-top:12px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">{{ c.label }}</div>
+                <div style="margin-top:7px;font-size:13px;line-height:1.7;color:#8A8C7E;">{{ c.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:clamp(20px,3vw,28px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:clamp(12px,1.8vw,18px);">
+            <sc-for list="{{ didiTexture }}" as="t" hint-placeholder-count="4">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#FBFAF7;min-width:0;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="didi-texture-{{ $index }}" src="{{ t.src }}" shape="rect" placeholder="{{ t.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:11px;font-size:12px;color:#8A8C7E;">Close up &mdash; print texture, stitch, bead, and pressed paper.</div>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">06 &mdash; Video &amp; reels</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Shot vertical, shown vertical.</div>
+        <div style="margin-top:14px;max-width:640px;font-size:15px;line-height:1.8;color:#8A8C7E;">Most of the process was documented as reels. They belong at 9:16, at the size they were made for.</div>
+
+        <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:clamp(18px,2.6vw,30px);">
+          <sc-for list="{{ didiReels }}" as="r" hint-placeholder-count="3">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:9/16;overflow:hidden;border-radius:22px;background:#1F211C;padding:7px;">
+                <div style="width:100%;height:100%;overflow:hidden;border-radius:16px;background:#F1EEE9;">
+                  <video-slot id="didi-reel-{{ $index }}" src="{{ r.src }}" label="{{ r.label }}"></video-slot>
+                </div>
+              </div>
+              <div style="margin-top:12px;font-size:12px;line-height:1.6;color:#8A8C7E;">{{ r.caption }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">07 &mdash; Photography</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Styled and shot myself.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:clamp(14px,2vw,22px);">
+          <sc-for list="{{ didiPhotography }}" as="p" hint-placeholder-count="3">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#F1EEE9;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="didi-photo-{{ $index }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">{{ p.caption }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,360px);gap:clamp(24px,4vw,52px);align-items:start;">
+          <div style="min-width:0;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">08 &mdash; The shop</div>
+            <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,3.2vw,40px);line-height:1.08;margin-bottom:20px;">Built to sell it.</div>
+            <div style="border:1px solid #E0DCD2;background:#FBFAF7;overflow:hidden;">
+              <div style="display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid #E0DCD2;background:#F4F1EB;">
+                <div style="display:flex;gap:6px;">
+                  <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                  <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                  <div style="width:9px;height:9px;border-radius:50%;background:#E5E2DA;"></div>
+                </div>
+                <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">didi.shop</div>
+              </div>
+              <div style="width:100%;aspect-ratio:4/3;overflow:hidden;"><image-slot id="didi-shop" src="{{ didiShopSrc }}" shape="rect" placeholder="DIDI shop — homepage" style="width:100%;height:100%;"></image-slot></div>
+            </div>
+            <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">Shop &mdash; the storefront I built, where the identity had to survive a product grid and a checkout.</div>
+          </div>
+          <div style="min-width:0;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">09 &mdash; Instagram</div>
+            <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,3.2vw,40px);line-height:1.08;margin-bottom:20px;">The feed.</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;">
+              <sc-for list="{{ didiFeed }}" as="f" hint-placeholder-count="9">
+                <div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#F1EEE9;min-width:0;">
+                  <image-slot id="didi-feed-{{ $index }}" src="{{ f.src }}" shape="rect" placeholder="Post" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">Feed &mdash; product, process, and print, alternating so the grid stays legible.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="max-width:900px;margin:0 auto;padding:clamp(64px,9vw,112px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;">In closing</div>
+        <div style="font-size:clamp(17px,2.1vw,23px);line-height:1.75;color:#1F211C;text-wrap:pretty;">Building a brand alone means every decision is yours and every gap is yours too — there is no one to hand the packaging to, or the photography, or the shipping. It taught me how much of a brand lives in the parts nobody briefs: the weight of the paper, the way a label is sewn, what the box feels like when it arrives. I bring that back to client work, where the same details decide whether a brand feels considered or just designed.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
+        <div onClick="{{ goColourism }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- SHORT PASSION PROJECTS — COLOURISM / CREATE #2 -->
+    <sc-if value="{{ isPassionProject }}">
+      <div style="width:100%;aspect-ratio:16/9;overflow:hidden;">
+        <image-slot id="{{ pp.key }}-hero" src="{{ pp.heroSrc }}" shape="rect" placeholder="{{ pp.heroPlaceholder }}" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ pp.kicker }}</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</div>
+        <div style="margin-top:24px;max-width:700px;font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">{{ pp.concept }}</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Process</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,44px);line-height:1.08;">{{ pp.processTitle }}</div>
+        <div style="margin-top:14px;max-width:640px;font-size:15px;line-height:1.8;color:#8A8C7E;">{{ pp.processNote }}</div>
+
+        <div style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(14px,2vw,22px);">
+          <sc-for list="{{ pp.process }}" as="s" hint-placeholder-count="4">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#F1EEE9;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="{{ s.slotId }}" src="{{ s.src }}" shape="rect" placeholder="{{ s.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">The work</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,44px);line-height:1.08;">{{ pp.finalTitle }}</div>
+      </div>
+
+      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+        <image-slot id="{{ pp.key }}-final" src="{{ pp.finalSrc }}" shape="rect" placeholder="{{ pp.finalPlaceholder }}" style="display:block;width:100%;aspect-ratio:{{ pp.finalRatio }};"></image-slot>
+        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">{{ pp.finalCaption }}</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(14px,2vw,22px);">
+          <sc-for list="{{ pp.finals }}" as="f" hint-placeholder-count="3">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:{{ f.ratio }};overflow:hidden;background:#F1EEE9;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="{{ f.slotId }}" src="{{ f.src }}" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">{{ f.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+        <div onClick="{{ pp.goPrev }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
+        <div onClick="{{ pp.goNext }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ENVIRONMENTAL / SIGNAGE LANDING -->
+    <sc-if value="{{ isEnvLanding }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="env-hero" src="{{ envHeroSrc }}" shape="rect" placeholder="Installed storefront graphics — wide" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</div>
+        <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Process</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;max-width:820px;">Tape measure to vinyl.</div>
+        <div style="margin-top:16px;max-width:680px;font-size:15.5px;line-height:1.8;color:#1F211C;">The same six stages carry every project on this page, whether the surface is a shopfront window or the curved flank of a food truck.</div>
+
+        <div style="margin-top:clamp(36px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+          <sc-for list="{{ envProcess }}" as="p" hint-placeholder-count="6">
+            <div style="background:#FBFAF7;padding:clamp(20px,2.4vw,26px);display:flex;flex-direction:column;">
+              <div style="width:100%;aspect-ratio:4/3;overflow:hidden;margin-bottom:18px;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="env-process-{{ p.n }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.title }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="font-size:11.5px;letter-spacing:0.12em;color:var(--accent);">{{ p.n }}</div>
+              <div style="margin-top:7px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(20px,2vw,26px);line-height:1.1;">{{ p.title }}</div>
+              <div style="margin-top:10px;font-size:13.5px;line-height:1.65;color:#8A8C7E;">{{ p.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
+          <sc-for list="{{ envSubcats }}" as="sub" hint-placeholder-count="2">
+            <div onClick="{{ sub.select }}" style="cursor:pointer;max-width:560px;min-width:0;">
+              <div style="aspect-ratio:4/5;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
+                  <image-slot id="env-landing-{{ sub.slug }}" src="{{ sub.src }}" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ sub.kicker }}</div>
+              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.2vw,30px);">{{ sub.label }}</div>
+              <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#8A8C7E;max-width:440px;">{{ sub.description }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- STOREFRONT & INTERIOR GRAPHICS -->
+    <sc-if value="{{ isStorefront }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="sf-hero" src="{{ sfHeroSrc }}" shape="rect" placeholder="Installed storefront — wide" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Four clients</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">Sector range</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:clamp(14px,2vw,22px);">
+          <sc-for list="{{ sfClients }}" as="c" hint-placeholder-count="4">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:3/4;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="sf-sector-{{ c.key }}" src="{{ c.src }}" shape="rect" placeholder="{{ c.name }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:11px;font-size:13.5px;color:#1F211C;">{{ c.name }}</div>
+              <div style="margin-top:4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ c.sector }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:16px;max-width:640px;font-size:13px;line-height:1.7;color:#8A8C7E;">Four sectors, four visual languages &mdash; a bridal boutique and an industrial supplier ask for opposite things on the glass. The process behind them never changed.</div>
+      </div>
+
+      <sc-for list="{{ sfCases }}" as="cs" hint-placeholder-count="4">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+          <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+            <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,44px);line-height:1.05;">{{ cs.name }}</div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">{{ cs.sector }}</div>
+          </div>
+
+          <div style="margin-top:clamp(24px,3vw,34px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(12px,1.8vw,20px);">
+            <div>
+              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">Before</div>
+              <image-slot id="sf-{{ cs.key }}-before" src="{{ cs.beforeSrc }}" shape="rect" placeholder="Bare glass / wall" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+            </div>
+            <div>
+              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">After</div>
+              <image-slot id="sf-{{ cs.key }}-after" src="{{ cs.afterSrc }}" shape="rect" placeholder="Installed graphics" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+            </div>
+          </div>
+
+          <div class="splitcols" style="margin-top:clamp(22px,3vw,30px);display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(24px,4vw,52px);align-items:start;">
+            <div style="min-width:0;">
+              <div style="font-size:15px;line-height:1.8;color:#1F211C;max-width:620px;">{{ cs.brief }}</div>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;">The constraint</div>
+              <div style="font-size:13.5px;line-height:1.7;color:#8A8C7E;">{{ cs.constraint }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:clamp(20px,3vw,28px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:clamp(12px,1.8vw,18px);">
+            <sc-for list="{{ cs.details }}" as="d" hint-placeholder-count="3">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;min-width:0;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="{{ d.slotId }}" src="{{ d.src }}" shape="rect" placeholder="Detail" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:11px;font-size:12px;color:#8A8C7E;">{{ cs.detailCaption }}</div>
+        </div>
+      </sc-for>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental craft</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">What the surface demands.</div>
+        <div style="margin-top:clamp(28px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+          <sc-for list="{{ envCraft }}" as="c" hint-placeholder-count="4">
+            <div style="background:#FBFAF7;padding:clamp(20px,2.4vw,28px);">
+              <div style="font-size:14.5px;color:#1F211C;">{{ c.title }}</div>
+              <div style="margin-top:9px;font-size:13.5px;line-height:1.65;color:#8A8C7E;">{{ c.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
+        <sc-if value="{{ showVehicle }}">
+          <div onClick="{{ goVehicle }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
+        </sc-if>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- VEHICLE GRAPHICS — hidden until images are uploaded (showVehicleGraphics prop) -->
+    <sc-if value="{{ isVehicle }}">
+      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="veh-hero" src="{{ vehHeroSrc }}" shape="rect" placeholder="Wrapped vehicle in its environment" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Wraps &amp; fleets</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</div>
+        <div style="margin-top:22px;max-width:720px;font-size:16px;line-height:1.8;color:#1F211C;">I led vehicle graphics end to end &mdash; measuring vehicles on site, working directly with clients on the brief, and preflighting artwork so the design survived the jump to a curved, paneled metal surface. A wrap is unforgiving: what looks right flat can break across a wheel arch or a door seam.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Featured project</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(28px,3.8vw,50px);line-height:1.05;">The 14-vehicle fleet.</div>
+        <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Fourteen wraps across different vehicle types, one design system. The challenge wasn't drawing it once &mdash; it was holding it consistent across vehicles with different proportions, panel breaks, and surface geometry, so the fleet reads as one brand parked side by side.</div>
+      </div>
+
+      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+        <image-slot id="veh-fleet-hero" src="{{ vehFleetHeroSrc }}" shape="rect" placeholder="Fleet lineup — wide" style="display:block;width:100%;aspect-ratio:21/9;"></image-slot>
+        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Fleet lineup &mdash; the system as it reads across the full set.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;">One system, four body types</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(12px,1.8vw,18px);">
+          <sc-for list="{{ fleetTypes }}" as="t" hint-placeholder-count="4">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:4/3;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="veh-fleet-type-{{ t.key }}" src="{{ t.src }}" shape="rect" placeholder="{{ t.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">{{ t.label }} &mdash; {{ t.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;">Where the system adapts</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:clamp(12px,1.8vw,18px);">
+          <sc-for list="{{ fleetDetails }}" as="d" hint-placeholder-count="4">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="{{ d.slotId }}" src="{{ d.src }}" shape="rect" placeholder="{{ d.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">{{ d.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:clamp(24px,3vw,32px);max-width:700px;font-size:15px;line-height:1.8;color:#1F211C;">Fourteen vehicles meant fourteen measurement sets, fourteen preflight passes, and one install calendar. I sequenced the artwork so production was never waiting on approvals, tracked revisions per vehicle so nothing was applied from a stale file, and kept sales, client, and installers working from the same schedule. All fourteen delivered on time.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Project range</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">By vehicle type.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
+          <sc-for list="{{ vehicleTypes }}" as="v" hint-placeholder-count="4">
+            <div style="min-width:0;">
+              <div style="width:100%;aspect-ratio:3/2;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="veh-type-{{ v.key }}" src="{{ v.src }}" shape="rect" placeholder="{{ v.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:12px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.8vw,23px);">{{ v.label }}</div>
+              <div style="margin-top:7px;font-size:13px;line-height:1.65;color:#8A8C7E;max-width:420px;">{{ v.challenge }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Team leadership</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Running the work, not just doing it.</div>
+        <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">I managed a small team through this work &mdash; delegating projects, carrying my own workload alongside theirs, and keeping every job on schedule. I was the point of contact between sales, client, and production, which meant every change request, measurement correction, and install date came through me and went out documented.</div>
+      </div>
+
+      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+        <div onClick="{{ goStorefront }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
+        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- RETAIL + PACKAGING LANDING -->
+    <sc-if value="{{ isRetailLanding }}">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</div>
+        <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
+      </div>
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
+          <sc-for list="{{ retailSubcats }}" as="sub" hint-placeholder-count="2">
+            <div onClick="{{ sub.select }}" style="cursor:pointer;">
+              <div style="aspect-ratio:4/5;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="retail-landing-{{ sub.slug }}" src="images/retail-landing-{{ sub.slug }}.webp" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot></div>
+              </div>
+              <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ sub.kicker }}</div>
+              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.2vw,30px);">{{ sub.label }}</div>
+              <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#8A8C7E;max-width:440px;">{{ sub.description }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- RETAIL SUBCATEGORY PAGES -->
+    <sc-if value="{{ isRetailSubcat }}">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ backToRetailLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
+      </div>
+
+      <sc-if value="{{ isStaedtlerPkg }}">
+        <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Ongoing Body of Work</div>
+          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,72px);line-height:1;">STAEDTLER Packaging</div>
+          <div style="margin-top:14px;max-width:680px;font-size:15.5px;line-height:1.75;color:#1F211C;">An ongoing collection of packaging projects for Staedtler's consumer line, including updates to existing packaging designed to hold brand consistency across the range.</div>
+        </div>
+
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Before / After</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
+            <div>
+              <image-slot id="staedtler-pkg-before" src="images/staedtler-pkg-before.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
+            </div>
+            <div>
+              <image-slot id="staedtler-pkg-after" src="images/staedtler-pkg-after.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(14px,2vw,24px);">
+            <div>
+              <image-slot id="staedtler-pkg-before-2" src="images/staedtler-pkg-before-2.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
+            </div>
+            <div>
+              <image-slot id="staedtler-pkg-after-2" src="images/staedtler-pkg-after-2.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
+            </div>
+          </div>
+        </div>
+
+        <div data-anchor="progression" style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">The Progression · One Example</div>
+          <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#efece3;">
+            <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
+              <image-slot id="progression-{{ $index }}" src="images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
+            </sc-for>
+            <div style="position:absolute;left:20px;bottom:20px;font-size:12px;letter-spacing:0.06em;color:#1F211C;background:#FBFAF7;padding:6px 12px;">{{ progressionCaption }}</div>
+            <div onClick="{{ prevSlide }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
+            <div onClick="{{ nextSlide }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">›</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
+              <div onClick="{{ slide.select }}" style="cursor:pointer;width:8px;height:8px;border-radius:50%;background:{{ slide.dotColor }};"></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Gallery</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,20px);">
+            <sc-for list="{{ staedtlerPkgGallery }}" as="g" hint-placeholder-count="6">
+              <div>
+                <div class="{{ g.containerClass }}" style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">
+                  <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
+                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ g.multi }}" hint-placeholder-val="{{ true }}">
+                  <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
+                    <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
+                      <div onClick="{{ frame.select }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ frame.dotColor }};transition:background 0.25s ease;"></div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMlbPresto }}">
+        <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+          <image-slot id="mlb-hero" src="images/mlb-hero.webp" shape="rect" placeholder="Campaign key visual" style="width:100%;height:100%;"></image-slot>
+        </div>
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Campaign</div>
+          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(32px,5vw,64px);line-height:1;">MLB The Show 24 × PRESTO</div>
+          <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">PlayStation · MLB · Metrolinx</div>
+        </div>
+
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) 0;">
+          <div style="border-top:1px solid #dedad2;border-bottom:1px solid #dedad2;padding:clamp(24px,3vw,32px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:24px;">
+            <div>
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Role</div>
+              <div style="font-size:14px;color:#1F211C;">Packaging Designer (production &amp; print files)</div>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Deliverables</div>
+              <div style="font-size:14px;color:#1F211C;">Packaging artwork, dielines, print production</div>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Partners</div>
+              <div style="font-size:14px;color:#1F211C;">PlayStation, MLB, Metrolinx</div>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Year</div>
+              <div style="font-size:14px;color:#1F211C;">2024</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="max-width:900px;margin:0 auto;padding:clamp(48px,7vw,72px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Overview</div>
+          <div style="font-size:16px;line-height:1.8;color:#1F211C;">A limited-run packaging and promotional launch built around the MLB The Show 24 partnership with Metrolinx's PRESTO card. I did the creative and artwork for the card and packaging, and led the print-ready dielines through production.</div>
+        </div>
+
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">The Card / Packaging</div>
+          <image-slot id="mlb-packaging" src="{{ mlbPackagingSrc }}" shape="rect" placeholder="Card &amp; packaging, large" style="width:100%;aspect-ratio:16/10;"></image-slot>
+          <div style="margin-top:10px;font-size:12px;color:#8A8C7E;">Packaging — printed card pack; creative and artwork by me.</div>
+        </div>
+
+        <div style="width:100%;padding:clamp(56px,8vw,88px) 0 0;">
+          <div style="max-width:1240px;margin:0 auto clamp(16px,2vw,20px);padding:0 clamp(20px,4vw,48px);"><span style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Dielines</span></div>
+          <div style="width:100%;aspect-ratio:21/9;">
+            <image-slot id="mlb-dielines" src="{{ mlbDielinesSrc }}" shape="rect" placeholder="Technical flat dieline artwork" style="width:100%;height:100%;"></image-slot>
+          </div>
+          <div style="max-width:1240px;margin:10px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Dielines — production-ready flats I built to spec for die-cutting and print.</div>
+        </div>
+
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px) 0;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Final Product</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(14px,2vw,20px);">
+            <sc-for list="{{ mlbIllustrations }}" as="g" hint-placeholder-count="3">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="mlb-illustration-{{ $index }}" src="{{ g.src }}" shape="rect" placeholder="Produced piece" style="width:100%;height:100%;"></image-slot></div></div>
+            </sc-for>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:#8A8C7E;">Final product — the printed, produced pieces as they shipped.</div>
+        </div>
+
+        <div style="width:100%;padding:clamp(56px,8vw,88px) 0 0;">
+          <div style="max-width:900px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(16px,2vw,20px);"><span style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Video</span></div>
+          <div style="max-width:900px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
+            <div style="width:100%;aspect-ratio:16/9;background:#1F211C;">
+              <iframe width="100%" height="100%" style="display:block;border:none;" src="https://www.youtube-nocookie.com/embed/KJMarEwuNc8" title="MLB The Show 24 x PRESTO launch video" allowfullscreen="true"></iframe>
+            </div>
+            <div style="margin-top:10px;font-size:12px;color:#8A8C7E;">Video — launch film for the campaign.</div>
+            <div style="margin-top:14px;font-size:12px;color:#8A8C7E;max-width:640px;">My role: creative and artwork for the card and packaging, plus print production and dielines.</div>
+          </div>
+        </div>
+
+      </sc-if>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,80px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(56px,8vw,80px);display:flex;justify-content:space-between;">
+        <div onClick="{{ prevSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
+        <div onClick="{{ nextSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
+      </div>
+      <div style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </div>
+    </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- CONTACT -->
+  <sc-if value="{{ isContact }}">
+    <div style="animation:fadeIn 0.6s ease;max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
+      <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Contact</div>
+      <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:44px;">Let's talk.</div>
+
+      <div class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(30px,5vw,64px);align-items:start;">
+        <div>
+          <div style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
+            <input placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <input placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <textarea placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
+            <div style="cursor:pointer;align-self:flex-start;margin-top:8px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:14px 32px;">Send Message</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Email</div>
+            <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali11patel@gmail.com</a>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Phone</div>
+            <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;font-size:15px;">416-550-7557</a>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Instagram</div>
+            <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;font-size:15px;">@dipali_11</a>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">LinkedIn</div>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
+          </div>
+          <a href="#" download="Dipali-Patel-Resume.pdf" title="Add your resume PDF file to this link" style="margin-top:8px;display:inline-block;text-align:center;cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;padding:14px 28px;color:#1F211C;text-decoration:none;">Download Resume</a>
+        </div>
+      </div>
+
+      <div style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(36px,5vw,48px);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Instagram</div>
+          <a href="https://instagram.com/dipali_11" target="_blank" style="font-size:13px;color:#1F211C;text-decoration:none;">@dipali_11 →</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));gap:10px;">
+          <sc-for list="{{ igTiles }}" as="t" hint-placeholder-count="6">
+            <image-slot id="{{ t.slotId }}" src="{{ t.src }}" shape="rect" placeholder="Instagram" style="width:100%;aspect-ratio:1/1;"></image-slot>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#B5BE4A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Palette&quot;, &quot;options&quot;: [&quot;#B5BE4A&quot;, &quot;#C9D44F&quot;, &quot;#A8B33C&quot;, &quot;#D2DC5A&quot;]}, &quot;showDigital&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Noris 122 page&quot;, &quot;label&quot;: &quot;Show Digital &amp; e-commerce phase&quot;}, &quot;showVehicleGraphics&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Environmental / Signage&quot;, &quot;label&quot;: &quot;Show Vehicle Graphics section&quot;}}">
+
+const WORK_CATEGORIES = [
+  {
+    slug: 'staedtler', label: 'STAEDTLER', kicker: 'Current Role', span: 1, ratio: '4/5',
+    title: 'Staedtler', subtitle: 'Design Lead & Marketing Specialist',
+    intro: "Leading design across Staedtler's North American consumer line — packaging, retail presence, and integrated digital campaigns that bring new products to market. I also manage Staedtler's Instagram and Facebook, running the brand's day-to-day social presence alongside the campaign work.",
+    hasBeforeAfter: false, inProgress: false, showCaseStudy: true, showSocialFeed: true, galleryCount: 6,
+    challenge: "Staedtler's product range spans dozens of SKUs across back-to-school, art, and technical categories — each with its own retail moment, but all needing to read as one brand.",
+    approach: "I built and maintain a system of templates and guidelines that let the team move fast without losing consistency, then apply it across packaging, POS, and campaign assets.",
+    result: "Faster turnaround on seasonal launches and a shelf presence that holds together whether you're looking at one product or fifty."
+  },
+  {
+    slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Selected Work', span: 1, ratio: '4/5',
+    title: 'Retail + Packaging', subtitle: 'Packaging artwork & production-accurate mockups',
+    intro: "Packaging artwork, production-accurate physical mockups, and updates to existing lines — a selection of the packaging work I've designed and brought to shelf.",
+    hasBeforeAfter: true, inProgress: false, showCaseStudy: false, galleryCount: 9
+  },
+  {
+    slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Flagship Case Study', span: 1, ratio: '4/5',
+    title: 'Integrated Digital Campaign', subtitle: 'Multi-channel launches, end to end',
+    intro: "From promotional emails and social content to Amazon brand pages and product imagery, giveaways, and influencer & PR box launches — this is brand consistency stress-tested across every channel a campaign touches.",
+    hasBeforeAfter: false, inProgress: false, showCaseStudy: true, galleryCount: 8,
+    challenge: "A single launch needed to look and feel identical whether a customer saw it in their inbox, on Instagram, on Amazon, or in an influencer's unboxing video.",
+    approach: "I built each campaign from one creative core — key art, messaging, and system — then adapted it channel by channel: email, paid and organic social, Amazon A+ content, contest landing pages, and PR box design.",
+    result: "Cohesive multi-platform launches that scaled from a single hero image to dozens of channel-specific assets without diluting the brand."
+  },
+  {
+    slug: 'environmental-signage', label: 'Environmental / Signage', kicker: 'Selected Work', span: 1, ratio: '4/5',
+    title: 'Environmental / Signage', subtitle: 'Large-format & vehicle graphics',
+    intro: "Signage and large-format work, including a 14-vehicle wrap program kept consistent across food trucks, commercial vehicles, and trailers — a selection of the environmental and vehicle work I've designed.",
+    hasBeforeAfter: true, inProgress: false, showCaseStudy: false, galleryCount: 9
+  },
+  {
+    slug: 'passion', label: 'Passion', kicker: 'Personal Work', span: 1, ratio: '4/5',
+    title: 'Passion', subtitle: 'Personal projects, taste, and things I make for myself',
+    intro: "A running set of personal work — styling, mood boards, and pieces made just because I wanted to make them. It's less about a portfolio category and more about the eye behind the client work: how I look at color, silhouette, and composition when nobody's briefed me.",
+    hasBeforeAfter: false, inProgress: true, showCaseStudy: false, galleryCount: 4,
+    note: "This section is personal by design — a look at taste and interests outside client work, updated as I make new things worth sharing."
+  }
+];
+
+const SKILLS = ['Illustrator','Photoshop','InDesign','After Effects','Premiere Pro','Adobe XD','Lightroom','Animate','CorelDRAW','Affinity Designer','Figma','Canva','Cinema 4D','Blender','Maya'];
+
+const imgSrc = (id) => SAVED_IMAGES.has(id) ? 'images/' + id + '.webp' : '';
+const vidSrc = (id) => SAVED_VIDEOS.has(id) ? 'videos/' + id + '.mp4' : '';
+
+const DIDI_SCOPE = ['Identity', 'Artwork', 'Bags', 'Jewelry', 'Packaging', 'Shop', 'Photography']
+  .map(label => ({ label }));
+
+const DIDI_IDENTITY = [
+  { key: 'logo', label: 'Logo', note: 'The mark, drawn from the same hand as the prints.' },
+  { key: 'wordmark', label: 'Wordmark', note: 'Set to sit on a label at an inch wide and still read.' },
+  { key: 'palette', label: 'Palette', note: 'Pulled from the dyes and papers actually used.' },
+  { key: 'type', label: 'Type', note: 'One pairing, carried across tags, cards, and shop.' },
+];
+
+const DIDI_CRAFT = [
+  { key: 'screenprint', label: 'Screen printing', note: 'Each design pulled by hand — small variations left in rather than corrected out.' },
+  { key: 'stitching', label: 'Hand-stitched labels', note: 'Sewn in one at a time, the detail that tells you a person made it.' },
+  { key: 'jewelry', label: 'Jewelry making', note: 'Beads strung and finished at the same table as the bags.' },
+  { key: 'paper', label: 'Handmade paper', note: 'Thank-you cards pressed from paper I made, so the last touch is handmade too.' },
+];
+
+const PASSION_PROJECTS = [
+  {
+    key: 'colourism', slug: 'decolonizing-colourism',
+    label: 'Decolonizing Colourism', kicker: 'Three-part illustration series',
+    description: 'An illustration series confronting colourism and the beauty standards it enforces.',
+    concept: "A three-part illustration series about colourism — the preference for lighter skin that runs quietly through South Asian culture and the beauty industry that profits from it. I wanted to make something that sat with the subject rather than resolving it neatly, so the series works as three related images instead of one statement.",
+    processTitle: 'Sketch to series.',
+    processNote: 'Working out three images that hold together as a set — shared palette, shared framing, three different moments.',
+    process: [
+      { label: 'Early sketches' }, { label: 'Composition studies' },
+      { label: 'Palette tests' }, { label: 'In progress' },
+    ],
+    finalTitle: 'The series.',
+    finalPlaceholder: 'Series — all three panels together, wide',
+    finalCaption: 'The full series — read together, the three panels build the argument.',
+    finalRatio: '21/9',
+    heroPlaceholder: 'Finished illustration — strongest panel',
+    finals: [
+      { label: 'Panel one', ratio: '4/5' },
+      { label: 'Panel two', ratio: '4/5' },
+      { label: 'Panel three', ratio: '4/5' },
+    ],
+  },
+  {
+    key: 'create2', slug: 'create-2',
+    label: 'CREATE #2', kicker: 'Hand-crafted object',
+    description: 'A hand-crafted mirror — a physical object made from reclaimed materials.',
+    concept: "A mirror, made by hand from materials I already had. It began as an exercise in using what was around me instead of buying new, and became an object about framing — what a mirror asks you to look at, and what the frame around it says while you do.",
+    processTitle: 'Material first.',
+    processNote: 'Reclaimed material sorted, cut, and finished — the shape followed what the pieces allowed.',
+    process: [
+      { label: 'Reclaimed materials' }, { label: 'Cutting and shaping' },
+      { label: 'Assembly' }, { label: 'Finishing' },
+    ],
+    finalTitle: 'The mirror.',
+    finalPlaceholder: 'Mirror — finished, front on',
+    finalCaption: 'Finished piece — shot front on, with the frame doing the talking.',
+    finalRatio: '16/9',
+    heroPlaceholder: 'Finished mirror — hero shot',
+    finals: [
+      { label: 'Three-quarter view', ratio: '4/5' },
+      { label: 'Edge and depth', ratio: '4/5' },
+      { label: 'Detail — surface and finish', ratio: '4/5' },
+      { label: 'In place, on a wall', ratio: '4/5' },
+    ],
+  },
+];
+
+const ENV_SUBCATS = [
+  { slug: 'storefront-interior', label: 'Storefront & Interior Graphics', kicker: 'Four Client Projects', description: 'Window, wall, and interior graphics for bridal retail, beauty, healthcare, and industrial supply — each a different visual language on the same process.' },
+  { slug: 'vehicle-graphics', label: 'Vehicle Graphics', kicker: 'Wraps & Fleets', description: 'Food trucks, commercial vehicles, trailers, and personal cars — including a 14-vehicle fleet held to one design system.' },
+];
+
+const ENV_PROCESS = [
+  { n: '01', title: 'Measure', body: 'On-site survey and measurement, building accurate templates before a single line is drawn.' },
+  { n: '02', title: 'Consult', body: 'Working directly with clients to define the brief and what the surface needs to say.' },
+  { n: '03', title: 'Design', body: 'Artwork built to the real geometry of the surface — panels, curves, mullions, door seams, and glass breaks.' },
+  { n: '04', title: 'Approve', body: 'Coordinating revisions between sales and client on tight schedules, documenting every change.' },
+  { n: '05', title: 'Preflight', body: 'Production-ready files: scale, bleed, panel splits, color, and substrate specs.' },
+  { n: '06', title: 'Install', body: 'The finished result on site, verifying the design translated from digital to physical.' },
+];
+
+const SF_CASES = [
+  {
+    key: 'av-bridal', name: 'AV Bridal', sector: 'Bridal retail',
+    brief: 'A bridal boutique needed its storefront to read as considered and unhurried — the window is the first fitting-room impression, and it had to signal craft without obscuring the gowns behind it.',
+    constraint: 'Privacy and daylight pulled in opposite directions. Frosted vinyl at the right height screened the fitting area while leaving the display glass clear.',
+    detailCaption: 'Frosted vinyl at seated eye level — screening without darkening the room.',
+    details: 3,
+  },
+  {
+    key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty',
+    brief: 'A salon wanting presence on a busy street — legible at traffic speed, then rewarding up close once you are through the door.',
+    constraint: 'One identity working at two viewing distances: full-height window type read from across the street, interior graphics scaled for three feet away at the chair.',
+    detailCaption: 'Cut vinyl on glass — weights adjusted so the same mark holds at both distances.',
+    details: 3,
+  },
+  {
+    key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare',
+    brief: 'A dental practice needing a calm, clinical face to the street and interior graphics that carry patients through the space without feeling institutional.',
+    constraint: 'Existing glass seams cut straight through the natural logo placement. The layout was rebuilt around the mullions so no element lands on a break.',
+    detailCaption: 'Wayfinding and window film — set out from the mullions, not fighting them.',
+    details: 3,
+  },
+  {
+    key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply',
+    brief: 'An industrial supplier whose branch needed to be findable and unmistakable from the road, in a category where clarity beats decoration.',
+    constraint: 'Large-format panels across an uneven facade, with door swings and access panels to work around — artwork split so no seam falls mid-wordmark.',
+    detailCaption: 'Printed panels and cut vinyl — splits planned to land between letterforms.',
+    details: 3,
+  },
+];
+
+const ENV_CRAFT = [
+  { title: 'Site survey & measurement', body: 'Every project starts on site with a tape measure. Templates built from real dimensions, not architectural drawings that no longer match the building.' },
+  { title: 'Viewing distance & legibility', body: 'Type that works from across a street is not type that works three feet away in a waiting room. Each surface gets sized for how it is actually read.' },
+  { title: 'Material & substrate', body: 'Frosted vinyl, perforated window film, cut vinyl, printed panels, backlit — chosen for light, privacy, durability, and the surface underneath.' },
+  { title: 'Architectural constraints', body: 'Mullions, door swings, existing glass seams, and access panels all move artwork. Designing around them is most of the job.' },
+];
+
+const VEHICLE_TYPES = [
+  { key: 'food-truck', label: 'Food trucks', challenge: 'Service windows, wheel arches, and equipment housings interrupt every panel — the layout has to survive holes cut out of it.' },
+  { key: 'commercial', label: 'Commercial vehicles', challenge: 'Corporate identity at highway speed, repeated across a fleet where every unit must read the same from a moving lane.' },
+  { key: 'trailers', label: 'Trailers', challenge: 'The largest flat canvas in the category, and the least forgiving — scale errors show instantly across a 20-foot side.' },
+  { key: 'personal', label: 'Personal vehicles', challenge: 'Tighter curves and compound surfaces, where artwork distorts fastest and placement is measured in inches.' },
+];
+
+const RETAIL_SUBCATS = [
+  { slug: 'staedtler-packaging', label: 'STAEDTLER Packaging', kicker: 'Ongoing Body of Work', description: "An ongoing body of packaging design for Staedtler's consumer line, including updates to existing packaging." },
+  { slug: 'mlb-presto', label: 'MLB The Show 24 × PRESTO', kicker: 'Campaign', description: "A single named launch campaign with PlayStation, MLB, and Metrolinx — card, packaging, dielines, and more." }
+];
+
+// Slots whose image file actually exists in images/. Add an id here only after
+// the file is written — see CLAUDE.md.
+const SAVED_IMAGES = new Set([
+  'stae-surface-packaging', 'stae-surface-print', 'stae-surface-print-2', 'stae-surface-print-3',
+  'stae-surface-social', 'stae-ecom-browser', 'stae-email-body',
+  'mlb-packaging', 'mlb-dielines',
+  'mlb-illustration-0', 'mlb-illustration-1', 'mlb-illustration-2',
+  'stae-mockup-hero', 'stae-mockup-0', 'stae-mockup-1', 'stae-mockup-2',
+  'stae-hsn-hero', 'stae-hsn-0', 'stae-hsn-1', 'stae-hsn-2', 'stae-hsn-3',
+  'stae-hsn-4', 'stae-hsn-5',
+  'noris-hero', 'noris-guidelines', 'noris-pullup-full',
+  'noris-sample-0-front', 'noris-sample-0-back',
+  'noris-sample-1-front', 'noris-sample-1-back', 'noris-sample-1-detail',
+  'noris-pkg-0', 'noris-pkg-1', 'noris-pkg-2', 'noris-pkg-3',
+  'noris-launch-0', 'noris-pr-0', 'noris-merch-0', 'noris-merch-1',
+  'env-hero', 'env-landing-storefront-interior',
+  'env-process-01', 'env-process-02', 'env-process-03',
+  'env-process-04', 'env-process-05', 'env-process-06',
+  'sf-hero',
+  'sf-sector-av-bridal', 'sf-sector-hair-lab', 'sf-sector-habit-dental', 'sf-sector-emco',
+  'sf-av-bridal-before', 'sf-av-bridal-after',
+  'sf-av-bridal-detail-0', 'sf-av-bridal-detail-1', 'sf-av-bridal-detail-2',
+  'sf-hair-lab-before',
+  'sf-hair-lab-detail-0', 'sf-hair-lab-detail-1', 'sf-hair-lab-detail-2',
+]);
+
+// Video files committed to videos/. Add an id only after the file is written.
+const SAVED_VIDEOS = new Set([]);
+
+class Component extends DCLogic {
+  state = { view: 'home', cat: 'staedtler', subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging' };
+
+  // Deliverables line reflects what the page actually shows.
+  get _deliverables() { return this.props.showDigital ? 'Packaging, sample cards, retail print, digital ads, Amazon brand page, PR boxes, merchandise' : 'Packaging, sample cards, retail print, PR boxes, merchandise'; }
+
+  PHASES = [
+    { n: '01', id: 'packaging', label: 'Brand & packaging' },
+    { n: '02', id: 'retail',    label: 'Retail & print' },
+    { n: '03', id: 'digital',   label: 'Digital & e-commerce' },
+    { n: '04', id: 'launch',    label: 'The launch campaign' },
+    { n: '05', id: 'pr',        label: 'PR boxes' },
+    { n: '06', id: 'merch',     label: 'Merchandise' },
+  ];
+
+  componentDidMount() {
+    this._onScroll = () => {
+      if (this.state.view !== 'work' || this.state.cat !== 'digital-campaign') return;
+      const nodes = document.querySelectorAll('[data-phase]');
+      if (!nodes.length) return;
+      let best = null, bestDist = Infinity;
+      nodes.forEach(n => {
+        const d = Math.abs(n.getBoundingClientRect().top - 140);
+        if (d < bestDist) { bestDist = d; best = n.getAttribute('data-phase'); }
+      });
+      if (best && best !== this.state.activePhase) this.setState({ activePhase: best });
+    };
+    window.addEventListener('scroll', this._onScroll, true);
+    window.addEventListener('resize', this._onScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll, true);
+    window.removeEventListener('resize', this._onScroll);
+  }
+
+  goProgression = () => {
+    this.setState({ view: 'work', cat: 'retail-packaging', subcat: 'staedtler-packaging', menuOpen: false }, () => {
+      // Images load after mount, so the document grows and any early scrollTo is
+      // clamped. Re-issue each frame until the anchor settles at the target offset.
+      const OFFSET = 100, DEADLINE = performance.now() + 2500;
+      const settle = () => {
+        const el = document.querySelector('[data-anchor="progression"]');
+        if (!el) { if (performance.now() < DEADLINE) requestAnimationFrame(settle); return; }
+        const delta = el.getBoundingClientRect().top - OFFSET;
+        if (Math.abs(delta) < 4 || performance.now() > DEADLINE) return;
+        window.scrollTo({ top: window.pageYOffset + delta, behavior: 'auto' });
+        requestAnimationFrame(settle);
+      };
+      requestAnimationFrame(settle);
+    });
+  };
+
+  goPhase = (id) => {
+    const el = document.querySelector('[data-phase="' + id + '"]');
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 110;
+    window.scrollTo({ top, behavior: 'smooth' });
+    this.setState({ activePhase: id });
+  };
+  progressionLabels = ['Concept', 'Design', 'Dieline', 'Mockups', 'Final Product'];
+
+  goHome = () => this.setState({ view: 'home', menuOpen: false });
+  goAbout = () => this.setState({ view: 'about', menuOpen: false });
+  goContact = () => this.setState({ view: 'contact', menuOpen: false });
+  goWorkDefault = () => this.setState({ view: 'work', cat: this.state.cat || 'staedtler', subcat: null, menuOpen: false });
+  openWorkMenu = () => this.setState({ menuOpen: true });
+  closeWorkMenu = () => this.setState({ menuOpen: false });
+  selectCategory = (slug) => this.setState({ view: 'work', cat: slug, subcat: null, menuOpen: false });
+  selectSubcat = (slug) => this.setState({ view: 'work', cat: 'retail-packaging', subcat: slug, menuOpen: false });
+  backToRetailLanding = () => this.setState({ subcat: null });
+  selectEnvSubcat = (slug) => this.setState({ view: 'work', cat: 'environmental-signage', subcat: slug, menuOpen: false });
+  selectPassionSubcat = (slug) => this.setState({ view: 'work', cat: 'passion', subcat: slug, menuOpen: false });
+  backToEnvLanding = () => this.setState({ subcat: null });
+
+  renderVals() {
+    const view = this.state.view;
+    const catIndex = WORK_CATEGORIES.findIndex(c => c.slug === this.state.cat);
+    const current = WORK_CATEGORIES[catIndex] || WORK_CATEGORIES[0];
+    const idx = catIndex === -1 ? 0 : catIndex;
+    const prevIdx = (idx - 1 + WORK_CATEGORIES.length) % WORK_CATEGORIES.length;
+    const nextIdx = (idx + 1) % WORK_CATEGORIES.length;
+
+    const workCategories = WORK_CATEGORIES.map(c => ({
+      ...c,
+      select: () => this.selectCategory(c.slug)
+    }));
+
+    const currentCategory = {
+      ...current,
+      galleryItems: Array.from({ length: current.galleryCount }, (_, i) => ({
+        slotId: 'gal-' + current.slug + '-' + i,
+        src: imgSrc('gal-' + current.slug + '-' + i),
+      })),
+      beforeSrc: imgSrc('ba-before-' + current.slug),
+      afterSrc: imgSrc('ba-after-' + current.slug)
+    };
+
+    const isRetailPackaging = view === 'work' && current.slug === 'retail-packaging';
+    const isDigitalCampaign = view === 'work' && current.slug === 'digital-campaign';
+    const isStaedtlerPage = view === 'work' && current.slug === 'staedtler';
+    const isEnvironmental = view === 'work' && current.slug === 'environmental-signage';
+    const showVehicle = this.props.showVehicleGraphics ?? false;
+    const isPassion = view === 'work' && current.slug === 'passion';
+    const sub = this.state.subcat;
+    const ppIndex = PASSION_PROJECTS.findIndex(p => p.slug === sub);
+    // DIDI + the two short projects form one prev/next ring
+    const passionRing = [{ slug: null, label: 'DIDI Tote Bags' }].concat(
+      PASSION_PROJECTS.map(p => ({ slug: p.slug, label: p.label }))
+    );
+    const pp = ppIndex === -1 ? null : (() => {
+      const p = PASSION_PROJECTS[ppIndex];
+      const ringPos = ppIndex + 1;
+      const prev = passionRing[(ringPos - 1 + passionRing.length) % passionRing.length];
+      const next = passionRing[(ringPos + 1) % passionRing.length];
+      const goRing = (slug) => () => slug === null
+        ? this.selectPassionSubcat('didi')
+        : this.selectPassionSubcat(slug);
+      return {
+        ...p,
+        heroSrc: imgSrc(p.key + '-hero'),
+        finalSrc: imgSrc(p.key + '-final'),
+        process: p.process.map((s, i) => ({
+          ...s, slotId: p.key + '-process-' + i, src: imgSrc(p.key + '-process-' + i),
+        })),
+        finals: p.finals.map((f, i) => ({
+          ...f, slotId: p.key + '-final-' + i, src: imgSrc(p.key + '-final-' + i),
+        })),
+        prevLabel: prev.label, nextLabel: next.label,
+        goPrev: goRing(prev.slug), goNext: goRing(next.slug),
+      };
+    })();
+
+    // Digital & e-commerce is built but empty — kept in the source, hidden until
+    // there are assets for it. Numbers renumber so the sequence has no gap.
+    const showDigital = this.props.showDigital ?? false;
+    const visiblePhases = this.PHASES
+      .filter(p => p.id !== 'digital' || showDigital)
+      .map((p, i) => ({ ...p, n: String(i + 1).padStart(2, '0') }));
+    const num = (id) => {
+      const hit = visiblePhases.find(p => p.id === id);
+      return hit ? hit.n : '';
+    };
+    const subcat = this.state.subcat;
+    const subIdx = RETAIL_SUBCATS.findIndex(s => s.slug === subcat);
+    const otherSubIdx = subIdx === 0 ? 1 : 0;
+
+    const retailSubcats = RETAIL_SUBCATS.map(s => ({
+      ...s,
+      select: () => this.selectSubcat(s.slug)
+    }));
+
+    return {
+      isHome: view === 'home',
+      isAbout: view === 'about',
+      isWork: view === 'work',
+      isContact: view === 'contact',
+      isGenericCategory: view === 'work' && !isRetailPackaging && !isDigitalCampaign && !isStaedtlerPage && !isEnvironmental && !isPassion,
+      isPassionLanding: isPassion && !sub,
+      isDidi: isPassion && sub === 'didi',
+      isPassionProject: isPassion && ppIndex !== -1,
+      pp,
+      backToPassion: () => this.setState({ subcat: null }),
+      goDidi: () => this.selectPassionSubcat('didi'),
+      goColourism: () => this.selectPassionSubcat('decolonizing-colourism'),
+      passionHeroSrc: imgSrc('passion-hero'),
+      didiTileSrc: imgSrc('passion-tile-didi'),
+      didiHeroSrc: imgSrc('didi-hero'),
+      didiProductHeroSrc: imgSrc('didi-product-hero'),
+      didiShopSrc: imgSrc('didi-shop'),
+      shopFrameHeight: 520,
+      passionSmallProjects: PASSION_PROJECTS.map(p => ({
+        key: p.key, label: p.label, kicker: p.kicker, description: p.description,
+        src: imgSrc('passion-tile-' + p.key),
+        go: () => this.selectPassionSubcat(p.slug),
+      })),
+      didiScope: DIDI_SCOPE,
+      didiIdentity: DIDI_IDENTITY.map(d => ({ ...d, src: imgSrc('didi-identity-' + d.key) })),
+      didiCraft: DIDI_CRAFT.map(c => ({ ...c, src: imgSrc('didi-craft-' + c.key) })),
+      didiMotion: [
+        { label: 'Logo animation', caption: 'Logo animation — the mark drawing itself, built for the shop and feed.', src: vidSrc('didi-motion-0') },
+        { label: 'Brand loop', caption: 'Brand loop — print and product cut together as a short repeating clip.', src: vidSrc('didi-motion-1') },
+      ],
+      didiProduct: [
+        { label: 'Tote — front', caption: 'Bag — the screen-printed face, shot square for the shop grid.' },
+        { label: 'Print detail', caption: 'Print detail — ink sitting on the weave, texture left visible.' },
+        { label: 'Stitched label', caption: 'Hand-stitched label — sewn in individually on every bag.' },
+        { label: 'Jewelry', caption: 'Handmade jewelry — attached to each piece, made alongside it.' },
+      ].map((p, i) => ({ ...p, src: imgSrc('didi-product-' + i) })),
+      didiTexture: [
+        { label: 'Print texture' }, { label: 'Stitch close-up' },
+        { label: 'Bead detail' }, { label: 'Pressed paper' },
+      ].map((t, i) => ({ ...t, src: imgSrc('didi-texture-' + i) })),
+      didiReels: [
+        { label: 'Screen printing', caption: 'Reel — pulling a screen, start to finish.' },
+        { label: 'Stitching labels', caption: 'Reel — labels sewn in by hand.' },
+        { label: 'Packing an order', caption: 'Reel — an order packed, from bag to handmade card.' },
+      ].map((r, i) => ({ ...r, src: vidSrc('didi-reel-' + i) })),
+      didiPhotography: [
+        { label: 'Product shoot', caption: 'Product shoot — styled and shot at home, natural light only.' },
+        { label: 'Styled still life', caption: 'Still life — bag with jewelry and card, the full unboxing in one frame.' },
+        { label: 'In use', caption: 'In use — the bag carried, so scale reads correctly.' },
+      ].map((p, i) => ({ ...p, src: imgSrc('didi-photo-' + i) })),
+      didiFeed: Array.from({ length: 9 }, (_, i) => ({ src: imgSrc('didi-feed-' + i) })),
+      isEnvLanding: isEnvironmental && !(showVehicle && this.state.subcat === 'vehicle-graphics') && !this.state.subcat,
+      isStorefront: isEnvironmental && this.state.subcat === 'storefront-interior',
+      showVehicle: showVehicle,
+      isVehicle: showVehicle && isEnvironmental && this.state.subcat === 'vehicle-graphics',
+      backToEnvLanding: this.backToEnvLanding,
+      goStorefront: () => this.selectEnvSubcat('storefront-interior'),
+      goVehicle: () => this.selectEnvSubcat('vehicle-graphics'),
+      envSubcats: ENV_SUBCATS.filter(s => showVehicle || s.slug !== 'vehicle-graphics').map(s => ({ ...s, src: imgSrc('env-landing-' + s.slug), select: () => this.selectEnvSubcat(s.slug) })),
+      envProcess: ENV_PROCESS.map(p => ({ ...p, src: imgSrc('env-process-' + p.n) })),
+      envHeroSrc: imgSrc('env-hero'),
+      sfHeroSrc: imgSrc('sf-hero'),
+      vehHeroSrc: imgSrc('veh-hero'),
+      vehFleetHeroSrc: imgSrc('veh-fleet-hero'),
+      envCraft: ENV_CRAFT,
+      vehicleTypes: VEHICLE_TYPES.map(v => ({ ...v, src: imgSrc('veh-type-' + v.key) })),
+      sfClients: [
+        { key: 'av-bridal', name: 'AV Bridal', sector: 'Bridal retail' },
+        { key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty' },
+        { key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare' },
+        { key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply' },
+      ].map(c => ({ ...c, src: imgSrc('sf-sector-' + c.key) })),
+      sfCases: SF_CASES.map(c => ({
+        ...c,
+        beforeSrc: imgSrc('sf-' + c.key + '-before'),
+        afterSrc: imgSrc('sf-' + c.key + '-after'),
+        details: Array.from({ length: c.details }, (_, i) => ({
+          slotId: 'sf-' + c.key + '-detail-' + i,
+          src: imgSrc('sf-' + c.key + '-detail-' + i),
+        })),
+      })),
+      fleetTypes: [
+        { key: 'truck', label: 'Box truck', note: 'the full system, uninterrupted' },
+        { key: 'van', label: 'Cargo van', note: 'compressed to a shorter flank' },
+        { key: 'trailer', label: 'Trailer', note: 'scaled up without thinning' },
+        { key: 'pickup', label: 'Pickup', note: 'split across bed and cab' },
+      ].map(t => ({ ...t, src: imgSrc('veh-fleet-type-' + t.key) })),
+      fleetDetails: [
+        { label: 'Wheel arch — artwork cropped, mark intact' },
+        { label: 'Door seam — split planned between elements' },
+        { label: 'Rear doors — system meeting across the gap' },
+        { label: 'Cab curve — type set back off the bend' },
+      ].map((d, i) => ({ ...d, slotId: 'veh-fleet-detail-' + i, src: imgSrc('veh-fleet-detail-' + i) })),
+      isStaedtlerPage,
+      ecomFrameHeight: 560,
+      brandSurfaces: [
+        { key: 'packaging', label: 'Packaging', note: 'On shelf, at every size in the range.', count: 1 },
+        { key: 'print', label: 'Print', note: 'Flyers, brochures, and sample-pack inserts.', count: 3 },
+        { key: 'social', label: 'Social', note: 'Feed content across three channels.', count: 1 },
+      ].map((s) => {
+        const multi = s.count > 1;
+        const sel = (this.state.surfaceSel || {})[s.key];
+        const pinned = multi && sel !== undefined && sel !== null;
+        return {
+          ...s,
+          multi,
+          containerClass: multi ? (pinned ? 'auto-cycle pinned' : 'auto-cycle') : '',
+          frames: Array.from({ length: s.count }, (_, f) => {
+            const active = pinned ? sel === f : f === 0;
+            return {
+              // frame 0 keeps the original id so existing uploads survive
+              slotId: 'stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)),
+              // only point at a file that exists — an src for a missing file
+              // renders a broken image AND hides the drop placeholder
+              src: SAVED_IMAGES.has('stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)))
+                ? 'images/stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)) + '.webp'
+                : '',
+              label: multi ? s.label + ' ' + (f + 1) : s.label,
+              frameClass: multi ? (pinned && sel === f ? 'auto-img show-frame' : 'auto-img') : 'solo-img',
+              delayStyle: (f * 3) + 's',
+              // hover zoom on the static tiles only — a zoom under the Print
+              // crossfade would fight the opacity animation
+              zoomClass: multi ? '' : 'tilescale',
+              pointerEvents: active ? 'auto' : 'none',
+              // while unpinned the dot tracks the CSS animation; once pinned it
+              // becomes a plain static indicator
+              dotClass: multi && !pinned ? 'auto-dot' : '',
+              delay: (f * 3) + 's',
+              dotColor: active ? 'var(--accent)' : '#D8D4C8',
+              select: () => this.setState(st => ({ surfaceSel: { ...(st.surfaceSel || {}), [s.key]: f } })),
+            };
+          }),
+        };
+      }),
+      capabilities: [
+        { n: '01', title: 'Product packaging', body: 'New artwork, plus updating existing packaging to new standards while preserving the brand.' },
+        { n: '02', title: 'Production mockups', body: 'Clean, correctly sized, near-production-quality physical mockups sent to buyers for approval before manufacturing.' },
+        { n: '03', title: 'Sales & retail materials', body: 'Promotional flyers for sales reps, brochures for active deals, and printed inserts for sample packs.' },
+        { n: '04', title: 'Email marketing', body: 'Promotional and event emails to the mailing list.' },
+        { n: '05', title: 'E-commerce', body: 'Amazon product imagery and full brand-page artwork across the entire catalog.' },
+        { n: '06', title: 'Social media', body: 'Instagram, Facebook, and LinkedIn: content creation, scheduling, and community engagement.' },
+        { n: '07', title: 'Campaigns', body: 'Proposing and fully executing giveaways, drawing contests, and product launches.' },
+        { n: '08', title: 'Influencer & PR', body: 'Sourcing creators, coordinating logistics, and shipping PR boxes for launches.' },
+        { n: '09', title: 'Team leadership', body: 'Directing a design team producing product-based cards for HSN.' },
+      ],
+      staeMockupHeroSrc: imgSrc('stae-mockup-hero'),
+      staeMockups: Array.from({ length: 3 }, (_, i) => ({ slotId: 'stae-mockup-' + i, src: imgSrc('stae-mockup-' + i) })),
+      staeChannels: [
+        { label: 'Instagram', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Facebook', url: 'https://www.facebook.com/STAEDTLERNorthAmerica/' },
+        { label: 'LinkedIn', url: 'https://www.linkedin.com/company/staedtler/' },
+      ],
+      // swap each url for the real permalink to that post
+      staeFeed: [
+        { label: 'Campaign post', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Product post', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Giveaway', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Drawing contest', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Product post', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Campaign post', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Community post', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Giveaway', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Product post', url: 'https://www.instagram.com/staedtler_na/' },
+      ],
+      growthStats: [
+        { value: '+362%', label: 'Instagram follower growth' },
+        { value: '+114%', label: 'Facebook follower growth' },
+        { value: '+198%', label: 'Combined audience growth' },
+        { value: '1.03%', label: 'Instagram engagement rate' },
+      ],
+      growthAxis: [
+        { label: 'Oct 2024' }, { label: 'Apr 2025' }, { label: 'Oct 2025' },
+        { label: 'Apr 2026' }, { label: 'Aug 2026' },
+      ],
+      growthAxisNote: 'Indexed to 100 at October 2024',
+      growthSupporting: [
+        { value: '1.03%', label: 'Instagram engagement', note: 'Above Facebook at 0.8% — growth without diluting engagement.' },
+        { value: '691', label: 'Posts published', note: 'Across both channels since late 2024.' },
+        { value: '16M+', label: 'Reach', note: 'Approximate scale across managed channels.' },
+        { value: '28M+', label: 'Impressions', note: 'Approximate scale across managed channels.' },
+      ],
+      // swap to the video only once videos/stae-hsn-hero.mp4 exists — a slot
+      // pointing at a missing file hides the saved hero image behind an empty
+      // drop state
+      hsnHeroVideoReady: SAVED_VIDEOS.has('stae-hsn-hero'),
+      hsnHeroImageOnly: !SAVED_VIDEOS.has('stae-hsn-hero'),
+      staeHsn: Array.from({ length: 6 }, (_, i) => ({
+        src: SAVED_IMAGES.has('stae-hsn-' + i) ? 'images/stae-hsn-' + i + '.webp' : '',
+      })),
+      staeFeatured: [
+        { key: 'retail', kicker: 'Case study', label: 'Retail + Packaging', note: 'Packaging artwork, mockups, and before/after updates.', go: () => this.selectCategory('retail-packaging') },
+        { key: 'noris', kicker: 'Flagship launch', label: 'Noris 122', note: 'A North American product launch, start to finish.', go: () => this.selectCategory('digital-campaign') },
+      ],
+      isDigitalCampaign,
+      amazonFrameHeight: 660,
+      amazonTabs: [{ title: 'STAEDTLER Noris 122 — Amazon' }, { title: 'Brand Store' }],
+      showDigital,
+      deliverables: this._deliverables,
+      nPackaging: num('packaging'),
+      nRetail: num('retail'),
+      nDigital: num('digital'),
+      nLaunch: num('launch'),
+      nPr: num('pr'),
+      nMerch: num('merch'),
+      phases: visiblePhases.map(p => ({
+        ...p,
+        go: () => this.goPhase(p.id),
+        railColor: this.state.activePhase === p.id ? '#1F211C' : '#8A8C7E',
+        railNum: this.state.activePhase === p.id ? '#5B2A5E' : '#B6B3A8',
+        railBorder: this.state.activePhase === p.id ? 'var(--accent)' : '#E8E4DC',
+      })),
+      norisHeroSrc: imgSrc('noris-hero'),
+      norisGuidelinesSrc: imgSrc('noris-guidelines'),
+      norisAmazonPageSrc: imgSrc('noris-amazon-page'),
+      // 4 tiles: pack fronts, styled in-context, and the two dielines
+      norisPackaging: Array.from({ length: 4 }, (_, i) => ({ slotId: 'noris-pkg-' + i, src: imgSrc('noris-pkg-' + i) })),
+      norisPrintTiles: [
+        { key: 'sample-0', caption: 'Sample card', sides: ['front', 'back'] },
+        { key: 'sample-1', caption: 'Insert Flyer', sides: ['front', 'back', 'detail', 'detail-2'] },
+        { key: 'pullup',   caption: 'Pull-up banner', sides: ['full', 'detail'] },
+      ].map((t) => {
+        const sel = (this.state.printSel || {})[t.key];
+        const pinned = sel !== undefined && sel !== null;
+        const niceLabel = { front: 'Front', back: 'Back', detail: 'Detail', 'detail-2': 'Detail 2', full: 'Full banner' };
+        return {
+          key: t.key,
+          caption: t.caption,
+          containerClass: pinned ? 'duo-item pinned' : 'duo-item',
+          frames: t.sides.map((side, f) => {
+            const active = pinned ? sel === f : f === 0;
+            return {
+              slotId: 'noris-' + t.key + '-' + side,
+              src: imgSrc('noris-' + t.key + '-' + side),
+              label: t.caption + ' — ' + niceLabel[side],
+              frameClass: pinned && sel === f ? 'duo-img show-frame' : 'duo-img',
+              pointerEvents: active ? 'auto' : 'none',
+              dotColor: active ? 'var(--accent)' : '#dedad2',
+              select: () => this.setState(st => ({ printSel: { ...(st.printSel || {}), [t.key]: f } })),
+            };
+          }),
+        };
+      }),
+      norisDigital: Array.from({ length: 2 }, (_, i) => ({ slotId: 'noris-digital-' + i, src: imgSrc('noris-digital-' + i) })),
+      norisAmazonProduct: Array.from({ length: 2 }, (_, i) => ({ slotId: 'noris-amazon-product-' + i, src: imgSrc('noris-amazon-product-' + i) })),
+      norisLaunch: [
+        { handle: '@handle', url: 'https://instagram.com/', note: 'Giveaway post — swap in the creator handle and post link.' },
+        { handle: '@handle', url: 'https://instagram.com/', note: 'Creator content — swap in the creator handle and post link.' },
+      ].map((p, i) => ({ ...p, slotId: 'noris-launch-' + i, src: imgSrc('noris-launch-' + i) })),
+      norisCreators: [
+        { handle: '@always.upper.elementary', url: 'https://instagram.com/', label: 'Reel recap', note: 'Classroom haul featuring the 122 in daily use.' },
+        { handle: '@7daysofplay', url: 'https://instagram.com/', label: 'Reel recap', note: 'Unboxing of the PR box, filmed start to finish.' },
+        { handle: '@ms.craft_kindergarten', url: 'https://instagram.com/', label: 'Reel recap', note: 'Back-to-school setup built around the launch kit.' },
+      ],
+      norisPr: Array.from({ length: 3 }, (_, i) => ({ slotId: 'noris-pr-' + i, src: imgSrc('noris-pr-' + i) })),
+      norisMerch: Array.from({ length: 4 }, (_, i) => ({ slotId: 'noris-merch-' + i, src: imgSrc('noris-merch-' + i) })),
+      goProgression: this.goProgression,
+      isRetailLanding: isRetailPackaging && !subcat,
+      isRetailSubcat: isRetailPackaging && !!subcat,
+      isStaedtlerPkg: isRetailPackaging && subcat === 'staedtler-packaging',
+      isMlbPresto: isRetailPackaging && subcat === 'mlb-presto',
+      retailSubcats,
+      backToRetailLanding: this.backToRetailLanding,
+      prevSubcatLabel: subIdx !== -1 ? RETAIL_SUBCATS[otherSubIdx].label : '',
+      nextSubcatLabel: subIdx !== -1 ? RETAIL_SUBCATS[otherSubIdx].label : '',
+      prevSubcat: () => this.selectSubcat(RETAIL_SUBCATS[otherSubIdx].slug),
+      nextSubcat: () => this.selectSubcat(RETAIL_SUBCATS[otherSubIdx].slug),
+      // One entry per gallery tile = how many view files exist for it in
+      // images/. A tile never renders more frames than it has files, so an
+      // empty frame (broken image + dead cycle step) is impossible.
+      staedtlerPkgGallery: [3, 4, 2, 2, 4, 4].map((frameCount, i) => {
+        const sel = (this.state.frameSel || {})[i];
+        const editing = sel !== undefined && sel !== null;
+        return {
+          index: i,
+          frameCount,
+          multi: frameCount > 1,
+          containerClass: (editing ? 'cycle-item pinned' : 'cycle-item') + ' cyc' + frameCount,
+          resetFrames: () => this.setState(s => ({ frameSel: { ...(s.frameSel || {}), [i]: null } })),
+          frames: Array.from({ length: frameCount }, (_, f) => {
+            const active = editing ? sel === f : f === 0;
+            return {
+              label: `View ${f + 1} of ${frameCount}`,
+              number: f + 1,
+              frameClass: editing && sel === f ? 'cycle-img show-frame' : 'cycle-img',
+              pointerEvents: active ? 'auto' : 'none',
+              dotColor: active ? 'var(--accent)' : '#dedad2',
+              select: () => this.setState(s => ({ frameSel: { ...(s.frameSel || {}), [i]: f } }))
+            };
+          })
+        };
+      }),
+      progressionCaption: this.progressionLabels[this.state.progressionIndex],
+      prevSlide: () => this.setState(s => ({ progressionIndex: (s.progressionIndex - 1 + this.progressionLabels.length) % this.progressionLabels.length })),
+      nextSlide: () => this.setState(s => ({ progressionIndex: (s.progressionIndex + 1) % this.progressionLabels.length })),
+      progressionSlides: this.progressionLabels.map((label, i) => ({
+        label,
+        opacity: i === this.state.progressionIndex ? 1 : 0,
+        pointerEvents: i === this.state.progressionIndex ? 'auto' : 'none',
+        dotColor: i === this.state.progressionIndex ? 'var(--accent)' : '#dedad2',
+        select: () => this.setState({ progressionIndex: i })
+      })),
+      mlbPackagingSrc: imgSrc('mlb-packaging'),
+      mlbDielinesSrc: imgSrc('mlb-dielines'),
+      mlbIllustrations: Array.from({ length: 3 }, (_, i) => ({ slotId: 'mlb-illustration-' + i, src: imgSrc('mlb-illustration-' + i) })),
+      homeUnderline: view === 'home' ? '#5B2A5E' : 'transparent',
+      aboutUnderline: view === 'about' ? '#5B2A5E' : 'transparent',
+      workUnderline: view === 'work' ? '#5B2A5E' : 'transparent',
+      contactUnderline: view === 'contact' ? '#1F211C' : 'transparent',
+      menuOpen: this.state.menuOpen,
+      goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
+      goWorkDefault: this.goWorkDefault, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
+      workCategories,
+      currentCategory,
+      prevCategoryLabel: WORK_CATEGORIES[prevIdx].label,
+      nextCategoryLabel: WORK_CATEGORIES[nextIdx].label,
+      prevCategory: () => this.selectCategory(WORK_CATEGORIES[prevIdx].slug),
+      nextCategory: () => this.selectCategory(WORK_CATEGORIES[nextIdx].slug),
+      accentColor: this.props.accentColor ?? '#B5BE4A',
+      skills: SKILLS.map(name => ({ name })),
+      aboutPortraitSrc: imgSrc('about-portrait'),
+      igTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'ig-' + i, src: imgSrc('ig-' + i) })),
+      staedtlerIgTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-ig-' + i, src: imgSrc('staedtler-ig-' + i) })),
+      staedtlerFbTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-fb-' + i, src: imgSrc('staedtler-fb-' + i) }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>
