@@ -139,9 +139,9 @@
 
       <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
-        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(14px,2vw,24px);">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
-            <div onClick="{{ cat.select }}" style="cursor:pointer;flex:1 1 min(300px,100%);max-width:360px;">
+            <div onClick="{{ cat.select }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" style="width:100%;height:100%;"></image-slot></div>
               </div>
@@ -1646,7 +1646,7 @@
 
 const WORK_CATEGORIES = [
   {
-    slug: 'staedtler', label: 'STAEDTLER', kicker: 'Current Role', ratio: '4/5',
+    slug: 'staedtler', label: 'STAEDTLER', kicker: 'Current Role', span: 1, ratio: '4/5',
     title: 'Staedtler', subtitle: 'Design Lead & Marketing Specialist',
     intro: "Leading design across Staedtler's North American consumer line — packaging, retail presence, and integrated digital campaigns that bring new products to market. I also manage Staedtler's Instagram and Facebook, running the brand's day-to-day social presence alongside the campaign work.",
     hasBeforeAfter: false, inProgress: false, showCaseStudy: true, showSocialFeed: true, galleryCount: 6,
@@ -1655,13 +1655,13 @@ const WORK_CATEGORIES = [
     result: "Faster turnaround on seasonal launches and a shelf presence that holds together whether you're looking at one product or fifty."
   },
   {
-    slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Selected Work', ratio: '4/5',
+    slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Selected Work', span: 1, ratio: '4/5',
     title: 'Retail + Packaging', subtitle: 'Packaging artwork & production-accurate mockups',
     intro: "Packaging artwork, production-accurate physical mockups, and updates to existing lines — a selection of the packaging work I've designed and brought to shelf.",
     hasBeforeAfter: true, inProgress: false, showCaseStudy: false, galleryCount: 9
   },
   {
-    slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Flagship Case Study', ratio: '4/5',
+    slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Flagship Case Study', span: 1, ratio: '4/5',
     title: 'Integrated Digital Campaign', subtitle: 'Multi-channel launches, end to end',
     intro: "From promotional emails and social content to Amazon brand pages and product imagery, giveaways, and influencer & PR box launches — this is brand consistency stress-tested across every channel a campaign touches.",
     hasBeforeAfter: false, inProgress: false, showCaseStudy: true, galleryCount: 8,
@@ -1670,13 +1670,13 @@ const WORK_CATEGORIES = [
     result: "Cohesive multi-platform launches that scaled from a single hero image to dozens of channel-specific assets without diluting the brand."
   },
   {
-    slug: 'environmental-signage', label: 'Environmental / Signage', kicker: 'Selected Work', ratio: '4/5',
+    slug: 'environmental-signage', label: 'Environmental / Signage', kicker: 'Selected Work', span: 1, ratio: '4/5',
     title: 'Environmental / Signage', subtitle: 'Large-format & vehicle graphics',
     intro: "Signage and large-format work, including a 14-vehicle wrap program kept consistent across food trucks, commercial vehicles, and trailers — a selection of the environmental and vehicle work I've designed.",
     hasBeforeAfter: true, inProgress: false, showCaseStudy: false, galleryCount: 9
   },
   {
-    slug: 'passion', label: 'Passion', kicker: 'Personal Work', ratio: '4/5',
+    slug: 'passion', label: 'Passion', kicker: 'Personal Work', span: 1, ratio: '4/5',
     title: 'Passion', subtitle: 'Personal projects, taste, and things I make for myself',
     intro: "A running set of personal work — styling, mood boards, and pieces made just because I wanted to make them. It's less about a portfolio category and more about the eye behind the client work: how I look at color, silhouette, and composition when nobody's briefed me.",
     hasBeforeAfter: false, inProgress: true, showCaseStudy: false, galleryCount: 4,
