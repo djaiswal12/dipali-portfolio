@@ -4,8 +4,8 @@
   "trailingSlash": false,
 
   "redirects": [
-    { "source": "/resume", "destination": "/Dipali-Patel-Resume.pdf", "permanent": false },
-    { "source": "/cv", "destination": "/Dipali-Patel-Resume.pdf", "permanent": false }
+    { "source": "/resume", "destination": "/about", "permanent": false },
+    { "source": "/cv", "destination": "/about", "permanent": false }
   ],
 
   "rewrites": [

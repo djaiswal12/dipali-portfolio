@@ -2,22 +2,13 @@
 
 Brand design portfolio. Static site, no build step, deployed on Vercel.
 
-**Live:** https://dipali-portfolio-psi.vercel.app
+**Live:** https://dipali-design.digital
 
 ---
 
 ## ⚠️ Setup still required
 
-Three things need doing before the site is fully functional. Nothing here is
-optional — each one is a visible dead end for a visitor until it's done.
-
-### 1. Add the resume PDF
-
-Drop `Dipali-Patel-Resume.pdf` into the repo root. The "Download Resume" button
-links to `/resume`, which `vercel.json` redirects to that filename. Until the
-file exists, that button 404s.
-
-### 2. Configure contact form email
+### 1. Configure contact form email
 
 The form posts to `/api/contact`, which sends through [Resend](https://resend.com).
 In **Vercel → Project → Settings → Environment Variables**, add:
@@ -34,33 +25,40 @@ deployments don't pick up new values.
 Without the key the form still validates and still gives the visitor a clear
 message pointing at the direct email address — it fails safe, not silently.
 
+### 2. Point the domain at Vercel
+
+`dipali-design.digital` is already written into the metadata (see below), but
+DNS still needs configuring: **Vercel → Project → Settings → Domains**, add the
+domain, then set the records at your registrar. Until that resolves, the
+canonical URL and share card point somewhere that doesn't answer.
+
 ### 3. Turn on analytics
 
 **Vercel → Project → Analytics** and **Speed Insights**, both free on Hobby. The
 script tags are already in `index.html`; until the features are enabled they
-404 harmlessly. Custom events already wired: `resume_download` and
-`contact_form_submit`.
+404 harmlessly. Custom event wired: `contact_form_submit`.
+
+### 4. Fill in the earlier roles
+
+`/about` has an experience timeline driven by the `EXPERIENCE` array in
+`index.html`. Only the Staedtler role is populated — the earlier history was
+left out rather than guessed. See the comment above that array.
 
 ---
 
-## When the custom domain goes live
+## The site origin
 
-The absolute URL is written in four files. Social unfurlers (Slack, LinkedIn,
-iMessage) don't run JavaScript, so these have to be static — they can't be
-computed at runtime. Find and replace this exact string:
-
-```
-https://dipali-portfolio-psi.vercel.app
-```
-
-in:
+`https://dipali-design.digital` is hardcoded in four files. Social unfurlers
+(Slack, LinkedIn, iMessage) don't run JavaScript, so this has to be static — it
+can't be computed at runtime. If the domain ever changes, find and replace it in:
 
 - `index.html` — canonical, `og:url`, `og:image`, `twitter:image`, JSON-LD
 - `sitemap.xml` — every `<loc>`
 - `robots.txt` — the `Sitemap:` line
 - `README.md` — the link at the top
 
-Then submit the sitemap in [Google Search Console](https://search.google.com/search-console).
+Once DNS resolves, submit the sitemap in
+[Google Search Console](https://search.google.com/search-console).
 
 ---
 

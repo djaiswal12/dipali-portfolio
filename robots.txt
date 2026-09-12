@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Update this host when the custom domain goes live.
-Sitemap: https://dipali-portfolio-psi.vercel.app/sitemap.xml
+Sitemap: https://dipali-design.digital/sitemap.xml

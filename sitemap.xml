@@ -2,19 +2,19 @@
 <!-- Every URL here only resolves because of the SPA rewrite in vercel.json.
      Update the host throughout when the custom domain goes live. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://dipali-portfolio-psi.vercel.app/</loc><priority>1.0</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/about</loc><priority>0.9</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/contact</loc><priority>0.8</priority></url>
+  <url><loc>https://dipali-design.digital/</loc><priority>1.0</priority></url>
+  <url><loc>https://dipali-design.digital/about</loc><priority>0.9</priority></url>
+  <url><loc>https://dipali-design.digital/contact</loc><priority>0.8</priority></url>
 
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/staedtler</loc><priority>0.9</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/retail-packaging</loc><priority>0.9</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/retail-packaging/staedtler-packaging</loc><priority>0.7</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/retail-packaging/mlb-presto</loc><priority>0.7</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/digital-campaign</loc><priority>0.9</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/environmental-signage</loc><priority>0.9</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/environmental-signage/storefront-interior</loc><priority>0.7</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/environmental-signage/vehicle-graphics</loc><priority>0.7</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/passion</loc><priority>0.6</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/passion/decolonizing-colourism</loc><priority>0.5</priority></url>
-  <url><loc>https://dipali-portfolio-psi.vercel.app/work/passion/create-2</loc><priority>0.5</priority></url>
+  <url><loc>https://dipali-design.digital/work/staedtler</loc><priority>0.9</priority></url>
+  <url><loc>https://dipali-design.digital/work/retail-packaging</loc><priority>0.9</priority></url>
+  <url><loc>https://dipali-design.digital/work/retail-packaging/staedtler-packaging</loc><priority>0.7</priority></url>
+  <url><loc>https://dipali-design.digital/work/retail-packaging/mlb-presto</loc><priority>0.7</priority></url>
+  <url><loc>https://dipali-design.digital/work/digital-campaign</loc><priority>0.9</priority></url>
+  <url><loc>https://dipali-design.digital/work/environmental-signage</loc><priority>0.9</priority></url>
+  <url><loc>https://dipali-design.digital/work/environmental-signage/storefront-interior</loc><priority>0.7</priority></url>
+  <url><loc>https://dipali-design.digital/work/environmental-signage/vehicle-graphics</loc><priority>0.7</priority></url>
+  <url><loc>https://dipali-design.digital/work/passion</loc><priority>0.6</priority></url>
+  <url><loc>https://dipali-design.digital/work/passion/decolonizing-colourism</loc><priority>0.5</priority></url>
+  <url><loc>https://dipali-design.digital/work/passion/create-2</loc><priority>0.5</priority></url>
 </urlset>
