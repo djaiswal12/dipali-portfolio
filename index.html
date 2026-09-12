@@ -230,7 +230,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
+      <div data-anchor="selected-work" style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
@@ -346,7 +346,7 @@
     <div style="animation:fadeIn 0.6s ease;">
     <sc-if value="{{ isGenericCategory }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
@@ -454,7 +454,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">STAEDTLER</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</h1>
         <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">One brand, every surface it touches — across the North American business.</div>
@@ -734,7 +734,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Integrated Digital Campaign</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">STAEDTLER Noris<span style="font-size:0.5em;vertical-align:super;">®</span> 122</div>
         <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">STAEDTLER · North American product launch</div>
@@ -951,7 +951,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</h1>
         <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
@@ -1287,7 +1287,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</h1>
         <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
@@ -1532,7 +1532,7 @@
     <!-- RETAIL + PACKAGING LANDING -->
     <sc-if value="{{ isRetailLanding }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</h1>
         <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
@@ -2035,7 +2035,11 @@ const SAVED_VIDEOS = new Set([]);
 const ROUTE_SUBCATS = {
   'retail-packaging': RETAIL_SUBCATS,
   'environmental-signage': ENV_SUBCATS,
-  'passion': PASSION_PROJECTS,
+  // 'didi' is a real passion subview (goDidi -> isDidi) but has no
+  // PASSION_PROJECTS entry, so it has to be listed explicitly. Without it the
+  // router rejects /work/passion/didi and silently drops you on the passion
+  // landing when that URL is reloaded, shared, or reached with Back.
+  'passion': PASSION_PROJECTS.concat([{ slug: 'didi', label: 'DIDI Tote Bags' }]),
 };
 
 // state -> "/work/retail-packaging/mlb-presto"
@@ -2188,6 +2192,26 @@ class Component extends DCLogic {
   goAbout = () => this.setState({ view: 'about', menuOpen: false });
   goContact = () => this.setState({ view: 'contact', menuOpen: false });
   goWorkDefault = () => this.setState({ view: 'work', cat: this.state.cat || 'staedtler', subcat: null, menuOpen: false });
+
+  /* "← All Work" was wired to goWorkDefault, which sets view:'work' with the
+     CURRENT category and subcat:null. Every one of the six places that button
+     appears is already a category landing in exactly that state, so the click
+     changed nothing and the link looked dead.
+
+     There is no dedicated all-work index; the home page's Selected Work grid is
+     that index. Go there and land on the grid rather than the hero, so the
+     button does what its label says. */
+  goAllWork = () => {
+    this._skipScrollOnce = true;
+    this.setState({ view: 'home', subcat: null, menuOpen: false }, () => {
+      requestAnimationFrame(() => {
+        const el = document.querySelector('[data-anchor="selected-work"]');
+        if (!el) { window.scrollTo({ top: 0, behavior: 'auto' }); return; }
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 90;
+        window.scrollTo({ top: top, behavior: 'auto' });
+      });
+    });
+  };
   openWorkMenu = () => this.setState({ menuOpen: true });
   closeWorkMenu = () => this.setState({ menuOpen: false });
   selectCategory = (slug) => this.setState({ view: 'work', cat: slug, subcat: null, menuOpen: false });
@@ -2598,10 +2622,20 @@ class Component extends DCLogic {
       isMlbPresto: isRetailPackaging && subcat === 'mlb-presto',
       retailSubcats,
       backToRetailLanding: this.backToRetailLanding,
-      prevSubcatLabel: subIdx !== -1 ? RETAIL_SUBCATS[otherSubIdx].label : '',
-      nextSubcatLabel: subIdx !== -1 ? RETAIL_SUBCATS[otherSubIdx].label : '',
-      prevSubcat: () => this.selectSubcat(RETAIL_SUBCATS[otherSubIdx].slug),
-      nextSubcat: () => this.selectSubcat(RETAIL_SUBCATS[otherSubIdx].slug),
+      /* Both of these used to point at otherSubIdx, so with two subcategories
+         "← Prev" and "Next →" carried the SAME label and went to the SAME page
+         — the pair read as a loop. Now it is a linear chain with the landing
+         page as the terminus at both ends, which is what the Environmental
+         subcategories already do. Adding a third subcategory needs no change. */
+      prevSubcatLabel: subIdx > 0 ? RETAIL_SUBCATS[subIdx - 1].label : 'Retail + Packaging',
+      nextSubcatLabel: (subIdx !== -1 && subIdx < RETAIL_SUBCATS.length - 1)
+        ? RETAIL_SUBCATS[subIdx + 1].label : 'Retail + Packaging',
+      prevSubcat: () => subIdx > 0
+        ? this.selectSubcat(RETAIL_SUBCATS[subIdx - 1].slug)
+        : this.backToRetailLanding(),
+      nextSubcat: () => (subIdx !== -1 && subIdx < RETAIL_SUBCATS.length - 1)
+        ? this.selectSubcat(RETAIL_SUBCATS[subIdx + 1].slug)
+        : this.backToRetailLanding(),
       // One entry per gallery tile = how many view files exist for it in
       // images/. A tile never renders more frames than it has files, so an
       // empty frame (broken image + dead cycle step) is impossible.
@@ -2665,7 +2699,7 @@ class Component extends DCLogic {
                      : this.state.contactState === 'ok' ? '#4A6B32' : '#8A8C7E',
 
       goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
-      goWorkDefault: this.goWorkDefault, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
+      goWorkDefault: this.goWorkDefault, goAllWork: this.goAllWork, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
       workCategories,
       currentCategory,
       prevCategoryLabel: WORK_CATEGORIES[prevIdx].label,
