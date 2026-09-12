@@ -1,8 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ==========================================================================
+     SITE ORIGIN — the ONLY place the absolute URL is written.
+     When the custom domain goes live, find/replace this exact string
+     everywhere in this file and in sitemap.xml + robots.txt:
+         https://dipali-portfolio-psi.vercel.app
+     Social unfurlers (Slack, LinkedIn, iMessage) do not run JavaScript,
+     so these tags must stay static HTML — they cannot be set at runtime.
+     ========================================================================== -->
+
+<title>Dipali Patel — Brand Designer &amp; Marketing Specialist</title>
+<meta name="description" content="Brand designer and marketing specialist. Design Lead at Staedtler North America — packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta name="author" content="Dipali Patel">
+<link rel="canonical" href="https://dipali-portfolio-psi.vercel.app/">
+<meta name="theme-color" content="#FBFAF7">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dipali Patel">
+<meta property="og:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
+<meta property="og:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta property="og:url" content="https://dipali-portfolio-psi.vercel.app/">
+<meta property="og:image" content="https://dipali-portfolio-psi.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dipali Patel — brand design portfolio">
+<meta property="og:locale" content="en_CA">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
+<meta name="twitter:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta name="twitter:image" content="https://dipali-portfolio-psi.vercel.app/og-image.jpg">
+<meta name="twitter:image:alt" content="Dipali Patel — brand design portfolio">
+
+<!-- Icons -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Structured data: lets Google show this as a person/portfolio result -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Dipali Patel",
+  "jobTitle": "Brand Designer & Marketing Specialist",
+  "description": "Brand designer and marketing specialist working across packaging, retail presence, and integrated digital campaigns.",
+  "url": "https://dipali-portfolio-psi.vercel.app/",
+  "image": "https://dipali-portfolio-psi.vercel.app/og-image.jpg",
+  "email": "mailto:dipali11patel@gmail.com",
+  "telephone": "+1-416-550-7557",
+  "address": { "@type": "PostalAddress", "addressRegion": "Ontario", "addressCountry": "CA" },
+  "worksFor": { "@type": "Organization", "name": "Staedtler" },
+  "sameAs": [
+    "https://linkedin.com/in/dipali-patel-profile",
+    "https://instagram.com/dipali_11"
+  ],
+  "knowsAbout": ["Brand Design", "Packaging Design", "Art Direction", "Marketing", "Retail Design"]
+}
+</script>
+
+<!-- Vercel Web Analytics + Speed Insights. Both need switching on in the Vercel
+     dashboard (Project → Analytics / Speed Insights); until then these 404
+     harmlessly. The va() stub queues custom events fired before the script
+     loads — see trackResume and the contact form success path. -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+
 <script src="./support.js"></script>
 </head>
 <body>
@@ -18,6 +88,22 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     html, body { margin: 0; padding: 0; background: #FBFAF7; }
     * { box-sizing: border-box; }
+    /* Visually hidden but still read by screen readers — used for the form
+       labels and the honeypot, neither of which should be visible. */
+    .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+          overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+    /* Keyboard users need to see where they are; the builder removed all outlines. */
+    a:focus-visible, button:focus-visible, input:focus-visible,
+    textarea:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--plum); outline-offset: 3px;
+    }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200;
+      background: #1F211C; color: #FBFAF7; padding: 12px 20px; font-size: 14px; }
+    .skip-link:focus { left: 12px; top: 12px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    }
     ::selection { background: var(--plum); color: #FBFAF7; }
     a { color: #1F211C; }
     a:hover { color: var(--plum); }
@@ -101,33 +187,40 @@
 
 <div style="background:#FBFAF7;min-height:100vh;color:#1F211C;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;--accent:{{ accentColor }};--plum:#5B2A5E;">
 
-  <!-- NAV -->
-  <div style="position:sticky;top:0;z-index:50;background:#FBFAF7;border-bottom:1px solid #dedad2;">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- NAV. The nav items were clickable divs, which meant no keyboard user could
+       reach them and no screen reader announced them as controls. They are real
+       buttons now; the inline resets keep the rendering identical to the divs
+       they replaced. -->
+  <header style="position:sticky;top:0;z-index:50;background:#FBFAF7;border-bottom:1px solid #dedad2;">
     <div style="max-width:1240px;margin:0 auto;padding:clamp(14px,2vw,20px) clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-      <div onClick="{{ goHome }}" style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,2vw,22px);letter-spacing:0.04em;cursor:pointer;font-weight:500;">DIPALI PATEL</div>
-      <div style="display:flex;align-items:center;gap:clamp(16px,3vw,36px);flex-wrap:wrap;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
-        <div onClick="{{ goHome }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ homeUnderline }};">Home</div>
-        <div onClick="{{ goAbout }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ aboutUnderline }};">About</div>
+      <button type="button" onClick="{{ goHome }}" aria-label="Dipali Patel — go to home" style="background:none;border:none;padding:0;color:inherit;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,2vw,22px);letter-spacing:0.04em;cursor:pointer;font-weight:500;">DIPALI PATEL</button>
+      <nav aria-label="Primary" style="display:flex;align-items:center;gap:clamp(16px,3vw,36px);flex-wrap:wrap;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
+        <button type="button" onClick="{{ goHome }}" aria-current="{{ homeCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ homeUnderline }};">Home</button>
+        <button type="button" onClick="{{ goAbout }}" aria-current="{{ aboutCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ aboutUnderline }};">About</button>
         <div style="position:relative;" onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}">
-          <div onClick="{{ goWorkDefault }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ workUnderline }};">Work</div>
+          <button type="button" onClick="{{ goWorkDefault }}" aria-current="{{ workCurrent }}" aria-expanded="{{ menuOpen }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ workUnderline }};">Work</button>
           <sc-if value="{{ menuOpen }}">
             <div style="position:absolute;top:100%;left:0;background:#FBFAF7;border:1px solid #dedad2;min-width:260px;padding:6px 0;box-shadow:0 12px 24px rgba(32,31,28,0.08);">
               <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
-                <div onClick="{{ cat.select }}" style="padding:12px 18px;cursor:pointer;font-size:12.5px;letter-spacing:0.06em;" class="navdrop">{{ cat.label }}</div>
+                <button type="button" onClick="{{ cat.select }}" style="display:block;width:100%;text-align:left;background:none;border:none;color:inherit;font-family:inherit;padding:12px 18px;cursor:pointer;font-size:12.5px;letter-spacing:0.06em;" class="navdrop">{{ cat.label }}</button>
               </sc-for>
             </div>
           </sc-if>
         </div>
-        <div onClick="{{ goContact }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ contactUnderline }};">Contact</div>
-      </div>
+        <button type="button" onClick="{{ goContact }}" aria-current="{{ contactCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ contactUnderline }};">Contact</button>
+      </nav>
     </div>
-  </div>
+  </header>
+
+  <main id="main">
 
   <!-- HOME -->
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
     <div style="animation:fadeIn 0.6s ease;">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px) clamp(24px,4vw,40px);">
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(46px,9vw,120px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(46px,9vw,120px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</h1>
         <div style="margin-top: 18px; max-width: 640px; font-size: clamp(16px,2vw,20px); line-height: 1.6; color: #8A8C7E; font-style: italic; font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif">
           Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
         </div>
@@ -143,7 +236,7 @@
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
             <div onClick="{{ cat.select }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" style="width:100%;height:100%;"></image-slot></div>
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.6vw,24px);">{{ cat.label }}</div>
@@ -163,17 +256,17 @@
           <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
             <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
             <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-            <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
-            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+            <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
           </div>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </div>
   </sc-if>
 
@@ -181,11 +274,11 @@
   <sc-if value="{{ isAbout }}">
     <div style="animation:fadeIn 0.6s ease;max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
       <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">About</div>
-      <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</div>
+      <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</h1>
       <div style="display:inline-block;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:11px 20px;margin-bottom:36px;">Open to brand design &amp; art direction — fashion, apparel, lifestyle</div>
 
       <div class="splitcols" style="display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr);gap:clamp(30px,5vw,64px);align-items:start;">
-        <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" style="width:100%;aspect-ratio:4/5;"></image-slot>
+        <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
         <div style="font-size:16px;line-height:1.75;color:#1F211C;display:flex;flex-direction:column;gap:20px;max-width:640px;">
           <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
           <p style="margin:0;">My work turns marketing strategy into creative people actually respond to. I specialize in integrated product launches, seasonal campaigns, and high-volume asset production — all while keeping brand consistency tight. I work closely with marketing, product, and sales teams so the creative lines up with business goals and retail timelines, and I bring a production background that keeps things efficient, clear, and accurate right down to the file.</p>
@@ -203,8 +296,8 @@
         <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
           <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
           <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-          <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
-          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+          <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
+          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
         </div>
       </div>
 
@@ -226,7 +319,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
         <div style="margin-top:24px;max-width:720px;font-size:15.5px;line-height:1.75;color:#1F211C;">{{ currentCategory.intro }}</div>
       </div>
@@ -271,7 +364,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Instagram</div>
-                <a href="https://instagram.com" target="_blank" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
+                <a href="https://instagram.com/staedtler" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerIgTiles }}" as="t" hint-placeholder-count="6">
@@ -282,7 +375,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Facebook</div>
-                <a href="https://facebook.com" target="_blank" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
+                <a href="https://facebook.com/staedtler" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerFbTiles }}" as="t" hint-placeholder-count="6">
@@ -317,24 +410,24 @@
         <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- STAEDTLER — ROLE OVERVIEW -->
     <sc-if value="{{ isStaedtlerPage }}">
       <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
-        <image-slot id="stae-hero" src="images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" style="width:100%;height:100%;"></image-slot>
+        <image-slot id="stae-hero" src="images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">STAEDTLER</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</h1>
         <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">One brand, every surface it touches — across the North American business.</div>
         <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">I joined STAEDTLER as a packaging designer and now lead creative across the North American business. On any given week I'm producing new product artwork, building production-accurate mockups for buyer approval, designing retail and sales materials, running the brand's social channels, and executing launch campaigns end to end. The range is wide, but the job underneath it is always the same: make every touchpoint look like it came from the same brand.</div>
       </div>
@@ -597,12 +690,12 @@
         <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- INTEGRATED DIGITAL CAMPAIGN — NORIS 122 FLAGSHIP -->
@@ -814,12 +907,12 @@
         <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- PASSION LANDING -->
@@ -831,7 +924,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</h1>
         <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
       </div>
 
@@ -845,7 +938,7 @@
           <div class="splitcols" style="margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,380px);gap:clamp(20px,3vw,44px);align-items:end;">
             <div style="min-width:0;">
               <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">A brand, built end to end</div>
-              <div style="margin-top:8px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(30px,4.4vw,58px);line-height:1.02;">DIDI Tote Bags</div>
+              <h1 style="margin:0;margin-top:8px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(30px,4.4vw,58px);line-height:1.02;">DIDI Tote Bags</h1>
             </div>
             <div style="min-width:0;font-size:14.5px;line-height:1.7;color:#8A8C7E;">A handmade accessories brand — identity, artwork, product, packaging, shop, and photography, all mine.</div>
           </div>
@@ -866,12 +959,12 @@
           </sc-for>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- DIDI TOTE BAGS — CASE STUDY -->
@@ -883,7 +976,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Handmade accessories brand</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</h1>
         <div style="margin-top:18px;max-width:640px;font-size:clamp(16px,1.9vw,21px);line-height:1.6;font-style:italic;color:#8A8C7E;">Elevated totes carrying South Asian&ndash;inspired art — made by hand, from materials given a second life.</div>
       </div>
 
@@ -1081,12 +1174,12 @@
         <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
         <div onClick="{{ goColourism }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- SHORT PASSION PROJECTS — COLOURISM / CREATE #2 -->
@@ -1098,7 +1191,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ pp.kicker }}</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</h1>
         <div style="margin-top:24px;max-width:700px;font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">{{ pp.concept }}</div>
       </div>
 
@@ -1150,12 +1243,12 @@
         <div onClick="{{ pp.goPrev }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
         <div onClick="{{ pp.goNext }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- ENVIRONMENTAL / SIGNAGE LANDING -->
@@ -1167,7 +1260,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</h1>
         <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
       </div>
 
@@ -1208,12 +1301,12 @@
           </sc-for>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- STOREFRONT & INTERIOR GRAPHICS -->
@@ -1225,7 +1318,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Four clients</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</h1>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;">
@@ -1306,12 +1399,12 @@
           <div onClick="{{ goVehicle }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
         </sc-if>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- VEHICLE GRAPHICS — hidden until images are uploaded (showVehicleGraphics prop) -->
@@ -1323,7 +1416,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Wraps &amp; fleets</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</h1>
         <div style="margin-top:22px;max-width:720px;font-size:16px;line-height:1.8;color:#1F211C;">I led vehicle graphics end to end &mdash; measuring vehicles on site, working directly with clients on the brief, and preflighting artwork so the design survived the jump to a curved, paneled metal surface. A wrap is unforgiving: what looks right flat can break across a wheel arch or a door seam.</div>
       </div>
 
@@ -1399,12 +1492,12 @@
         <div onClick="{{ goStorefront }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
         <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- RETAIL + PACKAGING LANDING -->
@@ -1412,7 +1505,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</h1>
         <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
       </div>
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
@@ -1429,12 +1522,12 @@
           </sc-for>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- RETAIL SUBCATEGORY PAGES -->
@@ -1446,7 +1539,7 @@
       <sc-if value="{{ isStaedtlerPkg }}">
         <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) 0;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Ongoing Body of Work</div>
-          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,72px);line-height:1;">STAEDTLER Packaging</div>
+          <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,72px);line-height:1;">STAEDTLER Packaging</h1>
           <div style="margin-top:14px;max-width:680px;font-size:15.5px;line-height:1.75;color:#1F211C;">An ongoing collection of packaging projects for Staedtler's consumer line, including updates to existing packaging designed to hold brand consistency across the range.</div>
         </div>
 
@@ -1520,7 +1613,7 @@
         </div>
         <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Campaign</div>
-          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(32px,5vw,64px);line-height:1;">MLB The Show 24 × PRESTO</div>
+          <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(32px,5vw,64px);line-height:1;">MLB The Show 24 × PRESTO</h1>
           <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">PlayStation · MLB · Metrolinx</div>
         </div>
 
@@ -1591,12 +1684,12 @@
         <div onClick="{{ prevSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
         <div onClick="{{ nextSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
     </div>
   </sc-if>
@@ -1605,16 +1698,31 @@
   <sc-if value="{{ isContact }}">
     <div style="animation:fadeIn 0.6s ease;max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
       <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Contact</div>
-      <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:44px;">Let's talk.</div>
+      <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:44px;">Let's talk.</h1>
 
       <div class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(30px,5vw,64px);align-items:start;">
         <div>
-          <div style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
-            <input placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
-            <input placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
-            <textarea placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
-            <div style="cursor:pointer;align-self:flex-start;margin-top:8px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:14px 32px;">Send Message</div>
-          </div>
+          <form onSubmit="{{ submitContact }}" novalidate style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
+            <label class="vh" for="cf-name">Your name</label>
+            <input id="cf-name" name="name" required autocomplete="name" placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <label class="vh" for="cf-email">Your email address</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <label class="vh" for="cf-message">Tell me about your project</label>
+            <textarea id="cf-message" name="message" required placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
+
+            <!-- Honeypot: hidden from people, irresistible to bots. A filled
+                 value makes the API return 200 and silently drop the message,
+                 so the bot never learns it was caught. -->
+            <div class="vh" aria-hidden="true"><label for="cf-company">Company</label><input id="cf-company" name="company" tabindex="-1" autocomplete="off"></div>
+
+            <!-- Deliberately NOT the `disabled` attribute: this runtime does no
+                 boolean-attribute handling, so disabled="false" would render
+                 literally and HTML would treat it as disabled forever. The
+                 in-flight guard lives in submitContact; these are the visuals. -->
+            <button type="submit" aria-disabled="{{ contactBusy }}" style="cursor:{{ contactBtnCursor }};pointer-events:{{ contactBtnEvents }};align-self:flex-start;margin-top:8px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:14px 32px;border:none;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;opacity:{{ contactBtnOpacity }};">{{ contactBtnLabel }}</button>
+
+            <p role="status" aria-live="polite" style="margin:0;display:{{ contactMsgDisplay }};font-size:14px;line-height:1.5;color:{{ contactMsgColor }};">{{ contactMsg }}</p>
+          </form>
         </div>
         <div style="display:flex;flex-direction:column;gap:22px;">
           <div>
@@ -1627,20 +1735,23 @@
           </div>
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Instagram</div>
-            <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;font-size:15px;">@dipali_11</a>
+            <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">@dipali_11</a>
           </div>
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">LinkedIn</div>
-            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
           </div>
-          <a href="#" download="Dipali-Patel-Resume.pdf" title="Add your resume PDF file to this link" style="margin-top:8px;display:inline-block;text-align:center;cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;padding:14px 28px;color:#1F211C;text-decoration:none;">Download Resume</a>
+          <!-- Points at /resume, which vercel.json redirects to the PDF. Keeps a
+               short shareable URL and means the filename can change in one place.
+               ACTION REQUIRED: add Dipali-Patel-Resume.pdf to the repo root. -->
+          <a href="/resume" onClick="{{ trackResume }}" download="Dipali-Patel-Resume.pdf" style="margin-top:8px;display:inline-block;text-align:center;cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;padding:14px 28px;color:#1F211C;text-decoration:none;">Download Resume</a>
         </div>
       </div>
 
       <div style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(36px,5vw,48px);">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Instagram</div>
-          <a href="https://instagram.com/dipali_11" target="_blank" style="font-size:13px;color:#1F211C;text-decoration:none;">@dipali_11 →</a>
+          <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="font-size:13px;color:#1F211C;text-decoration:none;">@dipali_11 →</a>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));gap:10px;">
           <sc-for list="{{ igTiles }}" as="t" hint-placeholder-count="6">
@@ -1650,6 +1761,8 @@
       </div>
     </div>
   </sc-if>
+
+  </main>
 
 </div>
 
@@ -1859,8 +1972,71 @@ const SAVED_IMAGES = new Set([
 // Video files committed to videos/. Add an id only after the file is written.
 const SAVED_VIDEOS = new Set([]);
 
+/* ---------------------------------------------------------------------------
+   ROUTING
+
+   The builder shipped every screen at "/" as an in-memory view switch, so the
+   back button did nothing, no project could be linked or bookmarked, a refresh
+   dumped you back to home, and analytics saw the whole site as one pageview.
+
+   These helpers map state <-> path in ONE place. The class drives them from
+   componentDidUpdate, which means all ~30 existing goHome / selectCategory
+   style handlers gain real history without any of them being rewritten.
+
+   Requires the SPA rewrite in vercel.json — without it a refresh on /about
+   404s, because no such file exists on disk.
+   --------------------------------------------------------------------------- */
+
+const ROUTE_SUBCATS = {
+  'retail-packaging': RETAIL_SUBCATS,
+  'environmental-signage': ENV_SUBCATS,
+  'passion': PASSION_PROJECTS,
+};
+
+// state -> "/work/retail-packaging/mlb-presto"
+function pathFromState(s) {
+  if (s.view === 'about') return '/about';
+  if (s.view === 'contact') return '/contact';
+  if (s.view === 'work') {
+    const cat = s.cat || 'staedtler';
+    return s.subcat ? '/work/' + cat + '/' + s.subcat : '/work/' + cat;
+  }
+  return '/';
+}
+
+// "/work/retail-packaging/mlb-presto" -> partial state. Unknown slugs fall back
+// rather than throwing, so a stale or hand-edited link still lands somewhere real.
+function stateFromPath(path) {
+  const parts = String(path || '/').replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+  if (!parts.length) return { view: 'home', subcat: null };
+  if (parts[0] === 'about') return { view: 'about', subcat: null };
+  if (parts[0] === 'contact') return { view: 'contact', subcat: null };
+  if (parts[0] === 'work') {
+    const cat = WORK_CATEGORIES.some(c => c.slug === parts[1]) ? parts[1] : 'staedtler';
+    const allowed = ROUTE_SUBCATS[cat] || [];
+    const subcat = allowed.some(x => x.slug === parts[2]) ? parts[2] : null;
+    return { view: 'work', cat: cat, subcat: subcat };
+  }
+  return { view: 'home', subcat: null };
+}
+
+// Tab title per route. A recruiter with eight tabs open should be able to tell
+// which one is the portfolio, and which project they left it on.
+function titleFromState(s) {
+  if (s.view === 'about') return 'About — Dipali Patel';
+  if (s.view === 'contact') return 'Contact — Dipali Patel';
+  if (s.view === 'work') {
+    const cat = WORK_CATEGORIES.find(c => c.slug === s.cat);
+    const sub = (ROUTE_SUBCATS[s.cat] || []).find(x => x.slug === s.subcat);
+    const label = sub ? sub.label : (cat ? (cat.title || cat.label) : 'Work');
+    return label + ' — Dipali Patel';
+  }
+  return 'Dipali Patel — Brand Designer & Marketing Specialist';
+}
+
 class Component extends DCLogic {
-  state = { view: 'home', cat: 'staedtler', subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging' };
+  state = { view: 'home', cat: 'staedtler', subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging',
+            contactBusy: false, contactState: 'idle', contactMsg: '' };
 
   // Deliverables line reflects what the page actually shows.
   get _deliverables() { return this.props.showDigital ? 'Packaging, sample cards, retail print, digital ads, Amazon brand page, PR boxes, merchandise' : 'Packaging, sample cards, retail print, PR boxes, merchandise'; }
@@ -1888,14 +2064,56 @@ class Component extends DCLogic {
     };
     window.addEventListener('scroll', this._onScroll, true);
     window.addEventListener('resize', this._onScroll);
+
+    // Back/forward: rewrite _lastPath before setState so the componentDidUpdate
+    // that follows sees no change and does not push a duplicate entry back on.
+    this._onPopState = () => {
+      const next = stateFromPath(location.pathname);
+      this._lastPath = pathFromState(Object.assign({}, this.state, next));
+      this.setState(Object.assign({ menuOpen: false }, next));
+    };
+    window.addEventListener('popstate', this._onPopState);
+
+    // Adopt whatever URL we were loaded on, so /work/staedtler renders that
+    // project directly instead of silently showing home.
+    const initial = stateFromPath(location.pathname);
+    this._skipScrollOnce = true;
+    this.setState(Object.assign({ menuOpen: false }, initial), () => this._syncUrl(true));
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this._onScroll, true);
     window.removeEventListener('resize', this._onScroll);
+    window.removeEventListener('popstate', this._onPopState);
+  }
+
+  // Single sync point for history. Cheap no-op on the many state changes that
+  // don't affect the path (menuOpen, activePhase, progressionIndex).
+  _syncUrl(replace) {
+    const path = pathFromState(this.state);
+    document.title = titleFromState(this.state);
+    if (path === this._lastPath) return;
+    const first = this._lastPath === undefined;
+    this._lastPath = path;
+    if (replace || first) {
+      history.replaceState({ path: path }, '', path);
+    } else {
+      history.pushState({ path: path }, '', path);
+    }
+    // Landing mid-page on a freshly opened project reads as broken. Handlers
+    // that scroll to their own anchor (goProgression) opt out via the flag.
+    if (this._skipScrollOnce) { this._skipScrollOnce = false; return; }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  componentDidUpdate() {
+    this._syncUrl(false);
   }
 
   goProgression = () => {
+    // Opts out of the router's scroll-to-top: this handler scrolls to its own
+    // anchor below, and the two would otherwise fight for the first few frames.
+    this._skipScrollOnce = true;
     this.setState({ view: 'work', cat: 'retail-packaging', subcat: 'staedtler-packaging', menuOpen: false }, () => {
       // Images load after mount, so the document grows and any early scrollTo is
       // clamped. Re-issue each frame until the anchor settles at the target offset.
@@ -1933,6 +2151,68 @@ class Component extends DCLogic {
   selectEnvSubcat = (slug) => this.setState({ view: 'work', cat: 'environmental-signage', subcat: slug, menuOpen: false });
   selectPassionSubcat = (slug) => this.setState({ view: 'work', cat: 'passion', subcat: slug, menuOpen: false });
   backToEnvLanding = () => this.setState({ subcat: null });
+
+  /* ---- Contact form -------------------------------------------------------
+     Previously three unnamed inputs and a <div> that said "Send Message" and
+     did nothing — a recruiter's message went nowhere, with no error shown.
+     Posts to /api/contact (Vercel function -> Resend). If that call fails for
+     any reason, including a missing RESEND_API_KEY, the error path surfaces the
+     direct email address rather than leaving the visitor with a dead button.
+     ------------------------------------------------------------------------- */
+  submitContact = (e) => {
+    e.preventDefault();
+    if (this.state.contactBusy) return;
+
+    const form = e.target;
+    const fd = new FormData(form);
+    // Read via FormData, not form.name — HTMLFormElement.name is the form's own
+    // attribute and would shadow the input.
+    const payload = {
+      name: String(fd.get('name') || '').trim(),
+      email: String(fd.get('email') || '').trim(),
+      message: String(fd.get('message') || '').trim(),
+      company: String(fd.get('company') || ''),
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      this.setState({ contactState: 'error', contactMsg: 'Please fill in your name, email, and a short message.' });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+      this.setState({ contactState: 'error', contactMsg: "That email address doesn't look right — mind checking it?" });
+      return;
+    }
+    if (payload.message.length > 5000) {
+      this.setState({ contactState: 'error', contactMsg: 'That message is a little long — could you trim it under 5000 characters?' });
+      return;
+    }
+
+    this.setState({ contactBusy: true, contactState: 'sending', contactMsg: 'Sending…' });
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json().catch(() => ({})).then((body) => ({ ok: r.ok, body: body })))
+      .then((res) => {
+        if (!res.ok) throw new Error((res.body && res.body.error) || 'Request failed');
+        form.reset();
+        this.setState({
+          contactBusy: false, contactState: 'ok',
+          contactMsg: "Thanks — your message is on its way. I'll get back to you shortly.",
+        });
+        if (window.va) window.va('event', { name: 'contact_form_submit' });
+      })
+      .catch(() => {
+        this.setState({
+          contactBusy: false, contactState: 'error',
+          contactMsg: 'Something went wrong sending that. Please email me directly at dipali11patel@gmail.com and I will pick it up there.',
+        });
+      });
+  };
+
+  trackResume = () => { if (window.va) window.va('event', { name: 'resume_download' }); };
 
   renderVals() {
     const view = this.state.view;
@@ -2320,7 +2600,27 @@ class Component extends DCLogic {
       aboutUnderline: view === 'about' ? '#5B2A5E' : 'transparent',
       workUnderline: view === 'work' ? '#5B2A5E' : 'transparent',
       contactUnderline: view === 'contact' ? '#1F211C' : 'transparent',
+      // The purple underline is the only "you are here" cue; aria-current gives
+      // screen readers the same information.
+      homeCurrent: view === 'home' ? 'page' : 'false',
+      aboutCurrent: view === 'about' ? 'page' : 'false',
+      workCurrent: view === 'work' ? 'page' : 'false',
+      contactCurrent: view === 'contact' ? 'page' : 'false',
       menuOpen: this.state.menuOpen,
+      // Contact form. The template has no conditional syntax, so visibility and
+      // colour are computed here and interpolated straight into the style attr.
+      submitContact: this.submitContact,
+      trackResume: this.trackResume,
+      contactBusy: this.state.contactBusy,
+      contactMsg: this.state.contactMsg,
+      contactBtnLabel: this.state.contactBusy ? 'Sending…' : 'Send Message',
+      contactBtnOpacity: this.state.contactBusy ? '0.55' : '1',
+      contactBtnCursor: this.state.contactBusy ? 'default' : 'pointer',
+      contactBtnEvents: this.state.contactBusy ? 'none' : 'auto',
+      contactMsgDisplay: this.state.contactMsg ? 'block' : 'none',
+      contactMsgColor: this.state.contactState === 'error' ? '#A3402F'
+                     : this.state.contactState === 'ok' ? '#4A6B32' : '#8A8C7E',
+
       goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
       goWorkDefault: this.goWorkDefault, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
       workCategories,
