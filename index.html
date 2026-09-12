@@ -73,7 +73,7 @@
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 
-<script src="./support.js"></script>
+<script src="/support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -82,8 +82,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&amp;family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
-  <script src="./image-slot.js"></script>
-  <script src="./video-slot.js"></script>
+  <script src="/image-slot.js"></script>
+  <script src="/video-slot.js"></script>
   <style>
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     html, body { margin: 0; padding: 0; background: #FBFAF7; }
@@ -236,7 +236,7 @@
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
             <div onClick="{{ cat.select }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="/images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.6vw,24px);">{{ cat.label }}</div>
@@ -393,7 +393,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Instagram</div>
-                <a href="https://instagram.com/staedtler" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
+                <a href="https://www.instagram.com/staedtler_na/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerIgTiles }}" as="t" hint-placeholder-count="6">
@@ -404,7 +404,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Facebook</div>
-                <a href="https://facebook.com/staedtler" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
+                <a href="https://www.facebook.com/STAEDTLERNorthAmerica/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerFbTiles }}" as="t" hint-placeholder-count="6">
@@ -450,7 +450,7 @@
     <!-- STAEDTLER — ROLE OVERVIEW -->
     <sc-if value="{{ isStaedtlerPage }}">
       <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
-        <image-slot id="stae-hero" src="images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
+        <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
@@ -507,7 +507,7 @@
                   </div>
                   <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">amazon.com/staedtler</div>
                 </div>
-                <image-slot id="stae-ecom-browser" src="images/stae-ecom-browser.webp" shape="rect" placeholder="Amazon brand page" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+                <image-slot id="stae-ecom-browser" src="/images/stae-ecom-browser.webp" shape="rect" placeholder="Amazon brand page" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
               </div>
               <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Amazon brand page — artwork across the full catalog, shown as it appears live.</div>
             </div>
@@ -519,7 +519,7 @@
                   <div style="font-size:11.5px;color:#8A8C7E;letter-spacing:0.03em;">STAEDTLER — New product launch</div>
                 </div>
                 <div style="padding:14px;">
-                  <image-slot id="stae-email-body" src="images/stae-email-body.webp" shape="rect" placeholder="Promotional email" style="display:block;width:100%;aspect-ratio:4/5;"></image-slot>
+                  <image-slot id="stae-email-body" src="/images/stae-email-body.webp" shape="rect" placeholder="Promotional email" style="display:block;width:100%;aspect-ratio:4/5;"></image-slot>
                 </div>
               </div>
               <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Promotional email — built for the mailing list, shown in an inbox.</div>
@@ -582,7 +582,7 @@
             <div>
               <a href="{{ p.url }}" target="_blank" rel="noopener" style="display:block;width:100%;aspect-ratio:1/1;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
-                  <image-slot id="stae-feed-{{ $index }}" src="images/stae-feed-{{ $index }}.webp" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
+                  <image-slot id="stae-feed-{{ $index }}" src="/images/stae-feed-{{ $index }}.webp" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
                 </div>
               </a>
               <a href="{{ p.url }}" target="_blank" rel="noopener" style="margin-top:7px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;color:#8A8C7E;text-decoration:none;">
@@ -674,11 +674,11 @@
       <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
         <sc-if value="{{ hsnHeroVideoReady }}" hint-placeholder-val="{{ false }}">
           <div style="width:100%;aspect-ratio:2/1;overflow:hidden;background:#F1EEE9;">
-            <video-slot id="stae-hsn-hero-video" src="videos/stae-hsn-hero.mp4" poster="images/stae-hsn-hero.webp" label="HSN card program — reel"></video-slot>
+            <video-slot id="stae-hsn-hero-video" src="/videos/stae-hsn-hero.mp4" poster="/images/stae-hsn-hero.webp" label="HSN card program — reel"></video-slot>
           </div>
         </sc-if>
         <sc-if value="{{ hsnHeroImageOnly }}" hint-placeholder-val="{{ true }}">
-          <image-slot id="stae-hsn-hero" src="images/stae-hsn-hero.webp" shape="rect" placeholder="HSN card — hero piece, styled" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
+          <image-slot id="stae-hsn-hero" src="/images/stae-hsn-hero.webp" shape="rect" placeholder="HSN card — hero piece, styled" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
         </sc-if>
         <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">HSN card program — the strongest piece, styled and shot as a finished object.</div>
       </div>
@@ -704,7 +704,7 @@
             <div onClick="{{ f.go }}" style="cursor:pointer;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
-                  <image-slot id="stae-featured-{{ f.key }}" src="images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
+                  <image-slot id="stae-featured-{{ f.key }}" src="/images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
                 </div>
               </div>
               <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ f.kicker }}</div>
@@ -883,7 +883,7 @@
                   <sc-for list="{{ norisCreators }}" as="creator" hint-placeholder-count="3">
                     <div>
                       <div style="width:100%;aspect-ratio:9/16;overflow:hidden;background:#F1EEE9;">
-                        <video-slot id="noris-creator-{{ $index }}" src="videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
+                        <video-slot id="noris-creator-{{ $index }}" src="/videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
                       </div>
                       <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
                         <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size: 12.5px; color: #1F211C; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px">{{ creator.handle }}</a>
@@ -1542,7 +1542,7 @@
           <sc-for list="{{ retailSubcats }}" as="sub" hint-placeholder-count="2">
             <div onClick="{{ sub.select }}" style="cursor:pointer;">
               <div style="aspect-ratio:4/5;overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="retail-landing-{{ sub.slug }}" src="images/retail-landing-{{ sub.slug }}.webp" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot></div>
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="retail-landing-{{ sub.slug }}" src="/images/retail-landing-{{ sub.slug }}.webp" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot></div>
               </div>
               <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ sub.kicker }}</div>
               <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.2vw,30px);">{{ sub.label }}</div>
@@ -1576,21 +1576,21 @@
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Before / After</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
             <div>
-              <image-slot id="staedtler-pkg-before" src="images/staedtler-pkg-before.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-before" src="/images/staedtler-pkg-before.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
             </div>
             <div>
-              <image-slot id="staedtler-pkg-after" src="images/staedtler-pkg-after.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-after" src="/images/staedtler-pkg-after.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(14px,2vw,24px);">
             <div>
-              <image-slot id="staedtler-pkg-before-2" src="images/staedtler-pkg-before-2.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-before-2" src="/images/staedtler-pkg-before-2.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
             </div>
             <div>
-              <image-slot id="staedtler-pkg-after-2" src="images/staedtler-pkg-after-2.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-after-2" src="/images/staedtler-pkg-after-2.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
             </div>
           </div>
@@ -1600,7 +1600,7 @@
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">The Progression · One Example</div>
           <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#efece3;">
             <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
-              <image-slot id="progression-{{ $index }}" src="images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
+              <image-slot id="progression-{{ $index }}" src="/images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
             </sc-for>
             <div style="position:absolute;left:20px;bottom:20px;font-size:12px;letter-spacing:0.06em;color:#1F211C;background:#FBFAF7;padding:6px 12px;">{{ progressionCaption }}</div>
             <div onClick="{{ prevSlide }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
@@ -1620,7 +1620,7 @@
               <div>
                 <div class="{{ g.containerClass }}" style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">
                   <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
-                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
+                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="/images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
                   </sc-for>
                 </div>
                 <sc-if value="{{ g.multi }}" hint-placeholder-val="{{ true }}">
@@ -1638,7 +1638,7 @@
 
       <sc-if value="{{ isMlbPresto }}">
         <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
-          <image-slot id="mlb-hero" src="images/mlb-hero.webp" shape="rect" placeholder="Campaign key visual" style="width:100%;height:100%;"></image-slot>
+          <image-slot id="mlb-hero" src="/images/mlb-hero.webp" shape="rect" placeholder="Campaign key visual" style="width:100%;height:100%;"></image-slot>
         </div>
         <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Campaign</div>
@@ -1856,8 +1856,8 @@ const EXPERIENCE = [
   },
 ];
 
-const imgSrc = (id) => SAVED_IMAGES.has(id) ? 'images/' + id + '.webp' : '';
-const vidSrc = (id) => SAVED_VIDEOS.has(id) ? 'videos/' + id + '.mp4' : '';
+const imgSrc = (id) => SAVED_IMAGES.has(id) ? '/images/' + id + '.webp' : '';
+const vidSrc = (id) => SAVED_VIDEOS.has(id) ? '/videos/' + id + '.mp4' : '';
 
 const DIDI_SCOPE = ['Identity', 'Artwork', 'Bags', 'Jewelry', 'Packaging', 'Shop', 'Photography']
   .map(label => ({ label }));
