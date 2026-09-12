@@ -2451,7 +2451,7 @@ class Component extends DCLogic {
               // only point at a file that exists — an src for a missing file
               // renders a broken image AND hides the drop placeholder
               src: SAVED_IMAGES.has('stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)))
-                ? 'images/stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)) + '.webp'
+                ? '/images/stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)) + '.webp'
                 : '',
               label: multi ? s.label + ' ' + (f + 1) : s.label,
               frameClass: multi ? (pinned && sel === f ? 'auto-img show-frame' : 'auto-img') : 'solo-img',
@@ -2523,7 +2523,7 @@ class Component extends DCLogic {
       hsnHeroVideoReady: SAVED_VIDEOS.has('stae-hsn-hero'),
       hsnHeroImageOnly: !SAVED_VIDEOS.has('stae-hsn-hero'),
       staeHsn: Array.from({ length: 6 }, (_, i) => ({
-        src: SAVED_IMAGES.has('stae-hsn-' + i) ? 'images/stae-hsn-' + i + '.webp' : '',
+        src: SAVED_IMAGES.has('stae-hsn-' + i) ? '/images/stae-hsn-' + i + '.webp' : '',
       })),
       staeFeatured: [
         { key: 'retail', kicker: 'Case study', label: 'Retail + Packaging', note: 'Packaging artwork, mockups, and before/after updates.', go: () => this.selectCategory('retail-packaging') },
