@@ -172,6 +172,36 @@
     .duo-item.pinned .duo-img.show-frame { opacity: 1; }
     .cycle-item.pinned .cycle-img { opacity: 0; animation: none; }
     .cycle-item.pinned .cycle-img.show-frame { opacity: 1; }
+    /* Dot indicators animated in lockstep with the image cycle above. Without
+       these the first dot stayed lit while the tile cycled through views 2..N,
+       so the position indicator was wrong most of the time. Percentages mirror
+       the cycN image keyframes exactly; only the animated property differs.
+       This is the same treatment .auto-dot already gives the brand-surface
+       tiles — the gallery just never got it. Once pinned the animation stops
+       and the inline dotColor takes over. */
+    @keyframes cycDot4 { 0% { background: #dedad2; } 3%, 29% { background: var(--accent); } 33%, 100% { background: #dedad2; } }
+    @keyframes cycDot3 { 0% { background: #dedad2; } 4%, 39% { background: var(--accent); } 43%, 100% { background: #dedad2; } }
+    @keyframes cycDot2 { 0% { background: #dedad2; } 6%, 57% { background: var(--accent); } 61%, 100% { background: #dedad2; } }
+    .cyc4 .cycle-dot { animation: cycDot4 12s infinite; }
+    .cyc4 .cycle-dot:nth-child(2) { animation-delay: 3s; }
+    .cyc4 .cycle-dot:nth-child(3) { animation-delay: 6s; }
+    .cyc4 .cycle-dot:nth-child(4) { animation-delay: 9s; }
+    .cyc3 .cycle-dot { animation: cycDot3 9s infinite; }
+    .cyc3 .cycle-dot:nth-child(2) { animation-delay: 3s; }
+    .cyc3 .cycle-dot:nth-child(3) { animation-delay: 6s; }
+    .cyc2 .cycle-dot { animation: cycDot2 6s infinite; }
+    .cyc2 .cycle-dot:nth-child(2) { animation-delay: 3s; }
+    /* Hover speeds the images up; the dots have to match or they desync. */
+    .cyc4:hover .cycle-dot { animation-duration: 6s; }
+    .cyc4:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
+    .cyc4:hover .cycle-dot:nth-child(3) { animation-delay: 3s; }
+    .cyc4:hover .cycle-dot:nth-child(4) { animation-delay: 4.5s; }
+    .cyc3:hover .cycle-dot { animation-duration: 4.5s; }
+    .cyc3:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
+    .cyc3:hover .cycle-dot:nth-child(3) { animation-delay: 3s; }
+    .cyc2:hover .cycle-dot { animation-duration: 3s; }
+    .cyc2:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
+    .cycle-item.pinned .cycle-dot { animation: none; }
     .navdrop:hover { background: #F4ECF3; color: var(--plum); }
     @media (max-width: 980px) {
       .phasewrap { grid-template-columns: minmax(0,1fr) !important; }
@@ -199,8 +229,16 @@
       <nav aria-label="Primary" style="display:flex;align-items:center;gap:clamp(16px,3vw,36px);flex-wrap:wrap;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
         <button type="button" onClick="{{ goHome }}" aria-current="{{ homeCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ homeUnderline }};">Home</button>
         <button type="button" onClick="{{ goAbout }}" aria-current="{{ aboutCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ aboutUnderline }};">About</button>
-        <div style="position:relative;" onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}">
-          <button type="button" onClick="{{ goWorkDefault }}" aria-current="{{ workCurrent }}" aria-expanded="{{ menuOpen }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ workUnderline }};">Work</button>
+        <!-- menuOpen used to be set in exactly one place: onMouseEnter. There was
+             no onFocus, no key handling, and the button's own click ran
+             goWorkDefault, which sets menuOpen:false — so pressing Enter actively
+             CLOSED the menu and jumped to whichever category was last viewed. A
+             keyboard or touch visitor could never see the five categories, while
+             aria-expanded advertised a popup to screen readers. Click now toggles,
+             which is what aria-haspopup/aria-expanded describe; hover still works
+             for mouse, and Escape closes. -->
+        <div style="position:relative;" onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}" onKeyDown="{{ workMenuKeyDown }}">
+          <button type="button" onClick="{{ toggleWorkMenu }}" aria-current="{{ workCurrent }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ workUnderline }};">Work</button>
           <sc-if value="{{ menuOpen }}">
             <div style="position:absolute;top:100%;left:0;background:#FBFAF7;border:1px solid #dedad2;min-width:260px;padding:6px 0;box-shadow:0 12px 24px rgba(32,31,28,0.08);">
               <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
@@ -225,8 +263,8 @@
           Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
         </div>
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
-          <div onClick="{{ goAbout }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
-          <div onClick="{{ goContact }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
+          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
         </div>
       </div>
 
@@ -234,7 +272,7 @@
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
-            <div onClick="{{ cat.select }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
+            <div onClick="{{ cat.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="/images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
               </div>
@@ -320,7 +358,7 @@
         <div style="max-width:520px;">
           <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,30px);margin-bottom:14px;">Work with me</div>
           <div style="font-size:15px;line-height:1.7;color:#8A8C7E;">Looking for a designer who can hold a brand together across a hundred touchpoints — in fashion, apparel, or lifestyle? I'd love to hear from you.</div>
-          <div onClick="{{ goContact }}" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
           <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
@@ -346,7 +384,7 @@
     <div style="animation:fadeIn 0.6s ease;">
     <sc-if value="{{ isGenericCategory }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
@@ -436,8 +474,8 @@
       </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -454,7 +492,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">STAEDTLER</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</h1>
         <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">One brand, every surface it touches — across the North American business.</div>
@@ -486,7 +524,7 @@
                 <sc-if value="{{ s.multi }}">
                   <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                     <sc-for list="{{ s.frames }}" as="fr" hint-placeholder-count="3">
-                      <div onClick="{{ fr.select }}" class="{{ fr.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ fr.dotColor }};animation-delay:{{ fr.delay }};transition:background 0.25s ease;"></div>
+                      <div onClick="{{ fr.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="{{ fr.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ fr.dotColor }};animation-delay:{{ fr.delay }};transition:background 0.25s ease;"></div>
                     </sc-for>
                   </div>
                 </sc-if>
@@ -701,7 +739,7 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">Go deeper.</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
           <sc-for list="{{ staeFeatured }}" as="f" hint-placeholder-count="3">
-            <div onClick="{{ f.go }}" style="cursor:pointer;">
+            <div onClick="{{ f.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
                   <image-slot id="stae-featured-{{ f.key }}" src="/images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
@@ -716,8 +754,8 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -734,7 +772,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Integrated Digital Campaign</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">STAEDTLER Noris<span style="font-size:0.5em;vertical-align:super;">®</span> 122</div>
         <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">STAEDTLER · North American product launch</div>
@@ -773,7 +811,7 @@
           <div class="phaserail" style="position:sticky;top:96px;display:flex;flex-direction:column;gap:2px;">
             <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:12px;">Phases</div>
             <sc-for list="{{ phases }}" as="p" hint-placeholder-count="7">
-              <div onClick="{{ p.go }}" style="cursor:pointer;display:flex;gap:9px;align-items:baseline;padding:7px 0;border-bottom:1px solid {{ p.railBorder }};">
+              <div onClick="{{ p.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;display:flex;gap:9px;align-items:baseline;padding:7px 0;border-bottom:1px solid {{ p.railBorder }};">
                 <div style="font-size:10.5px;letter-spacing:0.06em;color:{{ p.railNum }};min-width:16px;">{{ p.n }}</div>
                 <div style="font-size:12px;line-height:1.35;color:{{ p.railColor }};">{{ p.label }}</div>
               </div>
@@ -792,7 +830,7 @@
                 </sc-for>
               </div>
               <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Packaging — shot as printed pieces, real substrate and finish.</div>
-              <div onClick="{{ goProgression }}" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
+              <div onClick="{{ goProgression }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
 
             <div data-phase="retail">
               <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nRetail }} — Retail &amp; print</div>
@@ -813,7 +851,7 @@
                     </div>
                     <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                       <sc-for list="{{ tile.frames }}" as="side" hint-placeholder-count="3">
-                        <div onClick="{{ side.select }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ side.dotColor }};transition:background 0.25s ease;"></div>
+                        <div onClick="{{ side.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ side.dotColor }};transition:background 0.25s ease;"></div>
                       </sc-for>
                     </div>
                     <div style="margin-top:7px;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">{{ tile.caption }}</div>
@@ -887,7 +925,7 @@
                       </div>
                       <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
                         <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size: 12.5px; color: #1F211C; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px">{{ creator.handle }}</a>
-                        View post →
+                        <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;text-decoration:none;">View post →</a>
                       </div>
                       <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ creator.note }}</div>
                     </div>
@@ -933,8 +971,8 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -951,14 +989,14 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</h1>
         <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(52px,7vw,88px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:grid;gap:clamp(36px,5vw,64px);">
-        <div onClick="{{ goDidi }}" style="cursor:pointer;">
+        <div onClick="{{ goDidi }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
           <div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:#F1EEE9;">
             <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
               <image-slot id="passion-tile-didi" src="{{ didiTileSrc }}" shape="rect" placeholder="DIDI — strongest product shot, wide" style="width:100%;height:100%;"></image-slot>
@@ -975,7 +1013,7 @@
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(24px,3.5vw,44px);">
           <sc-for list="{{ passionSmallProjects }}" as="p" hint-placeholder-count="2">
-            <div onClick="{{ p.go }}" style="cursor:pointer;min-width:0;">
+            <div onClick="{{ p.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;min-width:0;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#F1EEE9;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
                   <image-slot id="passion-tile-{{ p.key }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
@@ -1003,7 +1041,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Handmade accessories brand</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</h1>
         <div style="margin-top:18px;max-width:640px;font-size:clamp(16px,1.9vw,21px);line-height:1.6;font-style:italic;color:#8A8C7E;">Elevated totes carrying South Asian&ndash;inspired art — made by hand, from materials given a second life.</div>
@@ -1200,8 +1238,8 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
-        <div onClick="{{ goColourism }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
+        <div onClick="{{ goColourism }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1218,7 +1256,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ pp.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</h1>
         <div style="margin-top:24px;max-width:700px;font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">{{ pp.concept }}</div>
@@ -1269,8 +1307,8 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ pp.goPrev }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
-        <div onClick="{{ pp.goNext }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
+        <div onClick="{{ pp.goPrev }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
+        <div onClick="{{ pp.goNext }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1287,7 +1325,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</h1>
         <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
@@ -1317,7 +1355,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
           <sc-for list="{{ envSubcats }}" as="sub" hint-placeholder-count="2">
-            <div onClick="{{ sub.select }}" style="cursor:pointer;max-width:560px;min-width:0;">
+            <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;max-width:560px;min-width:0;">
               <div style="aspect-ratio:4/5;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
                   <image-slot id="env-landing-{{ sub.slug }}" src="{{ sub.src }}" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot>
@@ -1345,7 +1383,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Four clients</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</h1>
       </div>
@@ -1423,9 +1461,9 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
         <sc-if value="{{ showVehicle }}">
-          <div onClick="{{ goVehicle }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
+          <div onClick="{{ goVehicle }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
         </sc-if>
       </div>
       <footer style="border-top:1px solid #dedad2;">
@@ -1443,7 +1481,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Wraps &amp; fleets</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</h1>
         <div style="margin-top:22px;max-width:720px;font-size:16px;line-height:1.8;color:#1F211C;">I led vehicle graphics end to end &mdash; measuring vehicles on site, working directly with clients on the brief, and preflighting artwork so the design survived the jump to a curved, paneled metal surface. A wrap is unforgiving: what looks right flat can break across a wheel arch or a door seam.</div>
@@ -1518,8 +1556,8 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ goStorefront }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
+        <div onClick="{{ goStorefront }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1532,7 +1570,7 @@
     <!-- RETAIL + PACKAGING LANDING -->
     <sc-if value="{{ isRetailLanding }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</h1>
         <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
@@ -1540,7 +1578,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
           <sc-for list="{{ retailSubcats }}" as="sub" hint-placeholder-count="2">
-            <div onClick="{{ sub.select }}" style="cursor:pointer;">
+            <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
               <div style="aspect-ratio:4/5;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="retail-landing-{{ sub.slug }}" src="/images/retail-landing-{{ sub.slug }}.webp" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot></div>
               </div>
@@ -1562,7 +1600,7 @@
     <!-- RETAIL SUBCATEGORY PAGES -->
     <sc-if value="{{ isRetailSubcat }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToRetailLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
+        <div onClick="{{ backToRetailLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
       </div>
 
       <sc-if value="{{ isStaedtlerPkg }}">
@@ -1603,12 +1641,12 @@
               <image-slot id="progression-{{ $index }}" src="/images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
             </sc-for>
             <div style="position:absolute;left:20px;bottom:20px;font-size:12px;letter-spacing:0.06em;color:#1F211C;background:#FBFAF7;padding:6px 12px;">{{ progressionCaption }}</div>
-            <div onClick="{{ prevSlide }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
-            <div onClick="{{ nextSlide }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">›</div>
+            <div onClick="{{ prevSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
+            <div onClick="{{ nextSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">›</div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;">
             <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
-              <div onClick="{{ slide.select }}" style="cursor:pointer;width:8px;height:8px;border-radius:50%;background:{{ slide.dotColor }};"></div>
+              <div onClick="{{ slide.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;width:8px;height:8px;border-radius:50%;background:{{ slide.dotColor }};"></div>
             </sc-for>
           </div>
         </div>
@@ -1617,7 +1655,7 @@
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Gallery</div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,20px);">
             <sc-for list="{{ staedtlerPkgGallery }}" as="g" hint-placeholder-count="6">
-              <div>
+              <div class="{{ g.containerClass }}">
                 <div class="{{ g.containerClass }}" style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">
                   <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
                     <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="/images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
@@ -1626,7 +1664,7 @@
                 <sc-if value="{{ g.multi }}" hint-placeholder-val="{{ true }}">
                   <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                     <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
-                      <div onClick="{{ frame.select }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ frame.dotColor }};transition:background 0.25s ease;"></div>
+                      <div onClick="{{ frame.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="{{ frame.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ frame.dotColor }};transition:background 0.25s ease;"></div>
                     </sc-for>
                   </div>
                 </sc-if>
@@ -1710,8 +1748,8 @@
       </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,80px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(56px,8vw,80px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
-        <div onClick="{{ nextSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
+        <div onClick="{{ prevSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
+        <div onClick="{{ nextSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -2117,7 +2155,7 @@ class Component extends DCLogic {
     // Back/forward: rewrite _lastPath before setState so the componentDidUpdate
     // that follows sees no change and does not push a duplicate entry back on.
     this._onPopState = () => {
-      const next = stateFromPath(location.pathname);
+      const next = this._renderable(stateFromPath(location.pathname));
       this._lastPath = pathFromState(Object.assign({}, this.state, next));
       this.setState(Object.assign({ menuOpen: false }, next));
     };
@@ -2125,7 +2163,7 @@ class Component extends DCLogic {
 
     // Adopt whatever URL we were loaded on, so /work/staedtler renders that
     // project directly instead of silently showing home.
-    const initial = stateFromPath(location.pathname);
+    const initial = this._renderable(stateFromPath(location.pathname));
     this._skipScrollOnce = true;
     this.setState(Object.assign({ menuOpen: false }, initial), () => this._syncUrl(true));
   }
@@ -2134,6 +2172,21 @@ class Component extends DCLogic {
     window.removeEventListener('scroll', this._onScroll, true);
     window.removeEventListener('resize', this._onScroll);
     window.removeEventListener('popstate', this._onPopState);
+  }
+
+  /* stateFromPath validates a slug against the DATA, but some sections are
+     additionally gated behind a prop. vehicle-graphics is in ENV_SUBCATS, so
+     the router accepts /work/environmental-signage/vehicle-graphics even when
+     showVehicleGraphics is off and nothing can render it. Drop a subcategory
+     the current props can't display, so the URL corrects itself to the landing
+     rather than sitting on a path that shows an empty page. */
+  _renderable(next) {
+    if (next && next.cat === 'environmental-signage'
+        && next.subcat === 'vehicle-graphics'
+        && !(this.props.showVehicleGraphics ?? false)) {
+      return Object.assign({}, next, { subcat: null });
+    }
+    return next;
   }
 
   // Single sync point for history. Cheap no-op on the many state changes that
@@ -2157,6 +2210,15 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     this._syncUrl(false);
+    /* Nothing used to clear the contact status, so submitting, navigating away
+       and coming back left a stale "your message is on its way" (or a red
+       validation error) sitting under an empty form, as if it had just been
+       sent again. Clearing on leave is one place instead of every nav handler.
+       Converges after a single extra render: once cleared, contactMsg is empty
+       and the condition is false. */
+    if (this.state.view !== 'contact' && this.state.contactMsg) {
+      this.setState({ contactMsg: '', contactState: 'idle', contactBusy: false });
+    }
   }
 
   goProgression = () => {
@@ -2214,6 +2276,23 @@ class Component extends DCLogic {
   };
   openWorkMenu = () => this.setState({ menuOpen: true });
   closeWorkMenu = () => this.setState({ menuOpen: false });
+  toggleWorkMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
+
+  /* Shared keyboard activation for the 44 clickable divs the builder emitted.
+     Converting them all to real buttons would have been more semantic, but several
+     are grid items and flex children whose layout depends on being blocks, so
+     role+tabindex+this handler buys the same operability with no visual risk.
+     Space is included because that is what a real button does, and preventing
+     its default stops the page scrolling underneath the activation. */
+  keyActivate = (e) => {
+    if (!e) return;
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      const el = e.currentTarget || e.target;
+      if (el && typeof el.click === 'function') el.click();
+    }
+  };
+  workMenuKeyDown = (e) => { if (e && e.key === 'Escape') this.setState({ menuOpen: false }); };
   selectCategory = (slug) => this.setState({ view: 'work', cat: slug, subcat: null, menuOpen: false });
   selectSubcat = (slug) => this.setState({ view: 'work', cat: 'retail-packaging', subcat: slug, menuOpen: false });
   backToRetailLanding = () => this.setState({ subcat: null });
@@ -2222,7 +2301,7 @@ class Component extends DCLogic {
   backToEnvLanding = () => this.setState({ subcat: null });
 
   /* ---- Contact form -------------------------------------------------------
-     Previously three unnamed inputs and a <div> that said "Send Message" and
+     Previously three unnamed inputs and a plain div that said "Send Message" and
      did nothing — a recruiter's message went nowhere, with no error shown.
      Posts to /api/contact (Vercel function -> Resend). If that call fails for
      any reason, including a missing RESEND_API_KEY, the error path surfaces the
@@ -2411,7 +2490,15 @@ class Component extends DCLogic {
         { label: 'In use', caption: 'In use — the bag carried, so scale reads correctly.' },
       ].map((p, i) => ({ ...p, src: imgSrc('didi-photo-' + i) })),
       didiFeed: Array.from({ length: 9 }, (_, i) => ({ src: imgSrc('didi-feed-' + i) })),
-      isEnvLanding: isEnvironmental && !(showVehicle && this.state.subcat === 'vehicle-graphics') && !this.state.subcat,
+      /* Show the landing whenever there is no RENDERABLE subcategory, not just
+         when subcat is empty. Previously subcat='vehicle-graphics' with
+         showVehicleGraphics off made isEnvLanding, isStorefront and isVehicle
+         all false at once, so the page rendered the header and nothing else —
+         no hero, no body, not even a footer, since each footer sits inside its
+         own sc-if. Reachable by URL because the slug is in ENV_SUBCATS. */
+      isEnvLanding: isEnvironmental
+        && this.state.subcat !== 'storefront-interior'
+        && !(showVehicle && this.state.subcat === 'vehicle-graphics'),
       isStorefront: isEnvironmental && this.state.subcat === 'storefront-interior',
       showVehicle: showVehicle,
       isVehicle: showVehicle && isEnvironmental && this.state.subcat === 'vehicle-graphics',
@@ -2655,7 +2742,11 @@ class Component extends DCLogic {
               number: f + 1,
               frameClass: editing && sel === f ? 'cycle-img show-frame' : 'cycle-img',
               pointerEvents: active ? 'auto' : 'none',
-              dotColor: active ? 'var(--accent)' : '#dedad2',
+              // Unpinned, the dot highlight is driven by the cycDotN CSS animation
+              // so it tracks whichever image is actually showing. Pinned, the CSS
+              // backs off and this static colour marks the chosen frame.
+              dotClass: editing ? '' : 'cycle-dot',
+              dotColor: editing && sel === f ? 'var(--accent)' : '#dedad2',
               select: () => this.setState(s => ({ frameSel: { ...(s.frameSel || {}), [i]: f } }))
             };
           })
@@ -2700,6 +2791,8 @@ class Component extends DCLogic {
 
       goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
       goWorkDefault: this.goWorkDefault, goAllWork: this.goAllWork, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
+      toggleWorkMenu: this.toggleWorkMenu, workMenuKeyDown: this.workMenuKeyDown,
+      keyActivate: this.keyActivate,
       workCategories,
       currentCategory,
       prevCategoryLabel: WORK_CATEGORIES[prevIdx].label,
