@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Dipali Patel">
+  <rect width="64" height="64" rx="12" fill="#5B2A5E"/>
+  <rect x="4" y="4" width="56" height="56" rx="9" fill="none" stroke="#B5BE4A" stroke-width="1.5" opacity="0.55"/>
+  <text x="32" y="45"
+        font-family="Georgia, 'Times New Roman', 'Abril Fatface', serif"
+        font-size="34" font-weight="500" text-anchor="middle" fill="#FBFAF7">DP</text>
+</svg>
