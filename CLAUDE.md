@@ -119,17 +119,23 @@ server-side and allows real validation, honeypot, and rate limiting. The form
 fails *safe*: any error, including a missing `RESEND_API_KEY`, surfaces the
 direct email address rather than a dead button.
 
-**No resume PDF.** Deliberate. The experience timeline on `/about` (the
-`EXPERIENCE` array) replaces it. `/resume` and `/cv` redirect to `/about`.
+**Resume PDF lives under Experience.** `files/Dipali-Patel-Resume.pdf`, linked
+from the bottom of the Experience section on `/about`. The experience timeline
+(the `EXPERIENCE` array) is still the primary telling; the PDF supplements it
+rather than replacing it. `/resume` and `/cv` still redirect to `/about`, which
+is where the download now sits. Supersedes the earlier "no resume PDF" call.
 
 **Employment history is not invented.** Only the Staedtler role is filled in —
 it's the one role documented elsewhere on the site. The bio says "almost five
 years", so earlier roles are missing and should be added *from real information*.
 Never guess these.
 
-**Empty image slots are left visible.** 26 slots across the digital-campaign and
-social sections have no image. Owner's call to leave them for now — see
-"Known gaps".
+**Empty image slots are now hidden, not shown.** Reverses the earlier call. The
+site goes out to viewers before the remaining photography exists, so a slot with
+no file behind it is dropped rather than rendered as an empty drop placeholder.
+`hasImg(id)` is the gate; arrays filter on it and sections wrap in `sc-if`. Add
+the file and its id to `SAVED_IMAGES` and the slot comes back on its own — see
+"Hiding and restoring unshot sections".
 
 **Nav items are real `<button>`s.** They were clickable `<div>`s, unreachable by
 keyboard. The inline style resets exist to keep the rendering identical.
@@ -140,31 +146,48 @@ in `index.html`, `sitemap.xml`, `robots.txt`, `README.md`.
 
 ---
 
-## Known gaps (deliberate, not bugs)
+## Hiding and restoring unshot sections
 
-**26 empty image slots.** Rendered but no file exists:
+Nothing renders an empty slot any more. Two mechanisms do the hiding, and both
+undo themselves once the assets arrive:
 
-| Section | Slots | Filled |
-|---|---|---|
-| `noris-launch-*` | 2 | 1 |
-| `noris-pr-*` | 3 | 1 |
-| `noris-merch-*` | 4 | 2 |
-| `noris-digital-*` | 2 | 0 |
-| `noris-amazon-product-*` | 2 | 0 |
-| `ig-*` | 6 | 0 |
-| `staedtler-ig-*` | 6 | 0 |
-| `staedtler-fb-*` | 6 | 0 |
+**`hasImg(id)`** — true when the id is in `SAVED_IMAGES`. Arrays filter on it
+(`norisPr`, `norisMerch`, `norisLaunch`, print-tile frames, `sfCases` and their
+details), and the About portrait wraps in `sc-if`. **Drop the file in `images/`,
+add the id to `SAVED_IMAGES`, and the slot reappears** — no template edit.
 
-Fix by adding the file **and** the id to `SAVED_IMAGES`. To hide unfilled slots
-instead, filter each array on truthy `src` — but note three sections would then
-collapse to a bare heading.
+**`SHOW_PASSION`** — `false`. The Passion branch (landing, DIDI, Colourism,
+CREATE #2) has no photography at all, so the whole category is filtered out of
+`VISIBLE_CATEGORIES`, which drives the nav dropdown, the home grid and the
+prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
+unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-**Placeholder creator handles.** Both `norisLaunch` entries have
-`handle: '@handle'` linking to bare `instagram.com`, with the builder's own note
-to swap them in.
+Currently outstanding: `about-portrait`; `noris-pr-1/2`, `noris-merch-2/3`,
+`noris-launch-1`, `noris-sample-1-detail-2`, `noris-pullup-detail`;
+`sf-hair-lab-after` and everything for `sf-habit-dental-*` / `sf-emco-*`; and
+the whole `passion-*` / `didi-*` / `colourism-*` / `create2-*` set.
+
+Two case studies (Habit Dental, EMCO) currently drop out of the Storefront page
+entirely and survive only as sector tiles; Hair Lab renders without its
+before/after pair because only the "before" exists.
+
+**Placeholder creator handles are gone.** `norisLaunch` entries now carry a
+plain `label` caption instead of the builder's `@handle` placeholder, and
+`norisCreators` handles render unlinked — the handles are real but the post
+permalinks are not. Restore the links when the real permalinks exist.
+
+**Grids use fixed column counts where the item count would otherwise orphan.**
+`.worktiles` (4 tiles) and `.hairgrid` (multiples of three). The hairline grids
+draw their rules with a background showing through a 1px gap, so a part-filled
+last row shows as grey voids rather than empty space.
 
 **Prop-gated sections.** `showDigital` and `showVehicleGraphics` both default to
 `false`, hiding the Digital & e-commerce phase and Vehicle Graphics.
+
+**Dead template branch.** `isGenericCategory` can never be true — its condition
+excludes all five `WORK_CATEGORIES` slugs — so the block it guards never
+renders. The `staedtler-ig-*` / `staedtler-fb-*` slots inside it are therefore
+not a live gap, despite looking like one.
 
 ---
 
