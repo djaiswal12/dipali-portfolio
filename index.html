@@ -258,7 +258,7 @@
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
     <div style="animation:fadeIn 0.6s ease;">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px) clamp(24px,4vw,40px);">
-        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(46px,9vw,120px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</h1>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6.5vw,88px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</div>
         <div style="margin-top: 18px; max-width: 640px; font-size: clamp(16px,2vw,20px); line-height: 1.6; color: #8A8C7E; font-style: italic; font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif">
           Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
         </div>
@@ -1813,18 +1813,6 @@
           <button type="button" onClick="{{ goAbout }}" style="margin-top:8px;display:inline-block;text-align:center;cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;background:none;padding:14px 28px;color:#1F211C;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;">Experience</button>
         </div>
       </div>
-
-      <div style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(36px,5vw,48px);">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
-          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Instagram</div>
-          <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="font-size:13px;color:#1F211C;text-decoration:none;">@dipali_11 →</a>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));gap:10px;">
-          <sc-for list="{{ igTiles }}" as="t" hint-placeholder-count="6">
-            <image-slot id="{{ t.slotId }}" src="{{ t.src }}" shape="rect" placeholder="Instagram" style="width:100%;aspect-ratio:1/1;"></image-slot>
-          </sc-for>
-        </div>
-      </div>
     </div>
   </sc-if>
 
@@ -2803,7 +2791,6 @@ class Component extends DCLogic {
       skills: SKILLS.map(name => ({ name })),
       experience: EXPERIENCE,
       aboutPortraitSrc: imgSrc('about-portrait'),
-      igTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'ig-' + i, src: imgSrc('ig-' + i) })),
       staedtlerIgTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-ig-' + i, src: imgSrc('staedtler-ig-' + i) })),
       staedtlerFbTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-fb-' + i, src: imgSrc('staedtler-fb-' + i) }))
     };
