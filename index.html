@@ -203,6 +203,15 @@
     .cyc2:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
     .cycle-item.pinned .cycle-dot { animation: none; }
     .navdrop:hover { background: #F4ECF3; color: var(--plum); }
+    /* Column counts that divide the item count evenly at every width, so the
+       last row is never left with an orphan. Four work tiles; the hairline card
+       grids hold multiples of three and draw their rules with a background
+       showing through a 1px gap, where a part-filled row reads as grey voids. */
+    .worktiles { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    @media (max-width: 1100px) { .worktiles { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 560px) { .worktiles { grid-template-columns: minmax(0,1fr); } }
+    .hairgrid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    @media (max-width: 860px) { .hairgrid { grid-template-columns: minmax(0,1fr); } }
     @media (max-width: 980px) {
       .phasewrap { grid-template-columns: minmax(0,1fr) !important; }
       .phaserail { display: none !important; }
@@ -270,8 +279,8 @@
 
       <div data-anchor="selected-work" style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
-          <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
+        <div class="worktiles" style="display:grid;gap:clamp(14px,2vw,24px);">
+          <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="4">
             <div onClick="{{ cat.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="/images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
@@ -315,8 +324,10 @@
       <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</h1>
       <div style="display:inline-block;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:11px 20px;margin-bottom:36px;">Open to brand design &amp; art direction — fashion, apparel, lifestyle</div>
 
-      <div class="splitcols" style="display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr);gap:clamp(30px,5vw,64px);align-items:start;">
-        <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
+      <div class="splitcols" style="display:grid;grid-template-columns:{{ aboutCols }};gap:clamp(30px,5vw,64px);align-items:start;">
+        <sc-if value="{{ hasAboutPortrait }}">
+          <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
+        </sc-if>
         <div style="font-size:16px;line-height:1.75;color:#1F211C;display:flex;flex-direction:column;gap:20px;max-width:640px;">
           <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
           <p style="margin:0;">My work turns marketing strategy into creative people actually respond to. I specialize in integrated product launches, seasonal campaigns, and high-volume asset production — all while keeping brand consistency tight. I work closely with marketing, product, and sales teams so the creative lines up with business goals and retail timelines, and I bring a production background that keeps things efficient, clear, and accurate right down to the file.</p>
@@ -349,6 +360,13 @@
             <div>
               <div style="font-size:17px;font-weight:600;margin-bottom:3px;">Bachelor of Design</div>
               <div style="font-size:14px;color:#8A8C7E;">OCAD University · Toronto, ON</div>
+            </div>
+          </div>
+
+          <div class="splitcols" style="display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr);gap:clamp(14px,3vw,40px);align-items:start;border-top:1px solid #dedad2;padding-top:26px;">
+            <div style="font-size:12.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;padding-top:4px;">Resume</div>
+            <div>
+              <a href="/files/Dipali-Patel-Resume.pdf" download="Dipali-Patel-Resume.pdf" style="display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;padding:13px 26px;color:#1F211C;text-decoration:none;">Download PDF</a>
             </div>
           </div>
         </div>
@@ -570,7 +588,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">What I do here</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">The full scope.</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+        <div class="hairgrid" style="display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
           <sc-for list="{{ capabilities }}" as="c" hint-placeholder-count="9">
             <div style="background:#FBFAF7;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:9px;">
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:22px;color:var(--accent);line-height:1;">{{ c.n }}</div>
@@ -906,11 +924,7 @@
                 <sc-for list="{{ norisLaunch }}" as="post" hint-placeholder-count="2">
                   <div>
                     <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;"><image-slot id="{{ post.slotId }}" src="{{ post.src }}" shape="rect" placeholder="Giveaway / creator content" style="width:100%;height:100%;"></image-slot></div></div>
-                    <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
-                      <a href="{{ post.url }}" target="_blank" rel="noopener" style="font-size:13px;color:#1F211C;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px;">{{ post.handle }}</a>
-                      <a href="{{ post.url }}" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;text-decoration:none;">View post →</a>
-                    </div>
-                    <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ post.note }}</div>
+                    <div style="margin-top:10px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ post.label }}</div>
                   </div>
                 </sc-for>
               </div>
@@ -923,10 +937,7 @@
                       <div style="width:100%;aspect-ratio:9/16;overflow:hidden;background:#F1EEE9;">
                         <video-slot id="noris-creator-{{ $index }}" src="/videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
                       </div>
-                      <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
-                        <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size: 12.5px; color: #1F211C; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px">{{ creator.handle }}</a>
-                        <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;text-decoration:none;">View post →</a>
-                      </div>
+                      <div style="margin-top:10px;font-size:12.5px;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:2px;display:inline-block;">{{ creator.handle }}</div>
                       <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ creator.note }}</div>
                     </div>
                   </sc-for>
@@ -1336,7 +1347,7 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;max-width:820px;">Tape measure to vinyl.</div>
         <div style="margin-top:16px;max-width:680px;font-size:15.5px;line-height:1.8;color:#1F211C;">The same six stages carry every project on this page, whether the surface is a shopfront window or the curved flank of a food truck.</div>
 
-        <div style="margin-top:clamp(36px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+        <div class="hairgrid" style="margin-top:clamp(36px,5vw,56px);display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
           <sc-for list="{{ envProcess }}" as="p" hint-placeholder-count="6">
             <div style="background:#FBFAF7;padding:clamp(20px,2.4vw,26px);display:flex;flex-direction:column;">
               <div style="width:100%;aspect-ratio:4/3;overflow:hidden;margin-bottom:18px;">
@@ -1413,16 +1424,18 @@
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">{{ cs.sector }}</div>
           </div>
 
-          <div style="margin-top:clamp(24px,3vw,34px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(12px,1.8vw,20px);">
-            <div>
-              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">Before</div>
-              <image-slot id="sf-{{ cs.key }}-before" src="{{ cs.beforeSrc }}" shape="rect" placeholder="Bare glass / wall" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+          <sc-if value="{{ cs.hasBeforeAfter }}">
+            <div style="margin-top:clamp(24px,3vw,34px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(12px,1.8vw,20px);">
+              <div>
+                <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">Before</div>
+                <image-slot id="sf-{{ cs.key }}-before" src="{{ cs.beforeSrc }}" shape="rect" placeholder="Bare glass / wall" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+              </div>
+              <div>
+                <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">After</div>
+                <image-slot id="sf-{{ cs.key }}-after" src="{{ cs.afterSrc }}" shape="rect" placeholder="Installed graphics" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+              </div>
             </div>
-            <div>
-              <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">After</div>
-              <image-slot id="sf-{{ cs.key }}-after" src="{{ cs.afterSrc }}" shape="rect" placeholder="Installed graphics" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
-            </div>
-          </div>
+          </sc-if>
 
           <div class="splitcols" style="margin-top:clamp(22px,3vw,30px);display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(24px,4vw,52px);align-items:start;">
             <div style="min-width:0;">
@@ -2043,6 +2056,15 @@ const SAVED_IMAGES = new Set([
 // Video files committed to videos/. Add an id only after the file is written.
 const SAVED_VIDEOS = new Set([]);
 
+// True once an image id has a committed file behind it. Slots and sections that
+// would otherwise render an empty drop placeholder are gated on this, so the
+// site reads as finished while the remaining photography is outstanding.
+const hasImg = (id) => SAVED_IMAGES.has(id);
+
+// The Passion category (landing, DIDI, Colourism, CREATE #2) has no photography
+// yet. Flip to true once those assets land to bring the whole branch back.
+const SHOW_PASSION = false;
+
 /* ---------------------------------------------------------------------------
    ROUTING
 
@@ -2087,7 +2109,8 @@ function stateFromPath(path) {
   if (parts[0] === 'about') return { view: 'about', subcat: null };
   if (parts[0] === 'contact') return { view: 'contact', subcat: null };
   if (parts[0] === 'work') {
-    const cat = WORK_CATEGORIES.some(c => c.slug === parts[1]) ? parts[1] : 'staedtler';
+    const routable = WORK_CATEGORIES.some(c => c.slug === parts[1]) && (SHOW_PASSION || parts[1] !== 'passion');
+    const cat = routable ? parts[1] : 'staedtler';
     const allowed = ROUTE_SUBCATS[cat] || [];
     const subcat = allowed.some(x => x.slug === parts[2]) ? parts[2] : null;
     return { view: 'work', cat: cat, subcat: subcat };
@@ -2351,13 +2374,17 @@ class Component extends DCLogic {
 
   renderVals() {
     const view = this.state.view;
-    const catIndex = WORK_CATEGORIES.findIndex(c => c.slug === this.state.cat);
-    const current = WORK_CATEGORIES[catIndex] || WORK_CATEGORIES[0];
+    // Categories a visitor can actually reach. The nav dropdown, the home grid
+    // and the prev/next ring all walk this, so a gated-off category is
+    // unreachable rather than merely unlinked.
+    const VISIBLE_CATEGORIES = WORK_CATEGORIES.filter(c => SHOW_PASSION || c.slug !== 'passion');
+    const catIndex = VISIBLE_CATEGORIES.findIndex(c => c.slug === this.state.cat);
+    const current = VISIBLE_CATEGORIES[catIndex] || VISIBLE_CATEGORIES[0];
     const idx = catIndex === -1 ? 0 : catIndex;
-    const prevIdx = (idx - 1 + WORK_CATEGORIES.length) % WORK_CATEGORIES.length;
-    const nextIdx = (idx + 1) % WORK_CATEGORIES.length;
+    const prevIdx = (idx - 1 + VISIBLE_CATEGORIES.length) % VISIBLE_CATEGORIES.length;
+    const nextIdx = (idx + 1) % VISIBLE_CATEGORIES.length;
 
-    const workCategories = WORK_CATEGORIES.map(c => ({
+    const workCategories = VISIBLE_CATEGORIES.map(c => ({
       ...c,
       select: () => this.selectCategory(c.slug)
     }));
@@ -2507,15 +2534,17 @@ class Component extends DCLogic {
         { key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare' },
         { key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply' },
       ].map(c => ({ ...c, src: imgSrc('sf-sector-' + c.key) })),
+      // A case study only earns a block once it has imagery. The before/after
+      // pair needs both halves — one alone reads as a mistake, not a comparison.
       sfCases: SF_CASES.map(c => ({
         ...c,
         beforeSrc: imgSrc('sf-' + c.key + '-before'),
         afterSrc: imgSrc('sf-' + c.key + '-after'),
-        details: Array.from({ length: c.details }, (_, i) => ({
-          slotId: 'sf-' + c.key + '-detail-' + i,
-          src: imgSrc('sf-' + c.key + '-detail-' + i),
-        })),
-      })),
+        hasBeforeAfter: hasImg('sf-' + c.key + '-before') && hasImg('sf-' + c.key + '-after'),
+        details: Array.from({ length: c.details }, (_, i) => 'sf-' + c.key + '-detail-' + i)
+          .filter(hasImg)
+          .map(id => ({ slotId: id, src: imgSrc(id) })),
+      })).filter(c => c.hasBeforeAfter || c.details.length > 0),
       fleetTypes: [
         { key: 'truck', label: 'Box truck', note: 'the full system, uninterrupted' },
         { key: 'van', label: 'Cargo van', note: 'compressed to a shorter flank' },
@@ -2663,7 +2692,9 @@ class Component extends DCLogic {
           key: t.key,
           caption: t.caption,
           containerClass: pinned ? 'duo-item pinned' : 'duo-item',
-          frames: t.sides.map((side, f) => {
+          // Only views with a photo behind them get a frame and a dot — an empty
+          // frame in the hover cycle reads as a broken tile.
+          frames: t.sides.filter(side => hasImg('noris-' + t.key + '-' + side)).map((side, f) => {
             const active = pinned ? sel === f : f === 0;
             return {
               slotId: 'noris-' + t.key + '-' + side,
@@ -2676,20 +2707,25 @@ class Component extends DCLogic {
             };
           }),
         };
-      }),
+      }).filter(t => t.frames.length > 0),
       norisDigital: Array.from({ length: 2 }, (_, i) => ({ slotId: 'noris-digital-' + i, src: imgSrc('noris-digital-' + i) })),
       norisAmazonProduct: Array.from({ length: 2 }, (_, i) => ({ slotId: 'noris-amazon-product-' + i, src: imgSrc('noris-amazon-product-' + i) })),
+      // Credit lines are omitted until the real creator handles and post links
+      // exist — a placeholder byline is worse than none.
       norisLaunch: [
-        { handle: '@handle', url: 'https://instagram.com/', note: 'Giveaway post — swap in the creator handle and post link.' },
-        { handle: '@handle', url: 'https://instagram.com/', note: 'Creator content — swap in the creator handle and post link.' },
-      ].map((p, i) => ({ ...p, slotId: 'noris-launch-' + i, src: imgSrc('noris-launch-' + i) })),
+        { label: 'Giveaway post' },
+        { label: 'Creator content' },
+      ].map((p, i) => ({ ...p, slotId: 'noris-launch-' + i, src: imgSrc('noris-launch-' + i) }))
+       .filter(p => hasImg(p.slotId)),
+      // Handles are real; the post permalinks are not yet, so these credit the
+      // creator without linking anywhere until the real links exist.
       norisCreators: [
-        { handle: '@always.upper.elementary', url: 'https://instagram.com/', label: 'Reel recap', note: 'Classroom haul featuring the 122 in daily use.' },
-        { handle: '@7daysofplay', url: 'https://instagram.com/', label: 'Reel recap', note: 'Unboxing of the PR box, filmed start to finish.' },
-        { handle: '@ms.craft_kindergarten', url: 'https://instagram.com/', label: 'Reel recap', note: 'Back-to-school setup built around the launch kit.' },
+        { handle: '@always.upper.elementary', label: 'Reel recap', note: 'Classroom haul featuring the 122 in daily use.' },
+        { handle: '@7daysofplay', label: 'Reel recap', note: 'Unboxing of the PR box, filmed start to finish.' },
+        { handle: '@ms.craft_kindergarten', label: 'Reel recap', note: 'Back-to-school setup built around the launch kit.' },
       ],
-      norisPr: Array.from({ length: 3 }, (_, i) => ({ slotId: 'noris-pr-' + i, src: imgSrc('noris-pr-' + i) })),
-      norisMerch: Array.from({ length: 4 }, (_, i) => ({ slotId: 'noris-merch-' + i, src: imgSrc('noris-merch-' + i) })),
+      norisPr: Array.from({ length: 3 }, (_, i) => ({ slotId: 'noris-pr-' + i, src: imgSrc('noris-pr-' + i) })).filter(p => hasImg(p.slotId)),
+      norisMerch: Array.from({ length: 4 }, (_, i) => ({ slotId: 'noris-merch-' + i, src: imgSrc('noris-merch-' + i) })).filter(p => hasImg(p.slotId)),
       goProgression: this.goProgression,
       isRetailLanding: isRetailPackaging && !subcat,
       isRetailSubcat: isRetailPackaging && !!subcat,
@@ -2783,14 +2819,16 @@ class Component extends DCLogic {
       keyActivate: this.keyActivate,
       workCategories,
       currentCategory,
-      prevCategoryLabel: WORK_CATEGORIES[prevIdx].label,
-      nextCategoryLabel: WORK_CATEGORIES[nextIdx].label,
-      prevCategory: () => this.selectCategory(WORK_CATEGORIES[prevIdx].slug),
-      nextCategory: () => this.selectCategory(WORK_CATEGORIES[nextIdx].slug),
+      prevCategoryLabel: VISIBLE_CATEGORIES[prevIdx].label,
+      nextCategoryLabel: VISIBLE_CATEGORIES[nextIdx].label,
+      prevCategory: () => this.selectCategory(VISIBLE_CATEGORIES[prevIdx].slug),
+      nextCategory: () => this.selectCategory(VISIBLE_CATEGORIES[nextIdx].slug),
       accentColor: this.props.accentColor ?? '#B5BE4A',
       skills: SKILLS.map(name => ({ name })),
       experience: EXPERIENCE,
       aboutPortraitSrc: imgSrc('about-portrait'),
+      hasAboutPortrait: hasImg('about-portrait'),
+      aboutCols: hasImg('about-portrait') ? 'minmax(240px,340px) minmax(0,1fr)' : 'minmax(0,1fr)',
       staedtlerIgTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-ig-' + i, src: imgSrc('staedtler-ig-' + i) })),
       staedtlerFbTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-fb-' + i, src: imgSrc('staedtler-fb-' + i) }))
     };
