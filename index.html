@@ -1,9 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+
+<!-- ==========================================================================
+     SITE ORIGIN — the ONLY place the absolute URL is written.
+     When the custom domain goes live, find/replace this exact string
+     everywhere in this file and in sitemap.xml + robots.txt:
+         https://dipali-design.digital
+     Social unfurlers (Slack, LinkedIn, iMessage) do not run JavaScript,
+     so these tags must stay static HTML — they cannot be set at runtime.
+     ========================================================================== -->
+
+<title>Dipali Patel — Brand Designer &amp; Marketing Specialist</title>
+<meta name="description" content="Brand designer and marketing specialist. Design Lead at Staedtler North America — packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta name="author" content="Dipali Patel">
+<link rel="canonical" href="https://dipali-design.digital/">
+<meta name="theme-color" content="#FBFAF7">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dipali Patel">
+<meta property="og:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
+<meta property="og:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta property="og:url" content="https://dipali-design.digital/">
+<meta property="og:image" content="https://dipali-design.digital/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dipali Patel — brand design portfolio">
+<meta property="og:locale" content="en_CA">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
+<meta name="twitter:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta name="twitter:image" content="https://dipali-design.digital/og-image.jpg">
+<meta name="twitter:image:alt" content="Dipali Patel — brand design portfolio">
+
+<!-- Icons -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Structured data: lets Google show this as a person/portfolio result -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Dipali Patel",
+  "jobTitle": "Brand Designer & Marketing Specialist",
+  "description": "Brand designer and marketing specialist working across packaging, retail presence, and integrated digital campaigns.",
+  "url": "https://dipali-design.digital/",
+  "image": "https://dipali-design.digital/og-image.jpg",
+  "email": "mailto:dipali11patel@gmail.com",
+  "telephone": "+1-416-550-7557",
+  "address": { "@type": "PostalAddress", "addressRegion": "Ontario", "addressCountry": "CA" },
+  "worksFor": { "@type": "Organization", "name": "Staedtler" },
+  "sameAs": [
+    "https://linkedin.com/in/dipali-patel-profile",
+    "https://instagram.com/dipali_11"
+  ],
+  "knowsAbout": ["Brand Design", "Packaging Design", "Art Direction", "Marketing", "Retail Design"]
+}
+</script>
+
+<!-- Vercel Web Analytics + Speed Insights. Both need switching on in the Vercel
+     dashboard (Project → Analytics / Speed Insights); until then these 404
+     harmlessly. The va() stub queues custom events fired before the script
+     loads — see the contact form success path in submitContact. -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+
+<script src="/support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -12,12 +82,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&amp;family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
-  <script src="./image-slot.js"></script>
-  <script src="./video-slot.js"></script>
+  <script src="/image-slot.js"></script>
+  <script src="/video-slot.js"></script>
   <style>
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     html, body { margin: 0; padding: 0; background: #FBFAF7; }
     * { box-sizing: border-box; }
+    /* Visually hidden but still read by screen readers — used for the form
+       labels and the honeypot, neither of which should be visible. */
+    .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+          overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+    /* Keyboard users need to see where they are; the builder removed all outlines. */
+    a:focus-visible, button:focus-visible, input:focus-visible,
+    textarea:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--plum); outline-offset: 3px;
+    }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200;
+      background: #1F211C; color: #FBFAF7; padding: 12px 20px; font-size: 14px; }
+    .skip-link:focus { left: 12px; top: 12px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    }
     ::selection { background: var(--plum); color: #FBFAF7; }
     a { color: #1F211C; }
     a:hover { color: var(--plum); }
@@ -86,6 +172,36 @@
     .duo-item.pinned .duo-img.show-frame { opacity: 1; }
     .cycle-item.pinned .cycle-img { opacity: 0; animation: none; }
     .cycle-item.pinned .cycle-img.show-frame { opacity: 1; }
+    /* Dot indicators animated in lockstep with the image cycle above. Without
+       these the first dot stayed lit while the tile cycled through views 2..N,
+       so the position indicator was wrong most of the time. Percentages mirror
+       the cycN image keyframes exactly; only the animated property differs.
+       This is the same treatment .auto-dot already gives the brand-surface
+       tiles — the gallery just never got it. Once pinned the animation stops
+       and the inline dotColor takes over. */
+    @keyframes cycDot4 { 0% { background: #dedad2; } 3%, 29% { background: var(--accent); } 33%, 100% { background: #dedad2; } }
+    @keyframes cycDot3 { 0% { background: #dedad2; } 4%, 39% { background: var(--accent); } 43%, 100% { background: #dedad2; } }
+    @keyframes cycDot2 { 0% { background: #dedad2; } 6%, 57% { background: var(--accent); } 61%, 100% { background: #dedad2; } }
+    .cyc4 .cycle-dot { animation: cycDot4 12s infinite; }
+    .cyc4 .cycle-dot:nth-child(2) { animation-delay: 3s; }
+    .cyc4 .cycle-dot:nth-child(3) { animation-delay: 6s; }
+    .cyc4 .cycle-dot:nth-child(4) { animation-delay: 9s; }
+    .cyc3 .cycle-dot { animation: cycDot3 9s infinite; }
+    .cyc3 .cycle-dot:nth-child(2) { animation-delay: 3s; }
+    .cyc3 .cycle-dot:nth-child(3) { animation-delay: 6s; }
+    .cyc2 .cycle-dot { animation: cycDot2 6s infinite; }
+    .cyc2 .cycle-dot:nth-child(2) { animation-delay: 3s; }
+    /* Hover speeds the images up; the dots have to match or they desync. */
+    .cyc4:hover .cycle-dot { animation-duration: 6s; }
+    .cyc4:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
+    .cyc4:hover .cycle-dot:nth-child(3) { animation-delay: 3s; }
+    .cyc4:hover .cycle-dot:nth-child(4) { animation-delay: 4.5s; }
+    .cyc3:hover .cycle-dot { animation-duration: 4.5s; }
+    .cyc3:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
+    .cyc3:hover .cycle-dot:nth-child(3) { animation-delay: 3s; }
+    .cyc2:hover .cycle-dot { animation-duration: 3s; }
+    .cyc2:hover .cycle-dot:nth-child(2) { animation-delay: 1.5s; }
+    .cycle-item.pinned .cycle-dot { animation: none; }
     .navdrop:hover { background: #F4ECF3; color: var(--plum); }
     @media (max-width: 980px) {
       .phasewrap { grid-template-columns: minmax(0,1fr) !important; }
@@ -101,27 +217,42 @@
 
 <div style="background:#FBFAF7;min-height:100vh;color:#1F211C;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;--accent:{{ accentColor }};--plum:#5B2A5E;">
 
-  <!-- NAV -->
-  <div style="position:sticky;top:0;z-index:50;background:#FBFAF7;border-bottom:1px solid #dedad2;">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- NAV. The nav items were clickable divs, which meant no keyboard user could
+       reach them and no screen reader announced them as controls. They are real
+       buttons now; the inline resets keep the rendering identical to the divs
+       they replaced. -->
+  <header style="position:sticky;top:0;z-index:50;background:#FBFAF7;border-bottom:1px solid #dedad2;">
     <div style="max-width:1240px;margin:0 auto;padding:clamp(14px,2vw,20px) clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-      <div onClick="{{ goHome }}" style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,2vw,22px);letter-spacing:0.04em;cursor:pointer;font-weight:500;">DIPALI PATEL</div>
-      <div style="display:flex;align-items:center;gap:clamp(16px,3vw,36px);flex-wrap:wrap;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
-        <div onClick="{{ goHome }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ homeUnderline }};">Home</div>
-        <div onClick="{{ goAbout }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ aboutUnderline }};">About</div>
-        <div style="position:relative;" onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}">
-          <div onClick="{{ goWorkDefault }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ workUnderline }};">Work</div>
+      <button type="button" onClick="{{ goHome }}" aria-label="Dipali Patel — go to home" style="background:none;border:none;padding:0;color:inherit;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,2vw,22px);letter-spacing:0.04em;cursor:pointer;font-weight:500;">DIPALI PATEL</button>
+      <nav aria-label="Primary" style="display:flex;align-items:center;gap:clamp(16px,3vw,36px);flex-wrap:wrap;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
+        <button type="button" onClick="{{ goHome }}" aria-current="{{ homeCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ homeUnderline }};">Home</button>
+        <button type="button" onClick="{{ goAbout }}" aria-current="{{ aboutCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ aboutUnderline }};">About</button>
+        <!-- menuOpen used to be set in exactly one place: onMouseEnter. There was
+             no onFocus, no key handling, and the button's own click ran
+             goWorkDefault, which sets menuOpen:false — so pressing Enter actively
+             CLOSED the menu and jumped to whichever category was last viewed. A
+             keyboard or touch visitor could never see the five categories, while
+             aria-expanded advertised a popup to screen readers. Click now toggles,
+             which is what aria-haspopup/aria-expanded describe; hover still works
+             for mouse, and Escape closes. -->
+        <div style="position:relative;" onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}" onKeyDown="{{ workMenuKeyDown }}">
+          <button type="button" onClick="{{ toggleWorkMenu }}" aria-current="{{ workCurrent }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ workUnderline }};">Work</button>
           <sc-if value="{{ menuOpen }}">
             <div style="position:absolute;top:100%;left:0;background:#FBFAF7;border:1px solid #dedad2;min-width:260px;padding:6px 0;box-shadow:0 12px 24px rgba(32,31,28,0.08);">
               <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
-                <div onClick="{{ cat.select }}" style="padding:12px 18px;cursor:pointer;font-size:12.5px;letter-spacing:0.06em;" class="navdrop">{{ cat.label }}</div>
+                <button type="button" onClick="{{ cat.select }}" style="display:block;width:100%;text-align:left;background:none;border:none;color:inherit;font-family:inherit;padding:12px 18px;cursor:pointer;font-size:12.5px;letter-spacing:0.06em;" class="navdrop">{{ cat.label }}</button>
               </sc-for>
             </div>
           </sc-if>
         </div>
-        <div onClick="{{ goContact }}" style="cursor:pointer;padding:6px 0;border-bottom:1px solid {{ contactUnderline }};">Contact</div>
-      </div>
+        <button type="button" onClick="{{ goContact }}" aria-current="{{ contactCurrent }}" style="background:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;padding:6px 0;border:none;border-bottom:1px solid {{ contactUnderline }};">Contact</button>
+      </nav>
     </div>
-  </div>
+  </header>
+
+  <main id="main">
 
   <!-- HOME -->
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
@@ -132,18 +263,18 @@
           Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
         </div>
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
-          <div onClick="{{ goAbout }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
-          <div onClick="{{ goContact }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
+          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
+      <div data-anchor="selected-work" style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
-            <div onClick="{{ cat.select }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
+            <div onClick="{{ cat.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" style="width:100%;height:100%;"></image-slot></div>
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="/images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.6vw,24px);">{{ cat.label }}</div>
@@ -163,17 +294,17 @@
           <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
             <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
             <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-            <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
-            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+            <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
           </div>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </div>
   </sc-if>
 
@@ -181,11 +312,11 @@
   <sc-if value="{{ isAbout }}">
     <div style="animation:fadeIn 0.6s ease;max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
       <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">About</div>
-      <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</div>
+      <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</h1>
       <div style="display:inline-block;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:11px 20px;margin-bottom:36px;">Open to brand design &amp; art direction — fashion, apparel, lifestyle</div>
 
       <div class="splitcols" style="display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr);gap:clamp(30px,5vw,64px);align-items:start;">
-        <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" style="width:100%;aspect-ratio:4/5;"></image-slot>
+        <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
         <div style="font-size:16px;line-height:1.75;color:#1F211C;display:flex;flex-direction:column;gap:20px;max-width:640px;">
           <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
           <p style="margin:0;">My work turns marketing strategy into creative people actually respond to. I specialize in integrated product launches, seasonal campaigns, and high-volume asset production — all while keeping brand consistency tight. I work closely with marketing, product, and sales teams so the creative lines up with business goals and retail timelines, and I bring a production background that keeps things efficient, clear, and accurate right down to the file.</p>
@@ -194,17 +325,46 @@
         </div>
       </div>
 
+      <!-- EXPERIENCE. Stands in for the resume download, which was removed
+           deliberately. Content lives in the EXPERIENCE array in the script
+           block below. -->
+      <section style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Experience</div>
+        <h2 style="margin:0 0 32px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(28px,3.4vw,40px);">Where I've done it.</h2>
+
+        <div style="display:flex;flex-direction:column;gap:30px;max-width:820px;">
+          <sc-for list="{{ experience }}" as="job" hint-placeholder-count="1">
+            <div class="splitcols" style="display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr);gap:clamp(14px,3vw,40px);align-items:start;">
+              <div style="font-size:12.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;padding-top:4px;">{{ job.period }}</div>
+              <div>
+                <div style="font-size:17px;font-weight:600;margin-bottom:3px;">{{ job.role }}</div>
+                <div style="font-size:14px;color:#8A8C7E;margin-bottom:10px;">{{ job.org }}</div>
+                <p style="margin:0;font-size:15px;line-height:1.7;color:#1F211C;">{{ job.summary }}</p>
+              </div>
+            </div>
+          </sc-for>
+
+          <div class="splitcols" style="display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr);gap:clamp(14px,3vw,40px);align-items:start;border-top:1px solid #dedad2;padding-top:26px;">
+            <div style="font-size:12.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;padding-top:4px;">Education</div>
+            <div>
+              <div style="font-size:17px;font-weight:600;margin-bottom:3px;">Bachelor of Design</div>
+              <div style="font-size:14px;color:#8A8C7E;">OCAD University · Toronto, ON</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
         <div style="max-width:520px;">
           <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,30px);margin-bottom:14px;">Work with me</div>
           <div style="font-size:15px;line-height:1.7;color:#8A8C7E;">Looking for a designer who can hold a brand together across a hundred touchpoints — in fashion, apparel, or lifestyle? I'd love to hear from you.</div>
-          <div onClick="{{ goContact }}" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
           <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
           <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-          <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
-          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+          <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
+          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
         </div>
       </div>
 
@@ -224,9 +384,9 @@
     <div style="animation:fadeIn 0.6s ease;">
     <sc-if value="{{ isGenericCategory }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
         <div style="margin-top:24px;max-width:720px;font-size:15.5px;line-height:1.75;color:#1F211C;">{{ currentCategory.intro }}</div>
       </div>
@@ -271,7 +431,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Instagram</div>
-                <a href="https://instagram.com" target="_blank" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
+                <a href="https://www.instagram.com/staedtler_na/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerIgTiles }}" as="t" hint-placeholder-count="6">
@@ -282,7 +442,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Facebook</div>
-                <a href="https://facebook.com" target="_blank" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
+                <a href="https://www.facebook.com/STAEDTLERNorthAmerica/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerFbTiles }}" as="t" hint-placeholder-count="6">
@@ -314,27 +474,27 @@
       </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- STAEDTLER — ROLE OVERVIEW -->
     <sc-if value="{{ isStaedtlerPage }}">
       <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
-        <image-slot id="stae-hero" src="images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" style="width:100%;height:100%;"></image-slot>
+        <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">STAEDTLER</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</h1>
         <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">One brand, every surface it touches — across the North American business.</div>
         <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">I joined STAEDTLER as a packaging designer and now lead creative across the North American business. On any given week I'm producing new product artwork, building production-accurate mockups for buyer approval, designing retail and sales materials, running the brand's social channels, and executing launch campaigns end to end. The range is wide, but the job underneath it is always the same: make every touchpoint look like it came from the same brand.</div>
       </div>
@@ -364,7 +524,7 @@
                 <sc-if value="{{ s.multi }}">
                   <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                     <sc-for list="{{ s.frames }}" as="fr" hint-placeholder-count="3">
-                      <div onClick="{{ fr.select }}" class="{{ fr.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ fr.dotColor }};animation-delay:{{ fr.delay }};transition:background 0.25s ease;"></div>
+                      <div onClick="{{ fr.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="{{ fr.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ fr.dotColor }};animation-delay:{{ fr.delay }};transition:background 0.25s ease;"></div>
                     </sc-for>
                   </div>
                 </sc-if>
@@ -385,7 +545,7 @@
                   </div>
                   <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">amazon.com/staedtler</div>
                 </div>
-                <image-slot id="stae-ecom-browser" src="images/stae-ecom-browser.webp" shape="rect" placeholder="Amazon brand page" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+                <image-slot id="stae-ecom-browser" src="/images/stae-ecom-browser.webp" shape="rect" placeholder="Amazon brand page" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
               </div>
               <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Amazon brand page — artwork across the full catalog, shown as it appears live.</div>
             </div>
@@ -397,7 +557,7 @@
                   <div style="font-size:11.5px;color:#8A8C7E;letter-spacing:0.03em;">STAEDTLER — New product launch</div>
                 </div>
                 <div style="padding:14px;">
-                  <image-slot id="stae-email-body" src="images/stae-email-body.webp" shape="rect" placeholder="Promotional email" style="display:block;width:100%;aspect-ratio:4/5;"></image-slot>
+                  <image-slot id="stae-email-body" src="/images/stae-email-body.webp" shape="rect" placeholder="Promotional email" style="display:block;width:100%;aspect-ratio:4/5;"></image-slot>
                 </div>
               </div>
               <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Promotional email — built for the mailing list, shown in an inbox.</div>
@@ -460,7 +620,7 @@
             <div>
               <a href="{{ p.url }}" target="_blank" rel="noopener" style="display:block;width:100%;aspect-ratio:1/1;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
-                  <image-slot id="stae-feed-{{ $index }}" src="images/stae-feed-{{ $index }}.webp" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
+                  <image-slot id="stae-feed-{{ $index }}" src="/images/stae-feed-{{ $index }}.webp" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
                 </div>
               </a>
               <a href="{{ p.url }}" target="_blank" rel="noopener" style="margin-top:7px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;color:#8A8C7E;text-decoration:none;">
@@ -552,11 +712,11 @@
       <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
         <sc-if value="{{ hsnHeroVideoReady }}" hint-placeholder-val="{{ false }}">
           <div style="width:100%;aspect-ratio:2/1;overflow:hidden;background:#F1EEE9;">
-            <video-slot id="stae-hsn-hero-video" src="videos/stae-hsn-hero.mp4" poster="images/stae-hsn-hero.webp" label="HSN card program — reel"></video-slot>
+            <video-slot id="stae-hsn-hero-video" src="/videos/stae-hsn-hero.mp4" poster="/images/stae-hsn-hero.webp" label="HSN card program — reel"></video-slot>
           </div>
         </sc-if>
         <sc-if value="{{ hsnHeroImageOnly }}" hint-placeholder-val="{{ true }}">
-          <image-slot id="stae-hsn-hero" src="images/stae-hsn-hero.webp" shape="rect" placeholder="HSN card — hero piece, styled" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
+          <image-slot id="stae-hsn-hero" src="/images/stae-hsn-hero.webp" shape="rect" placeholder="HSN card — hero piece, styled" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
         </sc-if>
         <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">HSN card program — the strongest piece, styled and shot as a finished object.</div>
       </div>
@@ -579,10 +739,10 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">Go deeper.</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
           <sc-for list="{{ staeFeatured }}" as="f" hint-placeholder-count="3">
-            <div onClick="{{ f.go }}" style="cursor:pointer;">
+            <div onClick="{{ f.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
-                  <image-slot id="stae-featured-{{ f.key }}" src="images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
+                  <image-slot id="stae-featured-{{ f.key }}" src="/images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
                 </div>
               </div>
               <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ f.kicker }}</div>
@@ -594,15 +754,15 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- INTEGRATED DIGITAL CAMPAIGN — NORIS 122 FLAGSHIP -->
@@ -612,7 +772,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Integrated Digital Campaign</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">STAEDTLER Noris<span style="font-size:0.5em;vertical-align:super;">®</span> 122</div>
         <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">STAEDTLER · North American product launch</div>
@@ -651,7 +811,7 @@
           <div class="phaserail" style="position:sticky;top:96px;display:flex;flex-direction:column;gap:2px;">
             <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:12px;">Phases</div>
             <sc-for list="{{ phases }}" as="p" hint-placeholder-count="7">
-              <div onClick="{{ p.go }}" style="cursor:pointer;display:flex;gap:9px;align-items:baseline;padding:7px 0;border-bottom:1px solid {{ p.railBorder }};">
+              <div onClick="{{ p.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;display:flex;gap:9px;align-items:baseline;padding:7px 0;border-bottom:1px solid {{ p.railBorder }};">
                 <div style="font-size:10.5px;letter-spacing:0.06em;color:{{ p.railNum }};min-width:16px;">{{ p.n }}</div>
                 <div style="font-size:12px;line-height:1.35;color:{{ p.railColor }};">{{ p.label }}</div>
               </div>
@@ -670,7 +830,7 @@
                 </sc-for>
               </div>
               <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Packaging — shot as printed pieces, real substrate and finish.</div>
-              <div onClick="{{ goProgression }}" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
+              <div onClick="{{ goProgression }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
 
             <div data-phase="retail">
               <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nRetail }} — Retail &amp; print</div>
@@ -691,7 +851,7 @@
                     </div>
                     <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                       <sc-for list="{{ tile.frames }}" as="side" hint-placeholder-count="3">
-                        <div onClick="{{ side.select }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ side.dotColor }};transition:background 0.25s ease;"></div>
+                        <div onClick="{{ side.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ side.dotColor }};transition:background 0.25s ease;"></div>
                       </sc-for>
                     </div>
                     <div style="margin-top:7px;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">{{ tile.caption }}</div>
@@ -761,11 +921,11 @@
                   <sc-for list="{{ norisCreators }}" as="creator" hint-placeholder-count="3">
                     <div>
                       <div style="width:100%;aspect-ratio:9/16;overflow:hidden;background:#F1EEE9;">
-                        <video-slot id="noris-creator-{{ $index }}" src="videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
+                        <video-slot id="noris-creator-{{ $index }}" src="/videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
                       </div>
                       <div style="margin-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;">
                         <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size: 12.5px; color: #1F211C; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px">{{ creator.handle }}</a>
-                        View post →
+                        <a href="{{ creator.url }}" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;text-decoration:none;">View post →</a>
                       </div>
                       <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ creator.note }}</div>
                     </div>
@@ -811,15 +971,15 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- PASSION LANDING -->
@@ -829,14 +989,14 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</h1>
         <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(52px,7vw,88px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:grid;gap:clamp(36px,5vw,64px);">
-        <div onClick="{{ goDidi }}" style="cursor:pointer;">
+        <div onClick="{{ goDidi }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
           <div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:#F1EEE9;">
             <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
               <image-slot id="passion-tile-didi" src="{{ didiTileSrc }}" shape="rect" placeholder="DIDI — strongest product shot, wide" style="width:100%;height:100%;"></image-slot>
@@ -845,7 +1005,7 @@
           <div class="splitcols" style="margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,380px);gap:clamp(20px,3vw,44px);align-items:end;">
             <div style="min-width:0;">
               <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">A brand, built end to end</div>
-              <div style="margin-top:8px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(30px,4.4vw,58px);line-height:1.02;">DIDI Tote Bags</div>
+              <h1 style="margin:0;margin-top:8px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(30px,4.4vw,58px);line-height:1.02;">DIDI Tote Bags</h1>
             </div>
             <div style="min-width:0;font-size:14.5px;line-height:1.7;color:#8A8C7E;">A handmade accessories brand — identity, artwork, product, packaging, shop, and photography, all mine.</div>
           </div>
@@ -853,7 +1013,7 @@
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(24px,3.5vw,44px);">
           <sc-for list="{{ passionSmallProjects }}" as="p" hint-placeholder-count="2">
-            <div onClick="{{ p.go }}" style="cursor:pointer;min-width:0;">
+            <div onClick="{{ p.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;min-width:0;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#F1EEE9;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
                   <image-slot id="passion-tile-{{ p.key }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
@@ -866,12 +1026,12 @@
           </sc-for>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- DIDI TOTE BAGS — CASE STUDY -->
@@ -881,9 +1041,9 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Handmade accessories brand</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</h1>
         <div style="margin-top:18px;max-width:640px;font-size:clamp(16px,1.9vw,21px);line-height:1.6;font-style:italic;color:#8A8C7E;">Elevated totes carrying South Asian&ndash;inspired art — made by hand, from materials given a second life.</div>
       </div>
 
@@ -1078,15 +1238,15 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
-        <div onClick="{{ goColourism }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
+        <div onClick="{{ goColourism }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- SHORT PASSION PROJECTS — COLOURISM / CREATE #2 -->
@@ -1096,9 +1256,9 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToPassion }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ pp.kicker }}</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</h1>
         <div style="margin-top:24px;max-width:700px;font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">{{ pp.concept }}</div>
       </div>
 
@@ -1147,15 +1307,15 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ pp.goPrev }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
-        <div onClick="{{ pp.goNext }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
+        <div onClick="{{ pp.goPrev }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
+        <div onClick="{{ pp.goNext }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- ENVIRONMENTAL / SIGNAGE LANDING -->
@@ -1165,9 +1325,9 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</h1>
         <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
       </div>
 
@@ -1195,7 +1355,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
           <sc-for list="{{ envSubcats }}" as="sub" hint-placeholder-count="2">
-            <div onClick="{{ sub.select }}" style="cursor:pointer;max-width:560px;min-width:0;">
+            <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;max-width:560px;min-width:0;">
               <div style="aspect-ratio:4/5;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
                   <image-slot id="env-landing-{{ sub.slug }}" src="{{ sub.src }}" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot>
@@ -1208,12 +1368,12 @@
           </sc-for>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- STOREFRONT & INTERIOR GRAPHICS -->
@@ -1223,9 +1383,9 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Four clients</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</h1>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;">
@@ -1301,17 +1461,17 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
         <sc-if value="{{ showVehicle }}">
-          <div onClick="{{ goVehicle }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
+          <div onClick="{{ goVehicle }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
         </sc-if>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- VEHICLE GRAPHICS — hidden until images are uploaded (showVehicleGraphics prop) -->
@@ -1321,9 +1481,9 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Wraps &amp; fleets</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</h1>
         <div style="margin-top:22px;max-width:720px;font-size:16px;line-height:1.8;color:#1F211C;">I led vehicle graphics end to end &mdash; measuring vehicles on site, working directly with clients on the brief, and preflighting artwork so the design survived the jump to a curved, paneled metal surface. A wrap is unforgiving: what looks right flat can break across a wheel arch or a door seam.</div>
       </div>
 
@@ -1396,31 +1556,31 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ goStorefront }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
-        <div onClick="{{ backToEnvLanding }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
+        <div onClick="{{ goStorefront }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- RETAIL + PACKAGING LANDING -->
     <sc-if value="{{ isRetailLanding }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goWorkDefault }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</h1>
         <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
       </div>
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
           <sc-for list="{{ retailSubcats }}" as="sub" hint-placeholder-count="2">
-            <div onClick="{{ sub.select }}" style="cursor:pointer;">
+            <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
               <div style="aspect-ratio:4/5;overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="retail-landing-{{ sub.slug }}" src="images/retail-landing-{{ sub.slug }}.webp" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot></div>
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="retail-landing-{{ sub.slug }}" src="/images/retail-landing-{{ sub.slug }}.webp" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot></div>
               </div>
               <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ sub.kicker }}</div>
               <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.2vw,30px);">{{ sub.label }}</div>
@@ -1429,24 +1589,24 @@
           </sc-for>
         </div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
 
     <!-- RETAIL SUBCATEGORY PAGES -->
     <sc-if value="{{ isRetailSubcat }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToRetailLanding }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
+        <div onClick="{{ backToRetailLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
       </div>
 
       <sc-if value="{{ isStaedtlerPkg }}">
         <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) 0;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Ongoing Body of Work</div>
-          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,72px);line-height:1;">STAEDTLER Packaging</div>
+          <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,72px);line-height:1;">STAEDTLER Packaging</h1>
           <div style="margin-top:14px;max-width:680px;font-size:15.5px;line-height:1.75;color:#1F211C;">An ongoing collection of packaging projects for Staedtler's consumer line, including updates to existing packaging designed to hold brand consistency across the range.</div>
         </div>
 
@@ -1454,21 +1614,21 @@
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Before / After</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);">
             <div>
-              <image-slot id="staedtler-pkg-before" src="images/staedtler-pkg-before.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-before" src="/images/staedtler-pkg-before.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
             </div>
             <div>
-              <image-slot id="staedtler-pkg-after" src="images/staedtler-pkg-after.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-after" src="/images/staedtler-pkg-after.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(14px,2vw,24px);">
             <div>
-              <image-slot id="staedtler-pkg-before-2" src="images/staedtler-pkg-before-2.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-before-2" src="/images/staedtler-pkg-before-2.webp" shape="rect" placeholder="Before" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">Before</div>
             </div>
             <div>
-              <image-slot id="staedtler-pkg-after-2" src="images/staedtler-pkg-after-2.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
+              <image-slot id="staedtler-pkg-after-2" src="/images/staedtler-pkg-after-2.webp" shape="rect" placeholder="After" style="width:100%;aspect-ratio:4/3;"></image-slot>
               <div style="margin-top:10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">After</div>
             </div>
           </div>
@@ -1478,15 +1638,15 @@
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">The Progression · One Example</div>
           <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#efece3;">
             <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
-              <image-slot id="progression-{{ $index }}" src="images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
+              <image-slot id="progression-{{ $index }}" src="/images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
             </sc-for>
             <div style="position:absolute;left:20px;bottom:20px;font-size:12px;letter-spacing:0.06em;color:#1F211C;background:#FBFAF7;padding:6px 12px;">{{ progressionCaption }}</div>
-            <div onClick="{{ prevSlide }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
-            <div onClick="{{ nextSlide }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">›</div>
+            <div onClick="{{ prevSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
+            <div onClick="{{ nextSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">›</div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;">
             <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
-              <div onClick="{{ slide.select }}" style="cursor:pointer;width:8px;height:8px;border-radius:50%;background:{{ slide.dotColor }};"></div>
+              <div onClick="{{ slide.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;width:8px;height:8px;border-radius:50%;background:{{ slide.dotColor }};"></div>
             </sc-for>
           </div>
         </div>
@@ -1495,16 +1655,16 @@
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Gallery</div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,20px);">
             <sc-for list="{{ staedtlerPkgGallery }}" as="g" hint-placeholder-count="6">
-              <div>
+              <div class="{{ g.containerClass }}">
                 <div class="{{ g.containerClass }}" style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">
                   <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
-                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
+                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="/images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
                   </sc-for>
                 </div>
                 <sc-if value="{{ g.multi }}" hint-placeholder-val="{{ true }}">
                   <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                     <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
-                      <div onClick="{{ frame.select }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ frame.dotColor }};transition:background 0.25s ease;"></div>
+                      <div onClick="{{ frame.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="{{ frame.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ frame.dotColor }};transition:background 0.25s ease;"></div>
                     </sc-for>
                   </div>
                 </sc-if>
@@ -1516,11 +1676,11 @@
 
       <sc-if value="{{ isMlbPresto }}">
         <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
-          <image-slot id="mlb-hero" src="images/mlb-hero.webp" shape="rect" placeholder="Campaign key visual" style="width:100%;height:100%;"></image-slot>
+          <image-slot id="mlb-hero" src="/images/mlb-hero.webp" shape="rect" placeholder="Campaign key visual" style="width:100%;height:100%;"></image-slot>
         </div>
         <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Campaign</div>
-          <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(32px,5vw,64px);line-height:1;">MLB The Show 24 × PRESTO</div>
+          <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(32px,5vw,64px);line-height:1;">MLB The Show 24 × PRESTO</h1>
           <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">PlayStation · MLB · Metrolinx</div>
         </div>
 
@@ -1588,15 +1748,15 @@
       </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,80px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(56px,8vw,80px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
-        <div onClick="{{ nextSubcat }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
+        <div onClick="{{ prevSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
+        <div onClick="{{ nextSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
       </div>
-      <div style="border-top:1px solid #dedad2;">
+      <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
           <div>Toronto, ON</div>
         </div>
-      </div>
+      </footer>
     </sc-if>
     </div>
   </sc-if>
@@ -1605,16 +1765,31 @@
   <sc-if value="{{ isContact }}">
     <div style="animation:fadeIn 0.6s ease;max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
       <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Contact</div>
-      <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:44px;">Let's talk.</div>
+      <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:44px;">Let's talk.</h1>
 
       <div class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(30px,5vw,64px);align-items:start;">
         <div>
-          <div style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
-            <input placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
-            <input placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
-            <textarea placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
-            <div style="cursor:pointer;align-self:flex-start;margin-top:8px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:14px 32px;">Send Message</div>
-          </div>
+          <form onSubmit="{{ submitContact }}" novalidate style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
+            <label class="vh" for="cf-name">Your name</label>
+            <input id="cf-name" name="name" required autocomplete="name" placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <label class="vh" for="cf-email">Your email address</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <label class="vh" for="cf-message">Tell me about your project</label>
+            <textarea id="cf-message" name="message" required placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
+
+            <!-- Honeypot: hidden from people, irresistible to bots. A filled
+                 value makes the API return 200 and silently drop the message,
+                 so the bot never learns it was caught. -->
+            <div class="vh" aria-hidden="true"><label for="cf-company">Company</label><input id="cf-company" name="company" tabindex="-1" autocomplete="off"></div>
+
+            <!-- Deliberately NOT the `disabled` attribute: this runtime does no
+                 boolean-attribute handling, so disabled="false" would render
+                 literally and HTML would treat it as disabled forever. The
+                 in-flight guard lives in submitContact; these are the visuals. -->
+            <button type="submit" aria-disabled="{{ contactBusy }}" style="cursor:{{ contactBtnCursor }};pointer-events:{{ contactBtnEvents }};align-self:flex-start;margin-top:8px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:14px 32px;border:none;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;opacity:{{ contactBtnOpacity }};">{{ contactBtnLabel }}</button>
+
+            <p role="status" aria-live="polite" style="margin:0;display:{{ contactMsgDisplay }};font-size:14px;line-height:1.5;color:{{ contactMsgColor }};">{{ contactMsg }}</p>
+          </form>
         </div>
         <div style="display:flex;flex-direction:column;gap:22px;">
           <div>
@@ -1627,17 +1802,21 @@
           </div>
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Instagram</div>
-            <a href="https://instagram.com/dipali_11" target="_blank" style="color:#1F211C;text-decoration:none;font-size:15px;">@dipali_11</a>
+            <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">@dipali_11</a>
           </div>
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">LinkedIn</div>
-            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
           </div>
-          <a href="#" download="Dipali-Patel-Resume.pdf" title="Add your resume PDF file to this link" style="margin-top:8px;display:inline-block;text-align:center;cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;padding:14px 28px;color:#1F211C;text-decoration:none;">Download Resume</a>
+          <!-- No resume download by design — the experience summary on /about
+               carries that information instead. -->
+          <button type="button" onClick="{{ goAbout }}" style="margin-top:8px;display:inline-block;text-align:center;cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #1F211C;background:none;padding:14px 28px;color:#1F211C;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;">Experience</button>
         </div>
       </div>
     </div>
   </sc-if>
+
+  </main>
 
 </div>
 
@@ -1686,8 +1865,25 @@ const WORK_CATEGORIES = [
 
 const SKILLS = ['Illustrator','Photoshop','InDesign','After Effects','Premiere Pro','Adobe XD','Lightroom','Animate','CorelDRAW','Affinity Designer','Figma','Canva','Cinema 4D','Blender','Maya'];
 
-const imgSrc = (id) => SAVED_IMAGES.has(id) ? 'images/' + id + '.webp' : '';
-const vidSrc = (id) => SAVED_VIDEOS.has(id) ? 'videos/' + id + '.mp4' : '';
+/* Experience shown on /about, standing in for a resume download.
+   Only the Staedtler role is filled in, because it is the one role actually
+   documented elsewhere on this site. The bio says "almost five years", so there
+   is earlier history that belongs here.
+
+   ACTION REQUIRED: add the earlier roles below — real titles, employers, and
+   dates. These were deliberately left out rather than guessed; an invented
+   employment history on a portfolio is worse than a short one. Newest first. */
+const EXPERIENCE = [
+  {
+    period: 'Current',
+    role: 'Design Lead & Marketing Specialist',
+    org: 'Staedtler, North America',
+    summary: "Lead creative across the North American consumer line — packaging artwork, production-accurate mockups, retail and POS, and integrated launch campaigns from key art through to Amazon brand pages and PR boxes. Build and maintain the template and guideline system the team works from, so seasonal launches move fast without the brand drifting. Also run Staedtler's day-to-day social presence.",
+  },
+];
+
+const imgSrc = (id) => SAVED_IMAGES.has(id) ? '/images/' + id + '.webp' : '';
+const vidSrc = (id) => SAVED_VIDEOS.has(id) ? '/videos/' + id + '.mp4' : '';
 
 const DIDI_SCOPE = ['Identity', 'Artwork', 'Bags', 'Jewelry', 'Packaging', 'Shop', 'Photography']
   .map(label => ({ label }));
@@ -1847,8 +2043,75 @@ const SAVED_IMAGES = new Set([
 // Video files committed to videos/. Add an id only after the file is written.
 const SAVED_VIDEOS = new Set([]);
 
+/* ---------------------------------------------------------------------------
+   ROUTING
+
+   The builder shipped every screen at "/" as an in-memory view switch, so the
+   back button did nothing, no project could be linked or bookmarked, a refresh
+   dumped you back to home, and analytics saw the whole site as one pageview.
+
+   These helpers map state <-> path in ONE place. The class drives them from
+   componentDidUpdate, which means all ~30 existing goHome / selectCategory
+   style handlers gain real history without any of them being rewritten.
+
+   Requires the SPA rewrite in vercel.json — without it a refresh on /about
+   404s, because no such file exists on disk.
+   --------------------------------------------------------------------------- */
+
+const ROUTE_SUBCATS = {
+  'retail-packaging': RETAIL_SUBCATS,
+  'environmental-signage': ENV_SUBCATS,
+  // 'didi' is a real passion subview (goDidi -> isDidi) but has no
+  // PASSION_PROJECTS entry, so it has to be listed explicitly. Without it the
+  // router rejects /work/passion/didi and silently drops you on the passion
+  // landing when that URL is reloaded, shared, or reached with Back.
+  'passion': PASSION_PROJECTS.concat([{ slug: 'didi', label: 'DIDI Tote Bags' }]),
+};
+
+// state -> "/work/retail-packaging/mlb-presto"
+function pathFromState(s) {
+  if (s.view === 'about') return '/about';
+  if (s.view === 'contact') return '/contact';
+  if (s.view === 'work') {
+    const cat = s.cat || 'staedtler';
+    return s.subcat ? '/work/' + cat + '/' + s.subcat : '/work/' + cat;
+  }
+  return '/';
+}
+
+// "/work/retail-packaging/mlb-presto" -> partial state. Unknown slugs fall back
+// rather than throwing, so a stale or hand-edited link still lands somewhere real.
+function stateFromPath(path) {
+  const parts = String(path || '/').replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+  if (!parts.length) return { view: 'home', subcat: null };
+  if (parts[0] === 'about') return { view: 'about', subcat: null };
+  if (parts[0] === 'contact') return { view: 'contact', subcat: null };
+  if (parts[0] === 'work') {
+    const cat = WORK_CATEGORIES.some(c => c.slug === parts[1]) ? parts[1] : 'staedtler';
+    const allowed = ROUTE_SUBCATS[cat] || [];
+    const subcat = allowed.some(x => x.slug === parts[2]) ? parts[2] : null;
+    return { view: 'work', cat: cat, subcat: subcat };
+  }
+  return { view: 'home', subcat: null };
+}
+
+// Tab title per route. A recruiter with eight tabs open should be able to tell
+// which one is the portfolio, and which project they left it on.
+function titleFromState(s) {
+  if (s.view === 'about') return 'About — Dipali Patel';
+  if (s.view === 'contact') return 'Contact — Dipali Patel';
+  if (s.view === 'work') {
+    const cat = WORK_CATEGORIES.find(c => c.slug === s.cat);
+    const sub = (ROUTE_SUBCATS[s.cat] || []).find(x => x.slug === s.subcat);
+    const label = sub ? sub.label : (cat ? (cat.title || cat.label) : 'Work');
+    return label + ' — Dipali Patel';
+  }
+  return 'Dipali Patel — Brand Designer & Marketing Specialist';
+}
+
 class Component extends DCLogic {
-  state = { view: 'home', cat: 'staedtler', subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging' };
+  state = { view: 'home', cat: 'staedtler', subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging',
+            contactBusy: false, contactState: 'idle', contactMsg: '' };
 
   // Deliverables line reflects what the page actually shows.
   get _deliverables() { return this.props.showDigital ? 'Packaging, sample cards, retail print, digital ads, Amazon brand page, PR boxes, merchandise' : 'Packaging, sample cards, retail print, PR boxes, merchandise'; }
@@ -1876,14 +2139,80 @@ class Component extends DCLogic {
     };
     window.addEventListener('scroll', this._onScroll, true);
     window.addEventListener('resize', this._onScroll);
+
+    // Back/forward: rewrite _lastPath before setState so the componentDidUpdate
+    // that follows sees no change and does not push a duplicate entry back on.
+    this._onPopState = () => {
+      const next = this._renderable(stateFromPath(location.pathname));
+      this._lastPath = pathFromState(Object.assign({}, this.state, next));
+      this.setState(Object.assign({ menuOpen: false }, next));
+    };
+    window.addEventListener('popstate', this._onPopState);
+
+    // Adopt whatever URL we were loaded on, so /work/staedtler renders that
+    // project directly instead of silently showing home.
+    const initial = this._renderable(stateFromPath(location.pathname));
+    this._skipScrollOnce = true;
+    this.setState(Object.assign({ menuOpen: false }, initial), () => this._syncUrl(true));
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this._onScroll, true);
     window.removeEventListener('resize', this._onScroll);
+    window.removeEventListener('popstate', this._onPopState);
+  }
+
+  /* stateFromPath validates a slug against the DATA, but some sections are
+     additionally gated behind a prop. vehicle-graphics is in ENV_SUBCATS, so
+     the router accepts /work/environmental-signage/vehicle-graphics even when
+     showVehicleGraphics is off and nothing can render it. Drop a subcategory
+     the current props can't display, so the URL corrects itself to the landing
+     rather than sitting on a path that shows an empty page. */
+  _renderable(next) {
+    if (next && next.cat === 'environmental-signage'
+        && next.subcat === 'vehicle-graphics'
+        && !(this.props.showVehicleGraphics ?? false)) {
+      return Object.assign({}, next, { subcat: null });
+    }
+    return next;
+  }
+
+  // Single sync point for history. Cheap no-op on the many state changes that
+  // don't affect the path (menuOpen, activePhase, progressionIndex).
+  _syncUrl(replace) {
+    const path = pathFromState(this.state);
+    document.title = titleFromState(this.state);
+    if (path === this._lastPath) return;
+    const first = this._lastPath === undefined;
+    this._lastPath = path;
+    if (replace || first) {
+      history.replaceState({ path: path }, '', path);
+    } else {
+      history.pushState({ path: path }, '', path);
+    }
+    // Landing mid-page on a freshly opened project reads as broken. Handlers
+    // that scroll to their own anchor (goProgression) opt out via the flag.
+    if (this._skipScrollOnce) { this._skipScrollOnce = false; return; }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  componentDidUpdate() {
+    this._syncUrl(false);
+    /* Nothing used to clear the contact status, so submitting, navigating away
+       and coming back left a stale "your message is on its way" (or a red
+       validation error) sitting under an empty form, as if it had just been
+       sent again. Clearing on leave is one place instead of every nav handler.
+       Converges after a single extra render: once cleared, contactMsg is empty
+       and the condition is false. */
+    if (this.state.view !== 'contact' && this.state.contactMsg) {
+      this.setState({ contactMsg: '', contactState: 'idle', contactBusy: false });
+    }
   }
 
   goProgression = () => {
+    // Opts out of the router's scroll-to-top: this handler scrolls to its own
+    // anchor below, and the two would otherwise fight for the first few frames.
+    this._skipScrollOnce = true;
     this.setState({ view: 'work', cat: 'retail-packaging', subcat: 'staedtler-packaging', menuOpen: false }, () => {
       // Images load after mount, so the document grows and any early scrollTo is
       // clamped. Re-issue each frame until the anchor settles at the target offset.
@@ -1913,14 +2242,112 @@ class Component extends DCLogic {
   goAbout = () => this.setState({ view: 'about', menuOpen: false });
   goContact = () => this.setState({ view: 'contact', menuOpen: false });
   goWorkDefault = () => this.setState({ view: 'work', cat: this.state.cat || 'staedtler', subcat: null, menuOpen: false });
+
+  /* "← All Work" was wired to goWorkDefault, which sets view:'work' with the
+     CURRENT category and subcat:null. Every one of the six places that button
+     appears is already a category landing in exactly that state, so the click
+     changed nothing and the link looked dead.
+
+     There is no dedicated all-work index; the home page's Selected Work grid is
+     that index. Go there and land on the grid rather than the hero, so the
+     button does what its label says. */
+  goAllWork = () => {
+    this._skipScrollOnce = true;
+    this.setState({ view: 'home', subcat: null, menuOpen: false }, () => {
+      requestAnimationFrame(() => {
+        const el = document.querySelector('[data-anchor="selected-work"]');
+        if (!el) { window.scrollTo({ top: 0, behavior: 'auto' }); return; }
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 90;
+        window.scrollTo({ top: top, behavior: 'auto' });
+      });
+    });
+  };
   openWorkMenu = () => this.setState({ menuOpen: true });
   closeWorkMenu = () => this.setState({ menuOpen: false });
+  toggleWorkMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
+
+  /* Shared keyboard activation for the 44 clickable divs the builder emitted.
+     Converting them all to real buttons would have been more semantic, but several
+     are grid items and flex children whose layout depends on being blocks, so
+     role+tabindex+this handler buys the same operability with no visual risk.
+     Space is included because that is what a real button does, and preventing
+     its default stops the page scrolling underneath the activation. */
+  keyActivate = (e) => {
+    if (!e) return;
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      const el = e.currentTarget || e.target;
+      if (el && typeof el.click === 'function') el.click();
+    }
+  };
+  workMenuKeyDown = (e) => { if (e && e.key === 'Escape') this.setState({ menuOpen: false }); };
   selectCategory = (slug) => this.setState({ view: 'work', cat: slug, subcat: null, menuOpen: false });
   selectSubcat = (slug) => this.setState({ view: 'work', cat: 'retail-packaging', subcat: slug, menuOpen: false });
   backToRetailLanding = () => this.setState({ subcat: null });
   selectEnvSubcat = (slug) => this.setState({ view: 'work', cat: 'environmental-signage', subcat: slug, menuOpen: false });
   selectPassionSubcat = (slug) => this.setState({ view: 'work', cat: 'passion', subcat: slug, menuOpen: false });
   backToEnvLanding = () => this.setState({ subcat: null });
+
+  /* ---- Contact form -------------------------------------------------------
+     Previously three unnamed inputs and a plain div that said "Send Message" and
+     did nothing — a recruiter's message went nowhere, with no error shown.
+     Posts to /api/contact (Vercel function -> Resend). If that call fails for
+     any reason, including a missing RESEND_API_KEY, the error path surfaces the
+     direct email address rather than leaving the visitor with a dead button.
+     ------------------------------------------------------------------------- */
+  submitContact = (e) => {
+    e.preventDefault();
+    if (this.state.contactBusy) return;
+
+    const form = e.target;
+    const fd = new FormData(form);
+    // Read via FormData, not form.name — HTMLFormElement.name is the form's own
+    // attribute and would shadow the input.
+    const payload = {
+      name: String(fd.get('name') || '').trim(),
+      email: String(fd.get('email') || '').trim(),
+      message: String(fd.get('message') || '').trim(),
+      company: String(fd.get('company') || ''),
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      this.setState({ contactState: 'error', contactMsg: 'Please fill in your name, email, and a short message.' });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+      this.setState({ contactState: 'error', contactMsg: "That email address doesn't look right — mind checking it?" });
+      return;
+    }
+    if (payload.message.length > 5000) {
+      this.setState({ contactState: 'error', contactMsg: 'That message is a little long — could you trim it under 5000 characters?' });
+      return;
+    }
+
+    this.setState({ contactBusy: true, contactState: 'sending', contactMsg: 'Sending…' });
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json().catch(() => ({})).then((body) => ({ ok: r.ok, body: body })))
+      .then((res) => {
+        if (!res.ok) throw new Error((res.body && res.body.error) || 'Request failed');
+        form.reset();
+        this.setState({
+          contactBusy: false, contactState: 'ok',
+          contactMsg: "Thanks — your message is on its way. I'll get back to you shortly.",
+        });
+        if (window.va) window.va('event', { name: 'contact_form_submit' });
+      })
+      .catch(() => {
+        this.setState({
+          contactBusy: false, contactState: 'error',
+          contactMsg: 'Something went wrong sending that. Please email me directly at dipali11patel@gmail.com and I will pick it up there.',
+        });
+      });
+  };
+
 
   renderVals() {
     const view = this.state.view;
@@ -2051,7 +2478,15 @@ class Component extends DCLogic {
         { label: 'In use', caption: 'In use — the bag carried, so scale reads correctly.' },
       ].map((p, i) => ({ ...p, src: imgSrc('didi-photo-' + i) })),
       didiFeed: Array.from({ length: 9 }, (_, i) => ({ src: imgSrc('didi-feed-' + i) })),
-      isEnvLanding: isEnvironmental && !(showVehicle && this.state.subcat === 'vehicle-graphics') && !this.state.subcat,
+      /* Show the landing whenever there is no RENDERABLE subcategory, not just
+         when subcat is empty. Previously subcat='vehicle-graphics' with
+         showVehicleGraphics off made isEnvLanding, isStorefront and isVehicle
+         all false at once, so the page rendered the header and nothing else —
+         no hero, no body, not even a footer, since each footer sits inside its
+         own sc-if. Reachable by URL because the slug is in ENV_SUBCATS. */
+      isEnvLanding: isEnvironmental
+        && this.state.subcat !== 'storefront-interior'
+        && !(showVehicle && this.state.subcat === 'vehicle-graphics'),
       isStorefront: isEnvironmental && this.state.subcat === 'storefront-interior',
       showVehicle: showVehicle,
       isVehicle: showVehicle && isEnvironmental && this.state.subcat === 'vehicle-graphics',
@@ -2115,7 +2550,7 @@ class Component extends DCLogic {
               // only point at a file that exists — an src for a missing file
               // renders a broken image AND hides the drop placeholder
               src: SAVED_IMAGES.has('stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)))
-                ? 'images/stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)) + '.webp'
+                ? '/images/stae-surface-' + s.key + (f === 0 ? '' : '-' + (f + 1)) + '.webp'
                 : '',
               label: multi ? s.label + ' ' + (f + 1) : s.label,
               frameClass: multi ? (pinned && sel === f ? 'auto-img show-frame' : 'auto-img') : 'solo-img',
@@ -2187,7 +2622,7 @@ class Component extends DCLogic {
       hsnHeroVideoReady: SAVED_VIDEOS.has('stae-hsn-hero'),
       hsnHeroImageOnly: !SAVED_VIDEOS.has('stae-hsn-hero'),
       staeHsn: Array.from({ length: 6 }, (_, i) => ({
-        src: SAVED_IMAGES.has('stae-hsn-' + i) ? 'images/stae-hsn-' + i + '.webp' : '',
+        src: SAVED_IMAGES.has('stae-hsn-' + i) ? '/images/stae-hsn-' + i + '.webp' : '',
       })),
       staeFeatured: [
         { key: 'retail', kicker: 'Case study', label: 'Retail + Packaging', note: 'Packaging artwork, mockups, and before/after updates.', go: () => this.selectCategory('retail-packaging') },
@@ -2262,10 +2697,20 @@ class Component extends DCLogic {
       isMlbPresto: isRetailPackaging && subcat === 'mlb-presto',
       retailSubcats,
       backToRetailLanding: this.backToRetailLanding,
-      prevSubcatLabel: subIdx !== -1 ? RETAIL_SUBCATS[otherSubIdx].label : '',
-      nextSubcatLabel: subIdx !== -1 ? RETAIL_SUBCATS[otherSubIdx].label : '',
-      prevSubcat: () => this.selectSubcat(RETAIL_SUBCATS[otherSubIdx].slug),
-      nextSubcat: () => this.selectSubcat(RETAIL_SUBCATS[otherSubIdx].slug),
+      /* Both of these used to point at otherSubIdx, so with two subcategories
+         "← Prev" and "Next →" carried the SAME label and went to the SAME page
+         — the pair read as a loop. Now it is a linear chain with the landing
+         page as the terminus at both ends, which is what the Environmental
+         subcategories already do. Adding a third subcategory needs no change. */
+      prevSubcatLabel: subIdx > 0 ? RETAIL_SUBCATS[subIdx - 1].label : 'Retail + Packaging',
+      nextSubcatLabel: (subIdx !== -1 && subIdx < RETAIL_SUBCATS.length - 1)
+        ? RETAIL_SUBCATS[subIdx + 1].label : 'Retail + Packaging',
+      prevSubcat: () => subIdx > 0
+        ? this.selectSubcat(RETAIL_SUBCATS[subIdx - 1].slug)
+        : this.backToRetailLanding(),
+      nextSubcat: () => (subIdx !== -1 && subIdx < RETAIL_SUBCATS.length - 1)
+        ? this.selectSubcat(RETAIL_SUBCATS[subIdx + 1].slug)
+        : this.backToRetailLanding(),
       // One entry per gallery tile = how many view files exist for it in
       // images/. A tile never renders more frames than it has files, so an
       // empty frame (broken image + dead cycle step) is impossible.
@@ -2285,7 +2730,11 @@ class Component extends DCLogic {
               number: f + 1,
               frameClass: editing && sel === f ? 'cycle-img show-frame' : 'cycle-img',
               pointerEvents: active ? 'auto' : 'none',
-              dotColor: active ? 'var(--accent)' : '#dedad2',
+              // Unpinned, the dot highlight is driven by the cycDotN CSS animation
+              // so it tracks whichever image is actually showing. Pinned, the CSS
+              // backs off and this static colour marks the chosen frame.
+              dotClass: editing ? '' : 'cycle-dot',
+              dotColor: editing && sel === f ? 'var(--accent)' : '#dedad2',
               select: () => this.setState(s => ({ frameSel: { ...(s.frameSel || {}), [i]: f } }))
             };
           })
@@ -2308,9 +2757,30 @@ class Component extends DCLogic {
       aboutUnderline: view === 'about' ? '#5B2A5E' : 'transparent',
       workUnderline: view === 'work' ? '#5B2A5E' : 'transparent',
       contactUnderline: view === 'contact' ? '#1F211C' : 'transparent',
+      // The purple underline is the only "you are here" cue; aria-current gives
+      // screen readers the same information.
+      homeCurrent: view === 'home' ? 'page' : 'false',
+      aboutCurrent: view === 'about' ? 'page' : 'false',
+      workCurrent: view === 'work' ? 'page' : 'false',
+      contactCurrent: view === 'contact' ? 'page' : 'false',
       menuOpen: this.state.menuOpen,
+      // Contact form. The template has no conditional syntax, so visibility and
+      // colour are computed here and interpolated straight into the style attr.
+      submitContact: this.submitContact,
+      contactBusy: this.state.contactBusy,
+      contactMsg: this.state.contactMsg,
+      contactBtnLabel: this.state.contactBusy ? 'Sending…' : 'Send Message',
+      contactBtnOpacity: this.state.contactBusy ? '0.55' : '1',
+      contactBtnCursor: this.state.contactBusy ? 'default' : 'pointer',
+      contactBtnEvents: this.state.contactBusy ? 'none' : 'auto',
+      contactMsgDisplay: this.state.contactMsg ? 'block' : 'none',
+      contactMsgColor: this.state.contactState === 'error' ? '#A3402F'
+                     : this.state.contactState === 'ok' ? '#4A6B32' : '#8A8C7E',
+
       goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
-      goWorkDefault: this.goWorkDefault, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
+      goWorkDefault: this.goWorkDefault, goAllWork: this.goAllWork, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
+      toggleWorkMenu: this.toggleWorkMenu, workMenuKeyDown: this.workMenuKeyDown,
+      keyActivate: this.keyActivate,
       workCategories,
       currentCategory,
       prevCategoryLabel: WORK_CATEGORIES[prevIdx].label,
@@ -2319,6 +2789,7 @@ class Component extends DCLogic {
       nextCategory: () => this.selectCategory(WORK_CATEGORIES[nextIdx].slug),
       accentColor: this.props.accentColor ?? '#B5BE4A',
       skills: SKILLS.map(name => ({ name })),
+      experience: EXPERIENCE,
       aboutPortraitSrc: imgSrc('about-portrait'),
       staedtlerIgTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-ig-' + i, src: imgSrc('staedtler-ig-' + i) })),
       staedtlerFbTiles: Array.from({ length: 6 }, (_, i) => ({ slotId: 'staedtler-fb-' + i, src: imgSrc('staedtler-fb-' + i) }))

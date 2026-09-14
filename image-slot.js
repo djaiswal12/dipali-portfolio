@@ -438,7 +438,7 @@
 
   class ImageSlot extends HTMLElement {
     static get observedAttributes() {
-      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href'];
+      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href', 'alt', 'loading'];
     }
 
     /** Duplicate-slide hook (called by deck-stage, see its
@@ -1080,7 +1080,12 @@
       if (stored && stored.u && !/^data:image\//i.test(stored.u)) stored = null;
       const srcAttr = this.getAttribute('src') || '';
       this._userUrl = (stored && stored.u) || null;
-      const url = this._userUrl || srcAttr;
+      // A custom element upgrades before the page runtime substitutes its
+      // {{ expressions }}, so on first render srcAttr can still be the literal
+      // template text. Fetching that produces a doomed request per slot and a
+      // wall of console errors; wait for the bound value instead.
+      const unbound = /\{\{/.test(srcAttr);
+      const url = this._userUrl || (unbound ? '' : srcAttr);
       // Don't clobber an in-flight reframe with a store-triggered re-render.
       if (!this.hasAttribute('data-reframe')) {
         this._view = {
@@ -1090,6 +1095,23 @@
         };
       }
       this._cap.textContent = this.getAttribute('placeholder') || 'Drop an image';
+      // Accessibility + performance. The shadow-root <img> is authored with a
+      // hardcoded alt="", which tells a screen reader every portfolio image is
+      // decorative. Mirror the host's alt through instead. Loading defaults to
+      // lazy — the site carries ~45MB of imagery and previously fetched all of
+      // it eagerly; pass loading="eager" on above-the-fold slots (the hero) so
+      // the largest contentful paint isn't deferred. The ghost is a decorative
+      // duplicate of the same picture, so it stays alt="".
+      // An explicit alt wins. Otherwise fall back to the authored placeholder,
+      // which already describes the intended picture ("Amazon brand page",
+      // "HSN card — hero piece, styled") and is a far better default than the
+      // empty alt this component shipped with. The generic library default is
+      // excluded so "Drop an image" never reaches a screen reader.
+      const authoredPlaceholder = this.getAttribute('placeholder') || '';
+      this._img.alt = this.getAttribute('alt')
+        || (authoredPlaceholder === 'Drop an image' ? '' : authoredPlaceholder);
+      this._img.loading = this.getAttribute('loading') || 'lazy';
+      this._img.decoding = 'async';
       // Toggle via style.display — the [hidden] attribute alone loses to
       // the display:flex / display:block rules in the stylesheet above.
       // An Unsplash src with no credit attribute must NOT render — showing

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <!-- Source for og-image.jpg (the 1200x630 link preview card).
+       Authored on a 1200x1200 canvas with the real card inset at y=285:
+       macOS Quick Look renders SVGs into a square, and would otherwise scale a
+       1200x630 document up to fill it and crop the sides off. The square canvas
+       keeps the render 1:1 so a centre crop lands exactly on the card.
+       Regeneration commands are in README.md, "Regenerating the share image".
+       Note: XML comments cannot contain a double hyphen, which is why the CLI
+       flags live in the README rather than here. -->
+  <rect width="1200" height="1200" fill="#FBFAF7"/>
+
+  <g transform="translate(0,285)">
+    <rect width="1200" height="630" fill="#FBFAF7"/>
+
+    <!-- Plum block, echoing the Contact button on the site -->
+    <rect x="0" y="0" width="18" height="630" fill="#5B2A5E"/>
+
+    <text x="86" y="132" font-family="'Work Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+          font-size="20" letter-spacing="4" fill="#8A8C7E">BRAND DESIGNER &amp; MARKETING SPECIALIST</text>
+    <rect x="86" y="158" width="94" height="3" fill="#B5BE4A"/>
+
+    <text x="80" y="300" font-family="Georgia, 'Times New Roman', serif"
+          font-size="118" fill="#1F211C">Dipali Patel</text>
+
+    <text x="86" y="374" font-family="Georgia, 'Times New Roman', serif" font-style="italic"
+          font-size="31" fill="#8A8C7E">Packaging, retail systems, and integrated campaigns</text>
+    <text x="86" y="418" font-family="Georgia, 'Times New Roman', serif" font-style="italic"
+          font-size="31" fill="#8A8C7E">that hold together at every touchpoint.</text>
+
+    <rect x="86" y="520" width="1028" height="1" fill="#dedad2"/>
+    <text x="86" y="572" font-family="'Work Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+          font-size="19" letter-spacing="2.4" fill="#8A8C7E">DESIGN LEAD, STAEDTLER NORTH AMERICA</text>
+    <text x="1114" y="572" text-anchor="end" font-family="'Work Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+          font-size="19" letter-spacing="2.4" fill="#5B2A5E">TORONTO, ON</text>
+  </g>
+</svg>
