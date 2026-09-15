@@ -207,8 +207,8 @@
        last row is never left with an orphan. Four work tiles; the hairline card
        grids hold multiples of three and draw their rules with a background
        showing through a 1px gap, where a part-filled row reads as grey voids. */
-    .worktiles { grid-template-columns: repeat(4, minmax(0,1fr)); }
-    @media (max-width: 1100px) { .worktiles { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    .worktiles { grid-template-columns: repeat(var(--cols, 4), minmax(0,1fr)); }
+    @media (max-width: 1100px) { .worktiles { grid-template-columns: repeat(var(--cols-tablet, 2), minmax(0,1fr)); } }
     @media (max-width: 560px) { .worktiles { grid-template-columns: minmax(0,1fr); } }
     .hairgrid { grid-template-columns: repeat(3, minmax(0,1fr)); }
     @media (max-width: 860px) { .hairgrid { grid-template-columns: minmax(0,1fr); } }
@@ -283,16 +283,14 @@
 
       <div data-anchor="selected-work" style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
-        <div class="worktiles" style="display:grid;gap:clamp(14px,2vw,24px);">
-          <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="4">
+        <div class="worktiles" style="display:grid;gap:clamp(14px,2vw,24px);--cols:{{ tileCols }};--cols-tablet:{{ tileColsTablet }};">
+          <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
             <div onClick="{{ cat.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="/images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;">
-                <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.6vw,24px);">{{ cat.label }}</div>
-                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
-              </div>
+              <div style="margin-top:12px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(17px,1.4vw,22px);line-height:1.15;">{{ cat.label }}</div>
+              <div style="margin-top:5px;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
             </div>
           </sc-for>
         </div>
@@ -508,17 +506,17 @@
     </sc-if>
 
     <!-- STAEDTLER — ROLE OVERVIEW -->
-    <sc-if value="{{ isStaedtlerPage }}">
+    <sc-if value="{{ isStaedtlerBrand }}">
       <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
-        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">STAEDTLER</div>
-        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">Design Lead &amp; Marketing Specialist</h1>
-        <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">One brand, every surface it touches — across the North American business.</div>
-        <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">I joined STAEDTLER as a packaging designer and now lead creative across the North American business. On any given week I'm producing new product artwork, building production-accurate mockups for buyer approval, designing retail and sales materials, running the brand's social channels, and executing launch campaigns end to end. The range is wide, but the job underneath it is always the same: make every touchpoint look like it came from the same brand.</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">{{ currentCategory.title }}</h1>
+        <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
+        <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">{{ currentCategory.intro }}</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
@@ -591,10 +589,10 @@
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">What I do here</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">The full scope.</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">What I make.</div>
         <div class="hairgrid" style="display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
-          <sc-for list="{{ capabilities }}" as="c" hint-placeholder-count="9">
-            <div style="background:#FBFAF7;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:9px;">
+          <sc-for list="{{ brandCapabilities }}" as="c" hint-placeholder-count="5">
+            <div style="background:#FBFAF7;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:9px;grid-column:span {{ c.span }};">
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:22px;color:var(--accent);line-height:1;">{{ c.n }}</div>
               <div style="font-size:15px;letter-spacing:0.01em;color:#1F211C;">{{ c.title }}</div>
               <div style="font-size:13.5px;line-height:1.6;color:#8A8C7E;">{{ c.body }}</div>
@@ -624,6 +622,50 @@
             </div>
           </sc-for>
         </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Featured work</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">Go deeper.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
+          <sc-for list="{{ staeFeatured }}" as="f" hint-placeholder-count="3">
+            <div onClick="{{ f.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
+              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
+                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
+                  <image-slot id="stae-featured-{{ f.key }}" src="/images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
+                </div>
+              </div>
+              <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ f.kicker }}</div>
+              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(20px,2vw,26px);">{{ f.label }}</div>
+              <div style="margin-top:8px;font-size:13.5px;line-height:1.6;color:#8A8C7E;">{{ f.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+      </div>
+      <footer style="border-top:1px solid #dedad2;">
+        <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
+          <div>© 2026 Dipali Patel</div>
+          <div>Toronto, ON</div>
+        </div>
+      </footer>
+    </sc-if>
+
+    <sc-if value="{{ isStaedtlerSocial }}">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
+        <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
+        <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">{{ currentCategory.title }}</h1>
+        <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
+        <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">{{ currentCategory.intro }}</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
@@ -757,19 +799,14 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
-        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Featured work</div>
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">Go deeper.</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
-          <sc-for list="{{ staeFeatured }}" as="f" hint-placeholder-count="3">
-            <div onClick="{{ f.go }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
-              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
-                  <image-slot id="stae-featured-{{ f.key }}" src="/images/stae-featured-{{ f.key }}.webp" shape="rect" placeholder="{{ f.label }}" style="width:100%;height:100%;"></image-slot>
-                </div>
-              </div>
-              <div style="margin-top:14px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ f.kicker }}</div>
-              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(20px,2vw,26px);">{{ f.label }}</div>
-              <div style="margin-top:8px;font-size:13.5px;line-height:1.6;color:#8A8C7E;">{{ f.note }}</div>
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">What I do here</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">What I run.</div>
+        <div class="hairgrid" style="display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+          <sc-for list="{{ socialCapabilities }}" as="c" hint-placeholder-count="4">
+            <div style="background:#FBFAF7;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:9px;grid-column:span {{ c.span }};">
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:22px;color:var(--accent);line-height:1;">{{ c.n }}</div>
+              <div style="font-size:15px;letter-spacing:0.01em;color:#1F211C;">{{ c.title }}</div>
+              <div style="font-size:13.5px;line-height:1.6;color:#8A8C7E;">{{ c.body }}</div>
             </div>
           </sc-for>
         </div>
@@ -1425,7 +1462,7 @@
 
 
       <sc-for list="{{ sfCases }}" as="cs" hint-placeholder-count="4">
-        <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+        <div data-case="{{ cs.key }}" style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
           <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
             <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.4vw,44px);line-height:1.05;">{{ cs.name }}</div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">{{ cs.sector }}</div>
@@ -1844,14 +1881,25 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#B5BE4A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Palette&quot;, &quot;options&quot;: [&quot;#B5BE4A&quot;, &quot;#C9D44F&quot;, &quot;#A8B33C&quot;, &quot;#D2DC5A&quot;]}, &quot;showDigital&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Noris 122 page&quot;, &quot;label&quot;: &quot;Show Digital &amp; e-commerce phase&quot;}, &quot;showVehicleGraphics&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Environmental / Signage&quot;, &quot;label&quot;: &quot;Show Vehicle Graphics section&quot;}}">
 
 const WORK_CATEGORIES = [
+  /* The STAEDTLER role is one job with two very different halves, and as a
+     single page the second half was buried under the first. Split along the
+     job title itself — Design Lead and Marketing Specialist — so each half is
+     a first-class category. `staedtler` still routes, to staedtler-brand, so
+     existing links and shared URLs keep working. */
   {
-    slug: 'staedtler', label: 'STAEDTLER', kicker: 'Current Role', span: 1, ratio: '4/5',
-    title: 'Staedtler', subtitle: 'Design Lead & Marketing Specialist',
-    intro: "Leading design across Staedtler's North American consumer line — packaging, retail presence, and integrated digital campaigns that bring new products to market. I also manage Staedtler's Instagram and Facebook, running the brand's day-to-day social presence alongside the campaign work.",
-    hasBeforeAfter: false, inProgress: false, showCaseStudy: true, showSocialFeed: true, galleryCount: 6,
+    slug: 'staedtler-brand', label: 'Brand & Packaging', kicker: 'STAEDTLER', span: 1, ratio: '4/5',
+    title: 'Brand & Packaging', subtitle: 'Design Lead — STAEDTLER North America',
+    intro: "Leading design across Staedtler's North American consumer line — product packaging, retail and sales materials, e-commerce artwork, and the production-accurate mockups buyers approve before anything goes to manufacturing.",
+    hasBeforeAfter: false, inProgress: false, showCaseStudy: true, galleryCount: 6,
     challenge: "Staedtler's product range spans dozens of SKUs across back-to-school, art, and technical categories — each with its own retail moment, but all needing to read as one brand.",
     approach: "I built and maintain a system of templates and guidelines that let the team move fast without losing consistency, then apply it across packaging, POS, and campaign assets.",
     result: "Faster turnaround on seasonal launches and a shelf presence that holds together whether you're looking at one product or fifty."
+  },
+  {
+    slug: 'staedtler-social', label: 'Social & Team', kicker: 'STAEDTLER', span: 1, ratio: '4/5',
+    title: 'Social & Team', subtitle: 'Marketing Specialist — STAEDTLER North America',
+    intro: "Running Staedtler's North American social presence across Instagram, Facebook and LinkedIn — content, campaigns, giveaways and creator partnerships — and directing the design team behind the HSN card program.",
+    hasBeforeAfter: false, inProgress: false, showCaseStudy: false, showSocialFeed: true, galleryCount: 6,
   },
   {
     slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Selected Work', span: 1, ratio: '4/5',
@@ -2109,12 +2157,37 @@ const ROUTE_SUBCATS = {
   'passion': PASSION_PROJECTS.concat([{ slug: 'didi', label: 'DIDI Tote Bags' }]),
 };
 
+// Where /work lands when the slug is unknown, and the first tile on the home
+// grid. Also the target for retired slugs.
+const DEFAULT_CATEGORY = 'staedtler-brand';
+
+// Retired slugs that must keep resolving. /work/staedtler was one page before
+// it was split in two; links to it are already out in the world.
+const CATEGORY_ALIASES = { 'staedtler': 'staedtler-brand' };
+
+/* .hairgrid draws its rules with a background showing through a 1px gap, so a
+   part-filled last row shows as grey voids. Widening the last card to cover the
+   shortfall fills the row for any item count. */
+// First column count from `prefer` that divides `n` exactly; n itself (one row)
+// when none does, since a prime count has no other even layout.
+function evenCols(n, prefer) {
+  return prefer.find(c => n % c === 0) || n;
+}
+
+function spanLast(items, cols = 3) {
+  const over = items.length % cols;
+  return items.map((c, i) => ({
+    ...c,
+    span: (over && i === items.length - 1) ? cols - over + 1 : 1,
+  }));
+}
+
 // state -> "/work/retail-packaging/mlb-presto"
 function pathFromState(s) {
   if (s.view === 'about') return '/about';
   if (s.view === 'contact') return '/contact';
   if (s.view === 'work') {
-    const cat = s.cat || 'staedtler';
+    const cat = s.cat || DEFAULT_CATEGORY;
     return s.subcat ? '/work/' + cat + '/' + s.subcat : '/work/' + cat;
   }
   return '/';
@@ -2128,8 +2201,9 @@ function stateFromPath(path) {
   if (parts[0] === 'about') return { view: 'about', subcat: null };
   if (parts[0] === 'contact') return { view: 'contact', subcat: null };
   if (parts[0] === 'work') {
-    const routable = WORK_CATEGORIES.some(c => c.slug === parts[1]) && (SHOW_PASSION || parts[1] !== 'passion');
-    const cat = routable ? parts[1] : 'staedtler';
+    const aliased = CATEGORY_ALIASES[parts[1]] || parts[1];
+    const routable = WORK_CATEGORIES.some(c => c.slug === aliased) && (SHOW_PASSION || aliased !== 'passion');
+    const cat = routable ? aliased : DEFAULT_CATEGORY;
     const allowed = ROUTE_SUBCATS[cat] || [];
     const subcat = allowed.some(x => x.slug === parts[2]) ? parts[2] : null;
     return { view: 'work', cat: cat, subcat: subcat };
@@ -2152,7 +2226,7 @@ function titleFromState(s) {
 }
 
 class Component extends DCLogic {
-  state = { view: 'home', cat: 'staedtler', subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging',
+  state = { view: 'home', cat: DEFAULT_CATEGORY, subcat: null, menuOpen: false, progressionIndex: 0, activePhase: 'packaging',
             contactBusy: false, contactState: 'idle', contactMsg: '' };
 
   // Deliverables line reflects what the page actually shows.
@@ -2263,7 +2337,7 @@ class Component extends DCLogic {
   goHome = () => this.setState({ view: 'home', menuOpen: false });
   goAbout = () => this.setState({ view: 'about', menuOpen: false });
   goContact = () => this.setState({ view: 'contact', menuOpen: false });
-  goWorkDefault = () => this.setState({ view: 'work', cat: this.state.cat || 'staedtler', subcat: null, menuOpen: false });
+  goWorkDefault = () => this.setState({ view: 'work', cat: this.state.cat || DEFAULT_CATEGORY, subcat: null, menuOpen: false });
 
   /* "← All Work" was wired to goWorkDefault, which sets view:'work' with the
      CURRENT category and subcat:null. Every one of the six places that button
@@ -2294,6 +2368,27 @@ class Component extends DCLogic {
   selectSubcat = (slug) => this.setState({ view: 'work', cat: 'retail-packaging', subcat: slug, menuOpen: false });
   backToRetailLanding = () => this.setState({ subcat: null });
   selectEnvSubcat = (slug) => this.setState({ view: 'work', cat: 'environmental-signage', subcat: slug, menuOpen: false });
+
+  /* The one exception to "every route opens at the top": a client tile names a
+     specific case, so it lands on that case's header rather than the top of a
+     page holding four of them. The scroll runs from the setState callback, which
+     fires after componentDidUpdate has already reset the scroll, and re-issues
+     each frame because lazy images above the target keep changing the offset
+     until they land. */
+  goEnvCase = (key) => {
+    this.setState({ view: 'work', cat: 'environmental-signage', subcat: 'storefront-interior', menuOpen: false }, () => {
+      const OFFSET = 90, DEADLINE = performance.now() + 2500;
+      const settle = () => {
+        const el = document.querySelector('[data-case="' + key + '"]');
+        if (!el) { if (performance.now() < DEADLINE) requestAnimationFrame(settle); return; }
+        const delta = el.getBoundingClientRect().top - OFFSET;
+        if (Math.abs(delta) < 4 || performance.now() > DEADLINE) return;
+        window.scrollTo({ top: window.pageYOffset + delta, behavior: 'auto' });
+        requestAnimationFrame(settle);
+      };
+      requestAnimationFrame(settle);
+    });
+  };
   selectPassionSubcat = (slug) => this.setState({ view: 'work', cat: 'passion', subcat: slug, menuOpen: false });
   backToEnvLanding = () => this.setState({ subcat: null });
 
@@ -2387,7 +2482,8 @@ class Component extends DCLogic {
 
     const isRetailPackaging = view === 'work' && current.slug === 'retail-packaging';
     const isDigitalCampaign = view === 'work' && current.slug === 'digital-campaign';
-    const isStaedtlerPage = view === 'work' && current.slug === 'staedtler';
+    const isStaedtlerBrand = view === 'work' && current.slug === 'staedtler-brand';
+    const isStaedtlerSocial = view === 'work' && current.slug === 'staedtler-social';
     const isEnvironmental = view === 'work' && current.slug === 'environmental-signage';
     const showVehicle = this.props.showVehicleGraphics ?? false;
     const isPassion = view === 'work' && current.slug === 'passion';
@@ -2444,7 +2540,7 @@ class Component extends DCLogic {
       isAbout: view === 'about',
       isWork: view === 'work',
       isContact: view === 'contact',
-      isGenericCategory: view === 'work' && !isRetailPackaging && !isDigitalCampaign && !isStaedtlerPage && !isEnvironmental && !isPassion,
+      isGenericCategory: view === 'work' && !isRetailPackaging && !isDigitalCampaign && !isStaedtlerBrand && !isStaedtlerSocial && !isEnvironmental && !isPassion,
       isPassionLanding: isPassion && !sub,
       isDidi: isPassion && sub === 'didi',
       isPassionProject: isPassion && ppIndex !== -1,
@@ -2521,7 +2617,7 @@ class Component extends DCLogic {
         { key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty' },
         { key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare' },
         { key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply' },
-      ].map(c => ({ ...c, src: imgSrc('sf-sector-' + c.key), select: () => this.selectEnvSubcat('storefront-interior') })),
+      ].map(c => ({ ...c, src: imgSrc('sf-sector-' + c.key), select: () => this.goEnvCase(c.key) })),
       showVehicleTile: showVehicle,
       // A case study only earns a block once it has imagery. The before/after
       // pair needs both halves — one alone reads as a mistake, not a comparison.
@@ -2549,7 +2645,8 @@ class Component extends DCLogic {
         { label: 'Rear doors — system meeting across the gap' },
         { label: 'Cab curve — type set back off the bend' },
       ].map((d, i) => ({ ...d, slotId: 'veh-fleet-detail-' + i, src: imgSrc('veh-fleet-detail-' + i) })),
-      isStaedtlerPage,
+      isStaedtlerBrand,
+      isStaedtlerSocial,
       ecomFrameHeight: 560,
       brandSurfaces: [
         { key: 'packaging', label: 'Packaging', note: 'On shelf, at every size in the range.', count: 1 },
@@ -2590,17 +2687,19 @@ class Component extends DCLogic {
           }),
         };
       }),
-      capabilities: [
+      brandCapabilities: spanLast([
         { n: '01', title: 'Product packaging', body: 'New artwork, plus updating existing packaging to new standards while preserving the brand.' },
         { n: '02', title: 'Production mockups', body: 'Clean, correctly sized, near-production-quality physical mockups sent to buyers for approval before manufacturing.' },
         { n: '03', title: 'Sales & retail materials', body: 'Promotional flyers for sales reps, brochures for active deals, and printed inserts for sample packs.' },
-        { n: '04', title: 'Email marketing', body: 'Promotional and event emails to the mailing list.' },
-        { n: '05', title: 'E-commerce', body: 'Amazon product imagery and full brand-page artwork across the entire catalog.' },
-        { n: '06', title: 'Social media', body: 'Instagram, Facebook, and LinkedIn: content creation, scheduling, and community engagement.' },
-        { n: '07', title: 'Campaigns', body: 'Proposing and fully executing giveaways, drawing contests, and product launches.' },
-        { n: '08', title: 'Influencer & PR', body: 'Sourcing creators, coordinating logistics, and shipping PR boxes for launches.' },
-        { n: '09', title: 'Team leadership', body: 'Directing a design team producing product-based cards for HSN.' },
-      ],
+        { n: '04', title: 'E-commerce', body: 'Amazon product imagery and full brand-page artwork across the entire catalog.' },
+        { n: '05', title: 'Email marketing', body: 'Promotional and event emails to the mailing list.' },
+      ]),
+      socialCapabilities: spanLast([
+        { n: '01', title: 'Social media', body: 'Instagram, Facebook, and LinkedIn: content creation, scheduling, and community engagement.' },
+        { n: '02', title: 'Campaigns', body: 'Proposing and fully executing giveaways, drawing contests, and product launches.' },
+        { n: '03', title: 'Influencer & PR', body: 'Sourcing creators, coordinating logistics, and shipping PR boxes for launches.' },
+        { n: '04', title: 'Team leadership', body: 'Directing a design team producing product-based cards for HSN.' },
+      ]),
       staeMockupHeroSrc: imgSrc('stae-mockup-hero'),
       staeMockups: Array.from({ length: 3 }, (_, i) => ({ slotId: 'stae-mockup-' + i, src: imgSrc('stae-mockup-' + i) })),
       staeChannels: [
@@ -2813,6 +2912,11 @@ class Component extends DCLogic {
       toggleWorkMenu: this.toggleWorkMenu, workMenuKeyDown: this.workMenuKeyDown,
       keyActivate: this.keyActivate,
       workCategories,
+      // Column counts that divide the visible-category count evenly, so the
+      // home grid never leaves an orphan in its last row. Five categories only
+      // divide by five, hence a single row; six drops to a roomier 3 x 2.
+      tileCols: evenCols(workCategories.length, [4, 3, 5, 2]),
+      tileColsTablet: workCategories.length % 2 === 0 ? 2 : 1,
       currentCategory,
       prevCategoryLabel: VISIBLE_CATEGORIES[prevIdx].label,
       nextCategoryLabel: VISIBLE_CATEGORIES[nextIdx].label,
