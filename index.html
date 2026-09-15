@@ -212,6 +212,10 @@
     @media (max-width: 560px) { .worktiles { grid-template-columns: minmax(0,1fr); } }
     .hairgrid { grid-template-columns: repeat(3, minmax(0,1fr)); }
     @media (max-width: 860px) { .hairgrid { grid-template-columns: minmax(0,1fr); } }
+    /* Wide imagery sits on the same measure as the copy rather than running
+       edge to edge. Full bleed upscaled ~1920px sources past their native width
+       on large displays, which is what made the headers look soft. */
+    .pagehero { width: min(1240px, calc(100% - 2 * clamp(20px, 4vw, 48px))); margin-inline: auto; }
     @media (max-width: 980px) {
       .phasewrap { grid-template-columns: minmax(0,1fr) !important; }
       .phaserail { display: none !important; }
@@ -449,7 +453,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Instagram</div>
-                <a href="https://www.instagram.com/staedtler_na/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtler →</a>
+                <a href="https://www.instagram.com/staedtlernorthamerica/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">@staedtlernorthamerica →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerIgTiles }}" as="t" hint-placeholder-count="6">
@@ -460,7 +464,7 @@
             <div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;">Facebook</div>
-                <a href="https://www.facebook.com/STAEDTLERNorthAmerica/" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">Staedtler →</a>
+                <a href="https://www.facebook.com/staedtler.northamerica" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1F211C;text-decoration:none;">STAEDTLER (US, CA) →</a>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 <sc-for list="{{ staedtlerFbTiles }}" as="t" hint-placeholder-count="6">
@@ -505,7 +509,7 @@
 
     <!-- STAEDTLER — ROLE OVERVIEW -->
     <sc-if value="{{ isStaedtlerPage }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -605,9 +609,9 @@
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Before anything goes to manufacturing, buyers see a physical mockup — correctly sized, correctly finished, close enough to production that the approval means something. Building these is a different skill from designing the artwork, and it's the part that keeps launches on schedule.</div>
       </div>
 
-      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+      <div class="pagehero" style="padding:clamp(28px,4vw,40px) 0 0;">
         <image-slot id="stae-mockup-hero" src="{{ staeMockupHeroSrc }}" shape="rect" placeholder="Mockups in-hand, at scale" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
-        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Production mockups — photographed in-hand, because that's how a buyer judges them.</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Production mockups — photographed in-hand, because that's how a buyer judges them.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
@@ -727,7 +731,7 @@
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">I direct a design team producing finished card projects made with STAEDTLER products, created for sale on HSN. I brief the team, set the creative direction for each release, hold the brand and quality standards, and review the output before it goes out. The work has to function as a sellable craft object first and a brand piece second — both, every time.</div>
       </div>
 
-      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+      <div class="pagehero" style="padding:clamp(28px,4vw,40px) 0 0;">
         <sc-if value="{{ hsnHeroVideoReady }}" hint-placeholder-val="{{ false }}">
           <div style="width:100%;aspect-ratio:2/1;overflow:hidden;background:#F1EEE9;">
             <video-slot id="stae-hsn-hero-video" src="/videos/stae-hsn-hero.mp4" poster="/images/stae-hsn-hero.webp" label="HSN card program — reel"></video-slot>
@@ -736,7 +740,7 @@
         <sc-if value="{{ hsnHeroImageOnly }}" hint-placeholder-val="{{ true }}">
           <image-slot id="stae-hsn-hero" src="/images/stae-hsn-hero.webp" shape="rect" placeholder="HSN card — hero piece, styled" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
         </sc-if>
-        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">HSN card program — the strongest piece, styled and shot as a finished object.</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">HSN card program — the strongest piece, styled and shot as a finished object.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
@@ -785,7 +789,7 @@
 
     <!-- INTEGRATED DIGITAL CAMPAIGN — NORIS 122 FLAGSHIP -->
     <sc-if value="{{ isDigitalCampaign }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="noris-hero" src="{{ norisHeroSrc }}" shape="rect" placeholder="Noris 122 key visual" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -818,9 +822,9 @@
         </div>
       </div>
 
-      <div style="width:100%;padding:clamp(48px,7vw,80px) 0 0;">
+      <div class="pagehero" style="padding:clamp(48px,7vw,80px) 0 0;">
         <image-slot id="noris-guidelines" src="{{ norisGuidelinesSrc }}" shape="rect" placeholder="Product design guidelines" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
-        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Product design guidelines — the livery, proportions, and claim placement every piece below was built against.</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Product design guidelines — the livery, proportions, and claim placement every piece below was built against.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;display:grid;grid-template-columns:1fr;gap:0;">
@@ -995,7 +999,7 @@
 
     <!-- PASSION LANDING -->
     <sc-if value="{{ isPassionLanding }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="passion-hero" src="{{ passionHeroSrc }}" shape="rect" placeholder="Personal work — strongest image, wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -1047,7 +1051,7 @@
 
     <!-- DIDI TOTE BAGS — CASE STUDY -->
     <sc-if value="{{ isDidi }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="didi-hero" src="{{ didiHeroSrc }}" shape="rect" placeholder="DIDI — hero product photograph, wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -1118,9 +1122,9 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Screen-printed, stitched, strung.</div>
       </div>
 
-      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+      <div class="pagehero" style="padding:clamp(28px,4vw,40px) 0 0;">
         <image-slot id="didi-product-hero" src="{{ didiProductHeroSrc }}" shape="rect" placeholder="Bags — full lineup, wide" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
-        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Product lineup &mdash; each bag a different print, the format held constant so the range reads as one brand.</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Product lineup &mdash; each bag a different print, the format held constant so the range reads as one brand.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
@@ -1297,9 +1301,9 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,44px);line-height:1.08;">{{ pp.finalTitle }}</div>
       </div>
 
-      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+      <div class="pagehero" style="padding:clamp(28px,4vw,40px) 0 0;">
         <image-slot id="{{ pp.key }}-final" src="{{ pp.finalSrc }}" shape="rect" placeholder="{{ pp.finalPlaceholder }}" style="display:block;width:100%;aspect-ratio:{{ pp.finalRatio }};"></image-slot>
-        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">{{ pp.finalCaption }}</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">{{ pp.finalCaption }}</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
@@ -1331,7 +1335,7 @@
 
     <!-- ENVIRONMENTAL / SIGNAGE LANDING -->
     <sc-if value="{{ isEnvLanding }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="env-hero" src="{{ envHeroSrc }}" shape="rect" placeholder="Installed storefront graphics — wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -1345,7 +1349,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Process</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;max-width:820px;">Tape measure to vinyl.</div>
-        <div style="margin-top:16px;max-width:680px;font-size:15.5px;line-height:1.8;color:#1F211C;">The same six stages carry every project on this page, whether the surface is a shopfront window or the curved flank of a food truck.</div>
+        <div style="margin-top:16px;max-width:680px;font-size:15.5px;line-height:1.8;color:#1F211C;">The same six stages carry every project on this page, whether the surface is a shopfront window or the curved flank of a food truck. These frames follow one job the whole way through &mdash; the House of Rohl Studio hoarding for EMCO, which appears again below as a finished case.</div>
 
         <div class="hairgrid" style="margin-top:clamp(36px,5vw,56px);display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
           <sc-for list="{{ envProcess }}" as="p" hint-placeholder-count="6">
@@ -1364,20 +1368,40 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
-          <sc-for list="{{ envSubcats }}" as="sub" hint-placeholder-count="2">
-            <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;max-width:560px;min-width:0;">
-              <div style="aspect-ratio:4/5;overflow:hidden;">
+        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Client projects</div>
+        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Four sectors, four visual languages.</div>
+        <div style="margin-top:16px;max-width:660px;font-size:15px;line-height:1.75;color:#8A8C7E;">A bridal boutique and an industrial supplier ask for opposite things on the glass. The process behind them never changed.</div>
+
+        <div class="worktiles" style="margin-top:clamp(32px,4vw,48px);display:grid;gap:clamp(14px,2vw,24px);">
+          <sc-for list="{{ envClients }}" as="c" hint-placeholder-count="4">
+            <div onClick="{{ c.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;min-width:0;">
+              <div style="aspect-ratio:3/4;overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
-                  <image-slot id="env-landing-{{ sub.slug }}" src="{{ sub.src }}" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot>
+                  <image-slot id="sf-sector-{{ c.key }}" src="{{ c.src }}" shape="rect" placeholder="{{ c.name }}" alt="{{ c.name }} — {{ c.sector }} signage by Dipali Patel" style="width:100%;height:100%;"></image-slot>
                 </div>
               </div>
-              <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ sub.kicker }}</div>
-              <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.2vw,30px);">{{ sub.label }}</div>
-              <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#8A8C7E;max-width:440px;">{{ sub.description }}</div>
+              <div style="margin-top:12px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(18px,1.7vw,24px);">{{ c.name }}</div>
+              <div style="margin-top:4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ c.sector }}</div>
             </div>
           </sc-for>
         </div>
+
+        <sc-if value="{{ showVehicleTile }}">
+          <div style="margin-top:clamp(52px,7vw,84px);border-top:1px solid #dedad2;padding-top:clamp(36px,5vw,52px);">
+            <sc-for list="{{ envSubcats }}" as="sub" hint-placeholder-count="1">
+              <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;max-width:560px;min-width:0;">
+                <div style="aspect-ratio:4/5;overflow:hidden;">
+                  <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
+                    <image-slot id="env-landing-{{ sub.slug }}" src="{{ sub.src }}" shape="rect" placeholder="{{ sub.label }}" style="width:100%;height:100%;"></image-slot>
+                  </div>
+                </div>
+                <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;">{{ sub.kicker }}</div>
+                <div style="margin-top:6px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.2vw,30px);">{{ sub.label }}</div>
+                <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#8A8C7E;max-width:440px;">{{ sub.description }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1389,7 +1413,7 @@
 
     <!-- STOREFRONT & INTERIOR GRAPHICS -->
     <sc-if value="{{ isStorefront }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="sf-hero" src="{{ sfHeroSrc }}" shape="rect" placeholder="Installed storefront — wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -1399,23 +1423,6 @@
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</h1>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;">
-        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">Sector range</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:clamp(14px,2vw,22px);">
-          <sc-for list="{{ sfClients }}" as="c" hint-placeholder-count="4">
-            <div style="min-width:0;">
-              <div style="width:100%;aspect-ratio:3/4;overflow:hidden;">
-                <div class="tilescale" style="width:100%;height:100%;transition:transform 0.5s ease;">
-                  <image-slot id="sf-sector-{{ c.key }}" src="{{ c.src }}" shape="rect" placeholder="{{ c.name }}" style="width:100%;height:100%;"></image-slot>
-                </div>
-              </div>
-              <div style="margin-top:11px;font-size:13.5px;color:#1F211C;">{{ c.name }}</div>
-              <div style="margin-top:4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ c.sector }}</div>
-            </div>
-          </sc-for>
-        </div>
-        <div style="margin-top:16px;max-width:640px;font-size:13px;line-height:1.7;color:#8A8C7E;">Four sectors, four visual languages &mdash; a bridal boutique and an industrial supplier ask for opposite things on the glass. The process behind them never changed.</div>
-      </div>
 
       <sc-for list="{{ sfCases }}" as="cs" hint-placeholder-count="4">
         <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
@@ -1489,7 +1496,7 @@
 
     <!-- VEHICLE GRAPHICS — hidden until images are uploaded (showVehicleGraphics prop) -->
     <sc-if value="{{ isVehicle }}">
-      <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+      <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
         <image-slot id="veh-hero" src="{{ vehHeroSrc }}" shape="rect" placeholder="Wrapped vehicle in its environment" style="width:100%;height:100%;"></image-slot>
       </div>
 
@@ -1506,9 +1513,9 @@
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Fourteen wraps across different vehicle types, one design system. The challenge wasn't drawing it once &mdash; it was holding it consistent across vehicles with different proportions, panel breaks, and surface geometry, so the fleet reads as one brand parked side by side.</div>
       </div>
 
-      <div style="width:100%;padding:clamp(28px,4vw,40px) 0 0;">
+      <div class="pagehero" style="padding:clamp(28px,4vw,40px) 0 0;">
         <image-slot id="veh-fleet-hero" src="{{ vehFleetHeroSrc }}" shape="rect" placeholder="Fleet lineup — wide" style="display:block;width:100%;aspect-ratio:21/9;"></image-slot>
-        <div style="max-width:1240px;margin:12px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Fleet lineup &mdash; the system as it reads across the full set.</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Fleet lineup &mdash; the system as it reads across the full set.</div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
@@ -1688,7 +1695,7 @@
       </sc-if>
 
       <sc-if value="{{ isMlbPresto }}">
-        <div style="width:100%;aspect-ratio:21/9;overflow:hidden;">
+        <div class="pagehero" style="aspect-ratio:21/9;overflow:hidden;">
           <image-slot id="mlb-hero" src="/images/mlb-hero.webp" shape="rect" placeholder="Campaign key visual" style="width:100%;height:100%;"></image-slot>
         </div>
         <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
@@ -1729,12 +1736,12 @@
           <div style="margin-top:10px;font-size:12px;color:#8A8C7E;">Packaging — printed card pack; creative and artwork by me.</div>
         </div>
 
-        <div style="width:100%;padding:clamp(56px,8vw,88px) 0 0;">
+        <div class="pagehero" style="padding:clamp(56px,8vw,88px) 0 0;">
           <div style="max-width:1240px;margin:0 auto clamp(16px,2vw,20px);padding:0 clamp(20px,4vw,48px);"><span style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Dielines</span></div>
-          <div style="width:100%;aspect-ratio:21/9;">
+          <div class="pagehero" style="aspect-ratio:21/9;">
             <image-slot id="mlb-dielines" src="{{ mlbDielinesSrc }}" shape="rect" placeholder="Technical flat dieline artwork" style="width:100%;height:100%;"></image-slot>
           </div>
-          <div style="max-width:1240px;margin:10px auto 0;padding:0 clamp(20px,4vw,48px);font-size:12px;color:#8A8C7E;">Dielines — production-ready flats I built to spec for die-cutting and print.</div>
+          <div style="margin-top:10px;font-size:12px;color:#8A8C7E;">Dielines — production-ready flats I built to spec for die-cutting and print.</div>
         </div>
 
         <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px) 0;">
@@ -1747,7 +1754,7 @@
           <div style="margin-top:10px;font-size:12px;color:#8A8C7E;">Final product — the printed, produced pieces as they shipped.</div>
         </div>
 
-        <div style="width:100%;padding:clamp(56px,8vw,88px) 0 0;">
+        <div class="pagehero" style="padding:clamp(56px,8vw,88px) 0 0;">
           <div style="max-width:900px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(16px,2vw,20px);"><span style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Video</span></div>
           <div style="max-width:900px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
             <div style="width:100%;aspect-ratio:16/9;background:#1F211C;">
@@ -1983,7 +1990,7 @@ const SF_CASES = [
     brief: 'A bridal boutique needed its storefront to read as considered and unhurried — the window is the first fitting-room impression, and it had to signal craft without obscuring the gowns behind it.',
     constraint: 'Privacy and daylight pulled in opposite directions. Frosted vinyl at the right height screened the fitting area while leaving the display glass clear.',
     detailCaption: 'Frosted vinyl at seated eye level — screening without darkening the room.',
-    details: 3,
+    details: 4,
   },
   {
     key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty',
@@ -2001,10 +2008,12 @@ const SF_CASES = [
   },
   {
     key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply',
-    brief: 'An industrial supplier whose branch needed to be findable and unmistakable from the road, in a category where clarity beats decoration.',
-    constraint: 'Large-format panels across an uneven facade, with door swings and access panels to work around — artwork split so no seam falls mid-wordmark.',
-    detailCaption: 'Printed panels and cut vinyl — splits planned to land between letterforms.',
-    details: 3,
+    brief: 'A House of Rohl Studio showroom taking shape behind construction hoarding downtown. The barrier was the only thing on the street for months, so it had to do the announcing — brand, fixtures, and an opening date, at pedestrian distance and passing-traffic distance at once.',
+    constraint: 'A long run of temporary panels around a corner site, broken by a door and site access. Artwork was split so no seam lands mid-wordmark, and the panel schedule was drawn from measured site dimensions rather than the architect\'s plan.',
+    detailCaption: 'Printed panels — set out from measured dimensions, splits planned between letterforms.',
+    // This is the job photographed end to end for the process strip above, so
+    // the case study draws on those same frames instead of a duplicate set.
+    detailIds: ['env-process-03', 'env-process-04', 'env-process-05'],
   },
 ];
 
@@ -2037,20 +2046,30 @@ const SAVED_IMAGES = new Set([
   'stae-mockup-hero', 'stae-mockup-0', 'stae-mockup-1', 'stae-mockup-2',
   'stae-hsn-hero', 'stae-hsn-0', 'stae-hsn-1', 'stae-hsn-2', 'stae-hsn-3',
   'stae-hsn-4', 'stae-hsn-5',
-  'noris-hero', 'noris-guidelines', 'noris-pullup-full',
+  'noris-hero', 'noris-guidelines', 'noris-pullup-full', 'noris-pullup-detail',
   'noris-sample-0-front', 'noris-sample-0-back',
-  'noris-sample-1-front', 'noris-sample-1-back', 'noris-sample-1-detail',
+  'noris-sample-1-front', 'noris-sample-1-back', 'noris-sample-1-detail', 'noris-sample-1-detail-2',
   'noris-pkg-0', 'noris-pkg-1', 'noris-pkg-2', 'noris-pkg-3',
-  'noris-launch-0', 'noris-pr-0', 'noris-merch-0', 'noris-merch-1',
+  'noris-launch-0', 'noris-launch-1',
+  'noris-pr-0', 'noris-pr-1', 'noris-pr-2',
+  'noris-merch-0', 'noris-merch-1', 'noris-merch-2', 'noris-merch-3',
   'env-hero', 'env-landing-storefront-interior',
   'env-process-01', 'env-process-02', 'env-process-03',
   'env-process-04', 'env-process-05', 'env-process-06',
   'sf-hero',
   'sf-sector-av-bridal', 'sf-sector-hair-lab', 'sf-sector-habit-dental', 'sf-sector-emco',
   'sf-av-bridal-before', 'sf-av-bridal-after',
-  'sf-av-bridal-detail-0', 'sf-av-bridal-detail-1', 'sf-av-bridal-detail-2',
-  'sf-hair-lab-before',
+  'sf-av-bridal-detail-0', 'sf-av-bridal-detail-1', 'sf-av-bridal-detail-2', 'sf-av-bridal-detail-3',
+  'sf-hair-lab-before', 'sf-hair-lab-after',
   'sf-hair-lab-detail-0', 'sf-hair-lab-detail-1', 'sf-hair-lab-detail-2',
+  'sf-habit-dental-before', 'sf-habit-dental-after',
+  'sf-habit-dental-detail-0', 'sf-habit-dental-detail-1', 'sf-habit-dental-detail-2',
+  'about-portrait',
+  // The EMCO job is the one photographed end-to-end for the process strip, so
+  // its case study draws on those same six frames — see sfCases.
+  // Passion ids (passion-*, didi-*, colourism-*, create2-*) are converted and
+  // sitting in images/ but deliberately NOT declared: the deep project pages
+  // are still unshot, so SHOW_PASSION stays false and these stay dark.
 ]);
 
 // Video files committed to videos/. Add an id only after the file is written.
@@ -2175,7 +2194,6 @@ class Component extends DCLogic {
     // Adopt whatever URL we were loaded on, so /work/staedtler renders that
     // project directly instead of silently showing home.
     const initial = this._renderable(stateFromPath(location.pathname));
-    this._skipScrollOnce = true;
     this.setState(Object.assign({ menuOpen: false }, initial), () => this._syncUrl(true));
   }
 
@@ -2213,9 +2231,8 @@ class Component extends DCLogic {
     } else {
       history.pushState({ path: path }, '', path);
     }
-    // Landing mid-page on a freshly opened project reads as broken. Handlers
-    // that scroll to their own anchor (goProgression) opt out via the flag.
-    if (this._skipScrollOnce) { this._skipScrollOnce = false; return; }
+    // Every route opens at the top, with no exceptions — landing mid-page on a
+    // freshly opened project reads as broken.
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
@@ -2232,25 +2249,7 @@ class Component extends DCLogic {
     }
   }
 
-  goProgression = () => {
-    // Opts out of the router's scroll-to-top: this handler scrolls to its own
-    // anchor below, and the two would otherwise fight for the first few frames.
-    this._skipScrollOnce = true;
-    this.setState({ view: 'work', cat: 'retail-packaging', subcat: 'staedtler-packaging', menuOpen: false }, () => {
-      // Images load after mount, so the document grows and any early scrollTo is
-      // clamped. Re-issue each frame until the anchor settles at the target offset.
-      const OFFSET = 100, DEADLINE = performance.now() + 2500;
-      const settle = () => {
-        const el = document.querySelector('[data-anchor="progression"]');
-        if (!el) { if (performance.now() < DEADLINE) requestAnimationFrame(settle); return; }
-        const delta = el.getBoundingClientRect().top - OFFSET;
-        if (Math.abs(delta) < 4 || performance.now() > DEADLINE) return;
-        window.scrollTo({ top: window.pageYOffset + delta, behavior: 'auto' });
-        requestAnimationFrame(settle);
-      };
-      requestAnimationFrame(settle);
-    });
-  };
+  goProgression = () => this.setState({ view: 'work', cat: 'retail-packaging', subcat: 'staedtler-packaging', menuOpen: false });
 
   goPhase = (id) => {
     const el = document.querySelector('[data-phase="' + id + '"]');
@@ -2269,22 +2268,9 @@ class Component extends DCLogic {
   /* "← All Work" was wired to goWorkDefault, which sets view:'work' with the
      CURRENT category and subcat:null. Every one of the six places that button
      appears is already a category landing in exactly that state, so the click
-     changed nothing and the link looked dead.
-
-     There is no dedicated all-work index; the home page's Selected Work grid is
-     that index. Go there and land on the grid rather than the hero, so the
-     button does what its label says. */
-  goAllWork = () => {
-    this._skipScrollOnce = true;
-    this.setState({ view: 'home', subcat: null, menuOpen: false }, () => {
-      requestAnimationFrame(() => {
-        const el = document.querySelector('[data-anchor="selected-work"]');
-        if (!el) { window.scrollTo({ top: 0, behavior: 'auto' }); return; }
-        const top = el.getBoundingClientRect().top + window.pageYOffset - 90;
-        window.scrollTo({ top: top, behavior: 'auto' });
-      });
-    });
-  };
+     changed nothing and the link looked dead. There is no dedicated all-work
+     index; the home page's Selected Work grid is that index. */
+  goAllWork = () => this.setState({ view: 'home', subcat: null, menuOpen: false });
   openWorkMenu = () => this.setState({ menuOpen: true });
   closeWorkMenu = () => this.setState({ menuOpen: false });
   toggleWorkMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
@@ -2528,12 +2514,15 @@ class Component extends DCLogic {
       vehFleetHeroSrc: imgSrc('veh-fleet-hero'),
       envCraft: ENV_CRAFT,
       vehicleTypes: VEHICLE_TYPES.map(v => ({ ...v, src: imgSrc('veh-type-' + v.key) })),
-      sfClients: [
+      // The four clients are the Environmental landing's tiles; each opens the
+      // Storefront & Interior page where all four case studies live.
+      envClients: [
         { key: 'av-bridal', name: 'AV Bridal', sector: 'Bridal retail' },
         { key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty' },
         { key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare' },
         { key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply' },
-      ].map(c => ({ ...c, src: imgSrc('sf-sector-' + c.key) })),
+      ].map(c => ({ ...c, src: imgSrc('sf-sector-' + c.key), select: () => this.selectEnvSubcat('storefront-interior') })),
+      showVehicleTile: showVehicle,
       // A case study only earns a block once it has imagery. The before/after
       // pair needs both halves — one alone reads as a mistake, not a comparison.
       sfCases: SF_CASES.map(c => ({
@@ -2541,7 +2530,10 @@ class Component extends DCLogic {
         beforeSrc: imgSrc('sf-' + c.key + '-before'),
         afterSrc: imgSrc('sf-' + c.key + '-after'),
         hasBeforeAfter: hasImg('sf-' + c.key + '-before') && hasImg('sf-' + c.key + '-after'),
-        details: Array.from({ length: c.details }, (_, i) => 'sf-' + c.key + '-detail-' + i)
+        // detailIds lets a case borrow frames that live under another id, for a
+        // job already photographed elsewhere on the page. Otherwise the ids
+        // follow from the key.
+        details: (c.detailIds || Array.from({ length: c.details }, (_, i) => 'sf-' + c.key + '-detail-' + i))
           .filter(hasImg)
           .map(id => ({ slotId: id, src: imgSrc(id) })),
       })).filter(c => c.hasBeforeAfter || c.details.length > 0),
@@ -2612,21 +2604,24 @@ class Component extends DCLogic {
       staeMockupHeroSrc: imgSrc('stae-mockup-hero'),
       staeMockups: Array.from({ length: 3 }, (_, i) => ({ slotId: 'stae-mockup-' + i, src: imgSrc('stae-mockup-' + i) })),
       staeChannels: [
-        { label: 'Instagram', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Facebook', url: 'https://www.facebook.com/STAEDTLERNorthAmerica/' },
-        { label: 'LinkedIn', url: 'https://www.linkedin.com/company/staedtler/' },
+        { label: 'Instagram', url: 'https://www.instagram.com/staedtlernorthamerica/' },
+        { label: 'Facebook', url: 'https://www.facebook.com/staedtler.northamerica' },
+        { label: 'LinkedIn', url: 'https://www.linkedin.com/company/staedtler-na/' },
       ],
-      // swap each url for the real permalink to that post
+      // Real post permalinks, in feed order. Instagram's copy-link share tokens
+      // (utm_source / stkn) are stripped — they are account-scoped telemetry and
+      // the canonical URL resolves the same. img_index is kept where it is
+      // load-bearing: entries 2 and 3 are two slides of one carousel.
       staeFeed: [
-        { label: 'Campaign post', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Product post', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Giveaway', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Drawing contest', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Product post', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Campaign post', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Community post', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Giveaway', url: 'https://www.instagram.com/staedtler_na/' },
-        { label: 'Product post', url: 'https://www.instagram.com/staedtler_na/' },
+        { label: 'Campaign post',  url: 'https://www.instagram.com/p/DVvXKd9lTFl/' },
+        { label: 'Product post',   url: 'https://www.instagram.com/p/DWbdO3glhUy/?img_index=2' },
+        { label: 'Giveaway',       url: 'https://www.instagram.com/p/DWbdO3glhUy/?img_index=1' },
+        { label: 'Drawing contest', url: 'https://www.instagram.com/p/DXO9KKBDUJQ/' },
+        { label: 'Product post',   url: 'https://www.instagram.com/p/DUf98liEhPb/' },
+        { label: 'Campaign post',  url: 'https://www.instagram.com/p/DWRKJE7lVnY/' },
+        { label: 'Community post', url: 'https://lnkd.in/p/eE-dxWyK' },
+        { label: 'Giveaway',       url: 'https://www.instagram.com/reel/DWq6En2CmpB/' },
+        { label: 'Product post',   url: 'https://www.instagram.com/reel/DayFqpCDLdB/' },
       ],
       growthStats: [
         { value: '+362%', label: 'Instagram follower growth' },
