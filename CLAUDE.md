@@ -103,8 +103,12 @@ rejects the URL and drops the visitor on the category landing. `didi` is listed
 explicitly there because it's a real subview with no `PASSION_PROJECTS` entry —
 exactly the bug this guards against.
 
-`_skipScrollOnce` opts a handler out of the router's scroll-to-top, for handlers
-that scroll to their own anchor (`goProgression`, `goAllWork`).
+**Every route opens at the top, unconditionally.** `_syncUrl` scrolls to 0 on
+every navigation with no opt-out. `goProgression` and `goAllWork` used to skip it
+via a `_skipScrollOnce` flag so they could scroll to their own anchor; both are
+now plain `setState` calls and the flag is gone. Don't reintroduce anchor
+scrolling on navigation — landing mid-page was reported as a bug. `goPhase` is
+unaffected: it scrolls within the page the visitor is already on.
 
 ---
 
@@ -162,14 +166,16 @@ CREATE #2) has no photography at all, so the whole category is filtered out of
 prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
 unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-Currently outstanding: `about-portrait`; `noris-pr-1/2`, `noris-merch-2/3`,
-`noris-launch-1`, `noris-sample-1-detail-2`, `noris-pullup-detail`;
-`sf-hair-lab-after` and everything for `sf-habit-dental-*` / `sf-emco-*`; and
-the whole `passion-*` / `didi-*` / `colourism-*` / `create2-*` set.
+Currently outstanding: only the Passion set. Its landing-page images
+(`passion-hero`, `passion-tile-*`, `didi-hero`, `didi-product-hero`,
+`colourism-hero`) are converted and sitting in `images/` but deliberately left
+out of `SAVED_IMAGES` — the deep DIDI / Colourism / CREATE #2 pages are still
+unshot and their slots are not individually gated, so flipping `SHOW_PASSION`
+before those land would expose empty slots. Declare the ids and flip the flag
+together.
 
-Two case studies (Habit Dental, EMCO) currently drop out of the Storefront page
-entirely and survive only as sector tiles; Hair Lab renders without its
-before/after pair because only the "before" exists.
+Everything else is filled. All four Storefront case studies render, and the
+Noris print tiles have every view.
 
 **Placeholder creator handles are gone.** `norisLaunch` entries now carry a
 plain `label` caption instead of the builder's `@handle` placeholder, and
@@ -177,9 +183,32 @@ plain `label` caption instead of the builder's `@handle` placeholder, and
 permalinks are not. Restore the links when the real permalinks exist.
 
 **Grids use fixed column counts where the item count would otherwise orphan.**
-`.worktiles` (4 tiles) and `.hairgrid` (multiples of three). The hairline grids
-draw their rules with a background showing through a 1px gap, so a part-filled
-last row shows as grey voids rather than empty space.
+`.worktiles` (4 tiles, reused for the four Environmental client tiles) and
+`.hairgrid` (multiples of three). The hairline grids draw their rules with a
+background showing through a 1px gap, so a part-filled last row shows as grey
+voids rather than empty space.
+
+**No full-bleed imagery.** `.pagehero` puts every wide image on the same measure
+as the copy (`min(1240px, 100% - gutters)`). Running them edge to edge upscaled
+~1920px sources past their native width on large displays, which is what made
+the headers look soft.
+
+**EMCO's case study borrows the process strip's frames.** The six
+`env-process-*` images are all one job — the House of Rohl Studio hoarding — so
+the strip says so explicitly and `SF_CASES` gives EMCO a `detailIds` override
+pointing at `env-process-03/04/05` rather than a duplicate `sf-emco-*` set. Any
+case may use `detailIds`; without it the ids follow from the key. EMCO has no
+before/after pair, which `hasBeforeAfter` handles on its own.
+
+**The four clients are the Environmental landing's tiles.** They replaced a
+single "Storefront & Interior Graphics" tile, and the Storefront subpage's
+"Sector range" strip was removed because it then showed the same four tiles
+twice in a row.
+
+**`image-slot` suppresses touch gestures only on fine pointers.** An
+unconditional `touch-action:none` on `.frame img` swallowed page scrolling on
+touch devices — a swipe starting on any image did nothing. It is now behind
+`@media (pointer: fine)`, plus `:host([data-panning])` for an in-progress pan.
 
 **Prop-gated sections.** `showDigital` and `showVehicleGraphics` both default to
 `false`, hiding the Digital & e-commerce phase and Vehicle Graphics.

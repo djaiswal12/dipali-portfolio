@@ -297,7 +297,13 @@
     // same left/top/width/height in frame-%, computed by _applyView(), so the
     // inside-mask crop and the outside-mask spill stay pixel-aligned.
     '.frame img{position:absolute;max-width:none;transform:translate(-50%,-50%);' +
-    '  -webkit-user-drag:none;user-select:none;touch-action:none}' +
+    '  -webkit-user-drag:none;user-select:none}' +
+    // touch-action:none here used to be unconditional, which swallowed page
+    // scrolling on touch devices: a swipe that began on any image did nothing.
+    // Reframing is a pointer-driven affordance, so suppress browser gestures
+    // only where a fine pointer exists, or while a pan is actually in progress.
+    '@media (pointer: fine){.frame img{touch-action:none}}' +
+    ':host([data-panning]) .frame img{touch-action:none}' +
     // Reframe mode (double-click): the full image spills past the mask. The
     // spill layer is sized to the IMAGE bounds so its corners are where the
     // resize handles belong. The ghost <img> inside is translucent; the real
