@@ -103,12 +103,25 @@ rejects the URL and drops the visitor on the category landing. `didi` is listed
 explicitly there because it's a real subview with no `PASSION_PROJECTS` entry —
 exactly the bug this guards against.
 
-**Every route opens at the top, unconditionally.** `_syncUrl` scrolls to 0 on
-every navigation with no opt-out. `goProgression` and `goAllWork` used to skip it
-via a `_skipScrollOnce` flag so they could scroll to their own anchor; both are
-now plain `setState` calls and the flag is gone. Don't reintroduce anchor
-scrolling on navigation — landing mid-page was reported as a bug. `goPhase` is
-unaffected: it scrolls within the page the visitor is already on.
+**Every route opens at the top.** `_syncUrl` scrolls to 0 on every navigation.
+`goProgression` and `goAllWork` used to skip it via a `_skipScrollOnce` flag so
+they could scroll to their own anchor; both are now plain `setState` calls and
+the flag is gone. Landing mid-page was reported as a bug, so don't add anchor
+scrolling to a handler that just opens a page.
+
+**`goEnvCase` is the one sanctioned exception**, and it was requested. A client
+tile on the Environmental landing names a specific case, so it lands on that
+case's `[data-case]` header rather than the top of a page holding four of them.
+It scrolls from the `setState` callback — which runs *after* `componentDidUpdate`
+has already reset to top — and re-issues each frame until the offset settles,
+because lazy images above the target keep moving it. Any future "link to a
+specific section" needs that same ordering. `goPhase` is unaffected: it scrolls
+within the page the visitor is already on.
+
+**Category slugs can be retired without breaking links.** `CATEGORY_ALIASES`
+maps an old slug to its replacement in `stateFromPath`, and `DEFAULT_CATEGORY`
+is where an unknown slug lands. `staedtler` → `staedtler-brand` is there because
+that URL was shared before the page was split.
 
 ---
 
@@ -182,11 +195,33 @@ plain `label` caption instead of the builder's `@handle` placeholder, and
 `norisCreators` handles render unlinked — the handles are real but the post
 permalinks are not. Restore the links when the real permalinks exist.
 
-**Grids use fixed column counts where the item count would otherwise orphan.**
-`.worktiles` (4 tiles, reused for the four Environmental client tiles) and
-`.hairgrid` (multiples of three). The hairline grids draw their rules with a
-background showing through a 1px gap, so a part-filled last row shows as grey
-voids rather than empty space.
+**Grids never orphan their last row, and two helpers keep it that way.**
+
+`evenCols(n, prefer)` picks the first column count that divides `n` exactly,
+falling back to `n` itself (one row) when none does. `.worktiles` reads it
+through `--cols` / `--cols-tablet`, so the home grid re-lays itself as
+categories come and go: five visible categories only divide by five, hence a
+single row; bringing Passion back makes six and it drops to a roomier 3 x 2.
+The Environmental client tiles reuse `.worktiles` without setting the variables
+and get the 4/2/1 defaults.
+
+`spanLast(items, cols)` widens the final card to cover the shortfall, used by
+the two capability lists. `.hairgrid` draws its rules with a background showing
+through a 1px gap, so a part-filled last row shows as grey voids rather than
+empty space — the wider card fills it for any count.
+
+**The STAEDTLER role is two categories, split along the job title.** One page
+could not carry both halves, and the second was buried under the first.
+`staedtler-brand` ("Brand & Packaging", Design Lead) holds the surfaces,
+production craft and featured work; `staedtler-social` ("Social & Team",
+Marketing Specialist) holds the channels, growth and the HSN team. Both share
+the page-header markup, which reads `currentCategory` — so the copy lives in
+`WORK_CATEGORIES`, not the template. `capabilities` split into
+`brandCapabilities` and `socialCapabilities` with it.
+
+Both pages currently share `stae-hero`, and `home-tile-staedtler-social.webp` is
+a crop of the Instagram profile screenshot. Both are stand-ins; a photograph of
+the social or team work would be better.
 
 **No full-bleed imagery.** `.pagehero` puts every wide image on the same measure
 as the copy (`min(1240px, 100% - gutters)`). Running them edge to edge upscaled
