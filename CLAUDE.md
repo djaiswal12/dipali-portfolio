@@ -103,8 +103,25 @@ rejects the URL and drops the visitor on the category landing. `didi` is listed
 explicitly there because it's a real subview with no `PASSION_PROJECTS` entry —
 exactly the bug this guards against.
 
-`_skipScrollOnce` opts a handler out of the router's scroll-to-top, for handlers
-that scroll to their own anchor (`goProgression`, `goAllWork`).
+**Every route opens at the top.** `_syncUrl` scrolls to 0 on every navigation.
+`goProgression` and `goAllWork` used to skip it via a `_skipScrollOnce` flag so
+they could scroll to their own anchor; both are now plain `setState` calls and
+the flag is gone. Landing mid-page was reported as a bug, so don't add anchor
+scrolling to a handler that just opens a page.
+
+**`goEnvCase` is the one sanctioned exception**, and it was requested. A client
+tile on the Environmental landing names a specific case, so it lands on that
+case's `[data-case]` header rather than the top of a page holding four of them.
+It scrolls from the `setState` callback — which runs *after* `componentDidUpdate`
+has already reset to top — and re-issues each frame until the offset settles,
+because lazy images above the target keep moving it. Any future "link to a
+specific section" needs that same ordering. `goPhase` is unaffected: it scrolls
+within the page the visitor is already on.
+
+**Category slugs can be retired without breaking links.** `CATEGORY_ALIASES`
+maps an old slug to its replacement in `stateFromPath`, and `DEFAULT_CATEGORY`
+is where an unknown slug lands. `staedtler` → `staedtler-brand` is there because
+that URL was shared before the page was split.
 
 ---
 
@@ -162,24 +179,71 @@ CREATE #2) has no photography at all, so the whole category is filtered out of
 prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
 unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-Currently outstanding: `about-portrait`; `noris-pr-1/2`, `noris-merch-2/3`,
-`noris-launch-1`, `noris-sample-1-detail-2`, `noris-pullup-detail`;
-`sf-hair-lab-after` and everything for `sf-habit-dental-*` / `sf-emco-*`; and
-the whole `passion-*` / `didi-*` / `colourism-*` / `create2-*` set.
+Currently outstanding: only the Passion set. Its landing-page images
+(`passion-hero`, `passion-tile-*`, `didi-hero`, `didi-product-hero`,
+`colourism-hero`) are converted and sitting in `images/` but deliberately left
+out of `SAVED_IMAGES` — the deep DIDI / Colourism / CREATE #2 pages are still
+unshot and their slots are not individually gated, so flipping `SHOW_PASSION`
+before those land would expose empty slots. Declare the ids and flip the flag
+together.
 
-Two case studies (Habit Dental, EMCO) currently drop out of the Storefront page
-entirely and survive only as sector tiles; Hair Lab renders without its
-before/after pair because only the "before" exists.
+Everything else is filled. All four Storefront case studies render, and the
+Noris print tiles have every view.
 
 **Placeholder creator handles are gone.** `norisLaunch` entries now carry a
 plain `label` caption instead of the builder's `@handle` placeholder, and
 `norisCreators` handles render unlinked — the handles are real but the post
 permalinks are not. Restore the links when the real permalinks exist.
 
-**Grids use fixed column counts where the item count would otherwise orphan.**
-`.worktiles` (4 tiles) and `.hairgrid` (multiples of three). The hairline grids
-draw their rules with a background showing through a 1px gap, so a part-filled
-last row shows as grey voids rather than empty space.
+**Grids never orphan their last row, and two helpers keep it that way.**
+
+`evenCols(n, prefer)` picks the first column count that divides `n` exactly,
+falling back to `n` itself (one row) when none does. `.worktiles` reads it
+through `--cols` / `--cols-tablet`, so the home grid re-lays itself as
+categories come and go: five visible categories only divide by five, hence a
+single row; bringing Passion back makes six and it drops to a roomier 3 x 2.
+The Environmental client tiles reuse `.worktiles` without setting the variables
+and get the 4/2/1 defaults.
+
+`spanLast(items, cols)` widens the final card to cover the shortfall, used by
+the two capability lists. `.hairgrid` draws its rules with a background showing
+through a 1px gap, so a part-filled last row shows as grey voids rather than
+empty space — the wider card fills it for any count.
+
+**The STAEDTLER role is two categories, split along the job title.** One page
+could not carry both halves, and the second was buried under the first.
+`staedtler-brand` ("Brand & Packaging", Design Lead) holds the surfaces,
+production craft and featured work; `staedtler-social` ("Social & Team",
+Marketing Specialist) holds the channels, growth and the HSN team. Both share
+the page-header markup, which reads `currentCategory` — so the copy lives in
+`WORK_CATEGORIES`, not the template. `capabilities` split into
+`brandCapabilities` and `socialCapabilities` with it.
+
+Both pages currently share `stae-hero`, and `home-tile-staedtler-social.webp` is
+a crop of the Instagram profile screenshot. Both are stand-ins; a photograph of
+the social or team work would be better.
+
+**No full-bleed imagery.** `.pagehero` puts every wide image on the same measure
+as the copy (`min(1240px, 100% - gutters)`). Running them edge to edge upscaled
+~1920px sources past their native width on large displays, which is what made
+the headers look soft.
+
+**EMCO's case study borrows the process strip's frames.** The six
+`env-process-*` images are all one job — the House of Rohl Studio hoarding — so
+the strip says so explicitly and `SF_CASES` gives EMCO a `detailIds` override
+pointing at `env-process-03/04/05` rather than a duplicate `sf-emco-*` set. Any
+case may use `detailIds`; without it the ids follow from the key. EMCO has no
+before/after pair, which `hasBeforeAfter` handles on its own.
+
+**The four clients are the Environmental landing's tiles.** They replaced a
+single "Storefront & Interior Graphics" tile, and the Storefront subpage's
+"Sector range" strip was removed because it then showed the same four tiles
+twice in a row.
+
+**`image-slot` suppresses touch gestures only on fine pointers.** An
+unconditional `touch-action:none` on `.frame img` swallowed page scrolling on
+touch devices — a swipe starting on any image did nothing. It is now behind
+`@media (pointer: fine)`, plus `:host([data-panning])` for an in-progress pan.
 
 **Prop-gated sections.** `showDigital` and `showVehicleGraphics` both default to
 `false`, hiding the Digital & e-commerce phase and Vehicle Graphics.
