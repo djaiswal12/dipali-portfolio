@@ -190,6 +190,17 @@ together.
 Everything else is filled. All four Storefront case studies render, and the
 Noris print tiles have every view.
 
+**Dipali's personal Instagram is off the site, deliberately.** Removed at her
+request from the contact stacks on `/`, `/about` and `/contact`, and from the
+JSON-LD `sameAs`. Don't reinstate it. STAEDTLER's channels are work accounts and
+stay — the two are easy to confuse when editing the contact blocks.
+
+**The HSN hero is a video.** `videos/stae-hsn-hero.mp4` is declared in
+`SAVED_VIDEOS`, which flips the `hsnHeroVideoReady` / `hsnHeroImageOnly` pair
+that was already in the template — the image is the fallback, not the default.
+That is the pattern for any future video: drop the file in `videos/`, declare
+the id, and the swap happens on its own.
+
 **Placeholder creator handles are gone.** `norisLaunch` entries now carry a
 plain `label` caption instead of the builder's `@handle` placeholder, and
 `norisCreators` handles render unlinked — the handles are real but the post
