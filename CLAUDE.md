@@ -71,11 +71,97 @@ script. Cost an hour. Same trap in XML comments with `--` (see `og-image.svg`).
 file exists. Adding a file is two steps: drop it in `images/`, then add the id to
 `SAVED_IMAGES`. Undeclared ids render an empty drop placeholder, not an error.
 
-### 6. `image-slot` alt text
+### 6. Cover crops are centred unless you say otherwise
+
+`image-slot` fills its frame and splits the overflow evenly, which cuts *both*
+ends off an image whose subject sits at one. Pass `align="top" | bottom | left |
+right` to keep that edge instead. The Amazon brand page is the case that needed
+it: a 771x858 portrait screenshot in a 4/3 browser viewport, where a centred
+crop removed the page header the frame exists to show.
+
+It seeds the pan at the extreme and lets `_clampView` pull it back once
+`naturalWidth`/`Height` are known, so the axis that doesn't overflow is
+unaffected. A crop the user has reframed and stored always wins.
+
+### 7. `vercel.json` rejects keys it doesn't know
+
+There is no comment syntax, and no spare key to smuggle one into. Adding
+`"_comment"` to a headers rule fails the deploy outright with an invalid-config
+error — the whole site stops building, and the PR's only signal is a red
+"Vercel Preview Comments" check pointing at a dashboard URL. A headers entry
+takes `source`, `headers`, `has` and `missing`; nothing else. Explanations for
+a rule go here, not in the JSON.
+
+Unnamed capture groups in `source` *are* fine — `/images/(.*)` and
+`/(.*)\.(js|css|…)` have shipped for weeks. Don't rewrite those chasing a
+build failure.
+
+### 8. `image-slot` alt text
 
 The shadow-root `<img>` ships with a hardcoded `alt=""`. `image-slot.js` mirrors
 the host's `alt` through, falling back to the `placeholder` attribute. Pass
 `loading="eager"` on above-the-fold slots; everything else lazy-loads.
+
+---
+
+## Mobile and touch
+
+Most viewers arrive on a phone. The builder laid the page out for a cursor, so
+four classes of thing broke, and each has a mechanism that fixes it everywhere
+rather than one element at a time.
+
+**Hit areas.** Interactive text on this site is 12-17px tall — fine to click,
+impossible to thumb. `.taptarget` keeps the element's own size and hangs an
+invisible `::after` under it (40px, or 34px inside a `.tapstack`), so nothing
+moves and the target grows. **Every `.taptarget` must be an inline-block or a
+flex item**: on a block-level element the invisible bar spans the whole column
+and swallows taps meant for the whitespace beside it, which is why the `← All
+Work` links carry `display:inline-block`. The header gets the same treatment
+through contextual selectors instead of six more class attributes; its dropdown
+items opt out (`.navdrop::after { content: none }`) because they are already
+42px tall and sit directly under the Work button.
+
+**Vertical stacks widen before they grow targets.** Three contact rows 25px
+apart cannot each have a 40px target without overlapping. `.tapstack` goes to
+`gap: 20px` on `(pointer: coarse)` and its targets to 34px. Same idea for
+`.dotrow`, whose 7px frame-picker dots get a 30x34 target and a 26px gap on
+touch — 7px dots at a 7px gap leave a 14px pitch, and no useful target fits in
+that.
+
+**Grids with a hard column count.** `repeat(3, 1fr)` is a 113px column on a
+390px phone. `.tilegrid3` drops to two columns at 760px and one at 520px. The
+creator row is why this is a bug and not just cramped: `@ms.craft_kindergarten`
+is a single unbreakable token wider than its column, so it pushed the whole
+page sideways and gave every page a horizontal scrollbar. Square feed grids
+keep three columns — they read as a feed and need no caption room.
+
+**Hover must be gated.** `:hover` latches after a tap on a touch screen, so
+`.tilescale:hover` lives inside `@media (hover: hover)`; without it a tapped
+tile stays zoomed until you tap something else.
+
+**Form fields are 16px, deliberately.** iOS Safari zooms the viewport in on a
+focused field under 16px and never zooms back out. Don't set 15px here to save
+a pixel.
+
+**The growth chart's callout.** It is anchored from its right edge with
+`white-space: nowrap`, so on a narrow plot it ran off the left of the screen.
+Under 560px `.chartnote` wraps inside a 96px box and `.chartnote-long` — the
+sentence, which the copy above the chart already says — is hidden.
+
+**Verify with a real touch context.** Headless Chromium has no H.264, so every
+`video-slot` reports as an empty drop placeholder in a test run; that is the
+harness, not the site. `image-slot` uses shadow DOM, so probe
+`slot.shadowRoot.querySelector('.empty')`, not `slot.querySelector('img')`.
+And scroll the page in steps before measuring or screenshotting, or lazy images
+are still loading when you look.
+
+**The scripts must not be hard-cached.** `support.js`, `image-slot.js` and
+`video-slot.js` are hand-maintained files at fixed URLs, so the week-long
+`max-age` that covers the rest of the static assets meant a fix in any of them
+stayed invisible to returning visitors for a week — which is exactly what
+happened with the `image-slot` touch-scroll fix. They now revalidate
+(`max-age=0, must-revalidate`); images keep the year-long immutable cache
+because their names change when their contents do.
 
 ---
 
@@ -179,13 +265,20 @@ CREATE #2) has no photography at all, so the whole category is filtered out of
 prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
 unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-Currently outstanding: only the Passion set. Its landing-page images
-(`passion-hero`, `passion-tile-*`, `didi-hero`, `didi-product-hero`,
-`colourism-hero`) are converted and sitting in `images/` but deliberately left
-out of `SAVED_IMAGES` — the deep DIDI / Colourism / CREATE #2 pages are still
-unshot and their slots are not individually gated, so flipping `SHOW_PASSION`
-before those land would expose empty slots. Declare the ids and flip the flag
-together.
+Currently outstanding: only the Passion set, and only two of its three
+projects. **CREATE #2 is fully shot** — all eleven of its slots are declared and
+filled (see "CREATE #2 was rebuilt from its build document" below), and
+`/work/passion/create-2` renders with nothing empty at either phone or desktop
+width. DIDI still has 31 empty slots and Decolonizing Colourism 9, and the
+Passion landing's own four tiles are converted but undeclared, so
+`SHOW_PASSION` stays `false` and the whole branch — CREATE #2 included — stays
+dark. Those slots are not individually gated on `hasImg`, so flipping the flag
+before DIDI and Colourism land would expose all forty. Declare the remaining
+ids and flip the flag together.
+
+To check the branch without shipping it, set `SHOW_PASSION = true` locally,
+render, and set it back — the router refuses `/work/passion` otherwise, so
+there is no other way in.
 
 Everything else is filled. All four Storefront case studies render, and the
 Noris print tiles have every view.
@@ -258,6 +351,44 @@ touch devices — a swipe starting on any image did nothing. It is now behind
 
 **Prop-gated sections.** `showDigital` and `showVehicleGraphics` both default to
 `false`, hiding the Digital & e-commerce phase and Vehicle Graphics.
+
+**CREATE #2 was rebuilt from its build document.** The copy that shipped was
+placeholder and wrong — it described a wall-mounted mirror "made from reclaimed
+materials". The real piece is a **hand mirror**: hardboard cut to a drafted
+silhouette, black cotton pulled to rust with a bleach discharge dye, shisha
+mirror-work couched in red floss with gold beading on the front, and BEAUTY HAS
+NO SKIN TONE embroidered in yellow on the back. Every word of the current copy
+is read off the 21 scanned pages Dipali kept, and the eleven images are crops
+from them. `finalRatio` is `4/3` rather than the `16/9` the other projects use
+because the embroidered line runs diagonally across most of its frame and a
+16/9 band cuts TONE off the bottom.
+
+**The source scans are in git history, not in `images/`.**
+`images/Patel_Dipali_Phys.pdf.zip` was 87 MB of scanned pages sitting in a
+publicly-served directory under a one-year immutable cache — her physical
+portfolio, downloadable by anyone who guessed the path, and two thirds of the
+repository's weight. It is deleted from the tree; `git show <commit>^:images/Patel_Dipali_Phys.pdf.zip`
+still recovers it. **It is still in the history**, so the clone is still large;
+purging it needs a filter + force-push that nobody has asked for yet.
+
+**Passion step strips size their columns like the home grid.** The process and
+"the work" strips used `repeat(auto-fit, minmax(185px, 1fr))`, which picks the
+column count from the available width alone — so CREATE #2's six process steps
+laid out 5 + 1 and orphaned the last tile. `.stepgrid` now reads `--cols` /
+`--cols-tablet` / `--cols-phone` from `evenCols` at each breakpoint, the same
+mechanism `.worktiles` uses, so a strip of any length fills every row. Six
+steps go 6 / 3 / 2; three finals go 3 / 3 / 1.
+
+**The STAEDTLER packaging images are low-resolution, and that is issue #28.**
+Seventeen of the 28 images on `/work/retail-packaging/staedtler-packaging` are
+displayed larger than their source: the gallery frames are 562 CSS px (1124
+device px at 2x) and the files behind them run 435-836 px, so they are soft on
+any retina screen. `staedtler-pkg-gal-3-frame-0` is the worst at 435x544 in a
+562x562 frame. This is not a crop or a code problem — the files came in small
+from the builder export and no larger version exists anywhere in the repo, so
+it needs re-exported sources at roughly 1200 px on the long edge. The
+alternative, if new files never arrive, is to lay the gallery out 3-up so the
+frames drop to ~365 px and most of the existing sources are then adequate.
 
 **Dead template branch.** `isGenericCategory` can never be true — its condition
 excludes all five `WORK_CATEGORIES` slugs — so the block it guards never

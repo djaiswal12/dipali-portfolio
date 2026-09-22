@@ -37,6 +37,13 @@
  *                Edit control, enters reframe mode (drag to move, scroll or
  *                corner-handles to scale; Escape / click-out commits). The
  *                crop persists alongside the image in the sidecar.
+ *   align        Which edge of a cover crop to keep when the image
+ *                overflows the frame: top | bottom | left | right.
+ *                (default: centred, i.e. the overflow is split evenly)
+ *                Only the axis that actually overflows is affected, and a
+ *                crop the user has reframed and stored always wins. Use it
+ *                where the subject sits at one end — a page screenshot whose
+ *                header must survive a landscape frame, say.
  *   placeholder  Empty-state caption.                      (default 'Drop an image')
  *   src          Optional initial/fallback image URL. Prefill it with a real
  *                photo via search_stock_photos when that tool is available
@@ -231,6 +238,12 @@
 
   const S_MAX = 5;
   const clampS = (s) => Math.max(1, Math.min(S_MAX, s));
+  // `align` seeds the pan at the far end of its axis and lets _clampView
+  // pull it back to the real overflow, which isn't known until the image
+  // has loaded. Positive y moves the image down inside the frame, which is
+  // what keeps its TOP edge in view; same logic for x and `left`.
+  const ALIGN_X = { left: 1e4, right: -1e4 };
+  const ALIGN_Y = { top: 1e4, bottom: -1e4 };
 
   // Normalize a stored slot value. Pre-reframe sidecars stored a bare
   // data-URL string; newer ones store {u, s, x, y}. Either shape is valid.
@@ -609,6 +622,11 @@
       this._img.addEventListener('load', () => {
         this._loadPending = false;
         this._releaseMask(true);
+        // Clamp first: the legal pan range is a function of naturalWidth/Height,
+        // which are 0 until this fires, so the clamp in _render() ran against an
+        // unknown image. Without this an `align` seed — or a stored pan — would
+        // not settle until something else triggered a re-render.
+        this._clampView();
         this._applyView();
       });
       this._img.addEventListener('error', () => {
@@ -1094,10 +1112,11 @@
       const url = this._userUrl || (unbound ? '' : srcAttr);
       // Don't clobber an in-flight reframe with a store-triggered re-render.
       if (!this.hasAttribute('data-reframe')) {
+        const align = (this.getAttribute('align') || '').toLowerCase();
         this._view = {
           s: stored && Number.isFinite(stored.s) ? clampS(stored.s) : 1,
-          x: stored && Number.isFinite(stored.x) ? stored.x : 0,
-          y: stored && Number.isFinite(stored.y) ? stored.y : 0,
+          x: stored && Number.isFinite(stored.x) ? stored.x : (ALIGN_X[align] || 0),
+          y: stored && Number.isFinite(stored.y) ? stored.y : (ALIGN_Y[align] || 0),
         };
       }
       this._cap.textContent = this.getAttribute('placeholder') || 'Drop an image';
