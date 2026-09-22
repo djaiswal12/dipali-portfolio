@@ -390,6 +390,44 @@ it needs re-exported sources at roughly 1200 px on the long edge. The
 alternative, if new files never arrive, is to lay the gallery out 3-up so the
 frames drop to ~365 px and most of the existing sources are then adequate.
 
+**The client roster is named on the home page.** `CLIENTS` drives a wrap row
+between the hero and Selected Work. Until now the landing page named Staedtler
+and nothing else, while PlayStation, MLB, Metrolinx, HSN, House of Rohl and the
+four storefront clients sat two and three clicks deep — the strongest signal on
+the site was the least visible thing on it.
+
+The heading is **"Brands I've worked with", not "Clients", deliberately**:
+PlayStation, MLB and Metrolinx were campaign partners on a STAEDTLER launch,
+not people who hired her. Text rather than logos, because there are no logo
+files and reproducing trademarked marks on a personal site is a fight not worth
+having. Each name is a real `<button>` that sets state like any other nav
+handler; the four storefront clients route through `goEnvCase` so they land on
+their own case rather than the top of a page holding four of them.
+
+**Challenge / Approach / Result had never rendered for anyone.** The one copy
+of that block lived inside `isGenericCategory`, the dead branch below — so the
+`challenge` / `approach` / `result` fields sitting in `WORK_CATEGORIES` since
+the STAEDTLER split were invisible on every page. The block is now repeated in
+each real category branch (`isStaedtlerBrand`, `isStaedtlerSocial`,
+`isDigitalCampaign`, `isEnvLanding`, `isRetailLanding`), because the builder has
+no partials. Each copy reads `currentCategory` and is gated on
+`currentCategory.hasResult`, so a category with nothing to say renders nothing
+and a Challenge never appears without a Result under it. The four storefront
+cases get the same treatment through `cs.outcome`.
+
+**`DRAFT_RESULTS` marks placeholder outcome copy so it cannot ship by
+accident.** Outcome sentences are the one thing on this site that cannot be
+written from the work itself — they need numbers only Dipali has. The draft
+ones carry `resultDraft` / `outcomeDraft`, render behind a visible `.draftchip`,
+and disappear entirely when the flag is `false` (the blocks are gated on having
+content, so nothing is left hanging). Two ways out of a draft: replace the
+string and delete its flag, or flip the constant and lose them all at once.
+
+Note that `staedtler-brand` and `digital-campaign` show **pre-existing** result
+copy with no chip — those sentences were already in the repo, they were simply
+never visible. They are qualitative and unverified; treat them as needing the
+same review as the drafts.
+
 **Dead template branch.** `isGenericCategory` can never be true — its condition
 excludes all five `WORK_CATEGORIES` slugs — so the block it guards never
 renders. The `staedtler-ig-*` / `staedtler-fb-*` slots inside it are therefore
