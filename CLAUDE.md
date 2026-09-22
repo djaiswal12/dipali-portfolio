@@ -83,7 +83,20 @@ It seeds the pan at the extreme and lets `_clampView` pull it back once
 `naturalWidth`/`Height` are known, so the axis that doesn't overflow is
 unaffected. A crop the user has reframed and stored always wins.
 
-### 7. `image-slot` alt text
+### 7. `vercel.json` rejects keys it doesn't know
+
+There is no comment syntax, and no spare key to smuggle one into. Adding
+`"_comment"` to a headers rule fails the deploy outright with an invalid-config
+error — the whole site stops building, and the PR's only signal is a red
+"Vercel Preview Comments" check pointing at a dashboard URL. A headers entry
+takes `source`, `headers`, `has` and `missing`; nothing else. Explanations for
+a rule go here, not in the JSON.
+
+Unnamed capture groups in `source` *are* fine — `/images/(.*)` and
+`/(.*)\.(js|css|…)` have shipped for weeks. Don't rewrite those chasing a
+build failure.
+
+### 8. `image-slot` alt text
 
 The shadow-root `<img>` ships with a hardcoded `alt=""`. `image-slot.js` mirrors
 the host's `alt` through, falling back to the `placeholder` attribute. Pass

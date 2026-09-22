@@ -26,8 +26,19 @@
       ]
     },
     {
-      "_comment": "The three hand-maintained scripts live at fixed URLs, so a week-long hard cache means a bug fix in any of them stays invisible to returning visitors for a week after it ships — which is exactly what happened with the image-slot touch-scroll fix. They are small and served with an ETag, so revalidating costs a 304.",
-      "source": "/(support|image-slot|video-slot).js",
+      "source": "/support.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/image-slot.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/video-slot.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
