@@ -213,6 +213,13 @@
     @media (max-width: 560px) { .worktiles { grid-template-columns: minmax(0,1fr); } }
     .hairgrid { grid-template-columns: repeat(3, minmax(0,1fr)); }
     @media (max-width: 860px) { .hairgrid { grid-template-columns: minmax(0,1fr); } }
+    /* Passion process / final strips. auto-fit picks the column count from the
+       available width alone, so a six-step strip laid out 5 + 1 and orphaned
+       its last tile. Same fix as .worktiles: the count comes from evenCols at
+       each breakpoint, so every row is full whatever the step count. */
+    .stepgrid { grid-template-columns: repeat(var(--cols, 5), minmax(0,1fr)); }
+    @media (max-width: 1100px) { .stepgrid { grid-template-columns: repeat(var(--cols-tablet, 3), minmax(0,1fr)); } }
+    @media (max-width: 560px) { .stepgrid { grid-template-columns: repeat(var(--cols-phone, 2), minmax(0,1fr)); } }
     /* Wide imagery sits on the same measure as the copy rather than running
        edge to edge. Full bleed upscaled ~1920px sources past their native width
        on large displays, which is what made the headers look soft. */
@@ -1388,7 +1395,7 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,44px);line-height:1.08;">{{ pp.processTitle }}</div>
         <div style="margin-top:14px;max-width:640px;font-size:15px;line-height:1.8;color:#8A8C7E;">{{ pp.processNote }}</div>
 
-        <div style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(14px,2vw,22px);">
+        <div class="stepgrid" style="margin-top:clamp(28px,4vw,44px);display:grid;gap:clamp(14px,2vw,22px);--cols:{{ pp.processCols }};--cols-tablet:{{ pp.processColsTablet }};--cols-phone:{{ pp.processColsPhone }};">
           <sc-for list="{{ pp.process }}" as="s" hint-placeholder-count="4">
             <div style="min-width:0;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;background:#F1EEE9;">
@@ -1413,7 +1420,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(14px,2vw,22px);">
+        <div class="stepgrid" style="display:grid;gap:clamp(14px,2vw,22px);--cols:{{ pp.finalCols }};--cols-tablet:{{ pp.finalColsTablet }};--cols-phone:{{ pp.finalColsPhone }};">
           <sc-for list="{{ pp.finals }}" as="f" hint-placeholder-count="3">
             <div style="min-width:0;">
               <div style="width:100%;aspect-ratio:{{ f.ratio }};overflow:hidden;background:#F1EEE9;">
@@ -1428,8 +1435,8 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ pp.goPrev }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
-        <div onClick="{{ pp.goNext }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
+        <div onClick="{{ pp.goPrev }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
+        <div onClick="{{ pp.goNext }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -2058,27 +2065,36 @@ const PASSION_PROJECTS = [
       { label: 'Panel three', ratio: '4/5' },
     ],
   },
+  /* Rewritten from the 21-page build document Dipali kept for this piece
+     (issue #36). Everything here is read off those photographs — the earlier
+     copy described a wall-mounted mirror "made from reclaimed materials",
+     which is not what the project is. finalRatio is 4/3 rather than 16/9
+     because the embroidered line runs diagonally across most of the frame
+     and a 16/9 band cuts TONE off the bottom. */
   {
     key: 'create2', slug: 'create-2',
-    label: 'CREATE #2', kicker: 'Hand-crafted object',
-    description: 'A hand-crafted mirror — a physical object made from reclaimed materials.',
-    concept: "A mirror, made by hand from materials I already had. It began as an exercise in using what was around me instead of buying new, and became an object about framing — what a mirror asks you to look at, and what the frame around it says while you do.",
-    processTitle: 'Material first.',
-    processNote: 'Reclaimed material sorted, cut, and finished — the shape followed what the pieces allowed.',
+    label: 'CREATE #2', kicker: 'Hand-embroidered mirror',
+    description: 'A hand mirror built from scratch, with a line about colourism embroidered on the back.',
+    concept: "A hand mirror, made from scratch. The front is shisha mirror-work — small mirrors couched in red floss and ringed with gold beading — set into bleach-dyed cotton around the glass you actually look into. The back reads BEAUTY HAS NO SKIN TONE, embroidered in yellow on the same cloth. The concept drawing plans both faces together from the start: what the mirror shows you on one side, and what it says on the other.",
+    processTitle: 'Drawn, dyed, cut, stitched.',
+    processNote: "Nothing here arrived finished. The silhouette was drafted and cut from hardboard, the cloth pulled from black to rust with a bleach discharge dye, and the shisha stitch practised on scrap before either panel went into the hoop.",
     process: [
-      { label: 'Reclaimed materials' }, { label: 'Cutting and shaping' },
-      { label: 'Assembly' }, { label: 'Finishing' },
+      { label: 'Concept drawing — front and back planned together' },
+      { label: 'Materials — hoop, shisha mirrors, floss, hardboard' },
+      { label: 'Learning the shisha stitch on scrap cotton' },
+      { label: 'Drafting the silhouette onto hardboard' },
+      { label: 'Bleach discharge dye — black cotton pulled to rust' },
+      { label: 'The back panel, in the hoop' },
     ],
-    finalTitle: 'The mirror.',
-    finalPlaceholder: 'Mirror — finished, front on',
-    finalCaption: 'Finished piece — shot front on, with the frame doing the talking.',
-    finalRatio: '16/9',
-    heroPlaceholder: 'Finished mirror — hero shot',
+    finalTitle: 'Beauty has no skin tone.',
+    finalPlaceholder: 'The back of the mirror — the line, in raking light',
+    finalCaption: 'The back, in raking light — yellow floss on bleach-dyed cotton, ringed with shisha mirrors and gold beading.',
+    finalRatio: '4/3',
+    heroPlaceholder: 'The mirror frame — shisha mirror-work, close up',
     finals: [
-      { label: 'Three-quarter view', ratio: '4/5' },
-      { label: 'Edge and depth', ratio: '4/5' },
-      { label: 'Detail — surface and finish', ratio: '4/5' },
-      { label: 'In place, on a wall', ratio: '4/5' },
+      { label: 'The finished mirror', ratio: '4/5' },
+      { label: 'The back, held', ratio: '4/5' },
+      { label: 'The front, in raking light', ratio: '4/5' },
     ],
   },
 ];
@@ -2180,9 +2196,16 @@ const SAVED_IMAGES = new Set([
   'about-portrait',
   // The EMCO job is the one photographed end-to-end for the process strip, so
   // its case study draws on those same six frames — see sfCases.
-  // Passion ids (passion-*, didi-*, colourism-*, create2-*) are converted and
-  // sitting in images/ but deliberately NOT declared: the deep project pages
-  // are still unshot, so SHOW_PASSION stays false and these stay dark.
+  // CREATE #2 is fully shot — every slot on /work/passion/create-2 has a file
+  // behind it, cut from the build document Dipali kept for the piece.
+  'create2-hero', 'create2-final',
+  'create2-process-0', 'create2-process-1', 'create2-process-2',
+  'create2-process-3', 'create2-process-4', 'create2-process-5',
+  'create2-final-0', 'create2-final-1', 'create2-final-2',
+  // The rest of Passion (passion-*, didi-*, colourism-*) is converted and
+  // sitting in images/ but deliberately NOT declared: the DIDI and Colourism
+  // project pages are still unshot, so SHOW_PASSION stays false and the whole
+  // branch — CREATE #2 included — stays dark until they land.
 ]);
 
 // Video files committed to videos/. Add an id only after the file is written.
@@ -2577,8 +2600,18 @@ class Component extends DCLogic {
       const goRing = (slug) => () => slug === null
         ? this.selectPassionSubcat('didi')
         : this.selectPassionSubcat(slug);
+      // Column counts that divide the item count exactly at every width, so
+      // neither strip is ever left with an orphan on its last row.
+      const strip = (n) => ({
+        cols: evenCols(n, [6, 5, 4, 3, 2]),
+        tablet: evenCols(n, [3, 2]),
+        phone: evenCols(n, [2, 1]),
+      });
+      const pc = strip(p.process.length), fc = strip(p.finals.length);
       return {
         ...p,
+        processCols: pc.cols, processColsTablet: pc.tablet, processColsPhone: pc.phone,
+        finalCols: fc.cols, finalColsTablet: fc.tablet, finalColsPhone: fc.phone,
         heroSrc: imgSrc(p.key + '-hero'),
         finalSrc: imgSrc(p.key + '-final'),
         process: p.process.map((s, i) => ({

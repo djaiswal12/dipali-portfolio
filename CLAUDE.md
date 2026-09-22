@@ -252,13 +252,20 @@ CREATE #2) has no photography at all, so the whole category is filtered out of
 prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
 unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-Currently outstanding: only the Passion set. Its landing-page images
-(`passion-hero`, `passion-tile-*`, `didi-hero`, `didi-product-hero`,
-`colourism-hero`) are converted and sitting in `images/` but deliberately left
-out of `SAVED_IMAGES` — the deep DIDI / Colourism / CREATE #2 pages are still
-unshot and their slots are not individually gated, so flipping `SHOW_PASSION`
-before those land would expose empty slots. Declare the ids and flip the flag
-together.
+Currently outstanding: only the Passion set, and only two of its three
+projects. **CREATE #2 is fully shot** — all eleven of its slots are declared and
+filled (see "CREATE #2 was rebuilt from its build document" below), and
+`/work/passion/create-2` renders with nothing empty at either phone or desktop
+width. DIDI still has 31 empty slots and Decolonizing Colourism 9, and the
+Passion landing's own four tiles are converted but undeclared, so
+`SHOW_PASSION` stays `false` and the whole branch — CREATE #2 included — stays
+dark. Those slots are not individually gated on `hasImg`, so flipping the flag
+before DIDI and Colourism land would expose all forty. Declare the remaining
+ids and flip the flag together.
+
+To check the branch without shipping it, set `SHOW_PASSION = true` locally,
+render, and set it back — the router refuses `/work/passion` otherwise, so
+there is no other way in.
 
 Everything else is filled. All four Storefront case studies render, and the
 Noris print tiles have every view.
@@ -331,6 +338,44 @@ touch devices — a swipe starting on any image did nothing. It is now behind
 
 **Prop-gated sections.** `showDigital` and `showVehicleGraphics` both default to
 `false`, hiding the Digital & e-commerce phase and Vehicle Graphics.
+
+**CREATE #2 was rebuilt from its build document.** The copy that shipped was
+placeholder and wrong — it described a wall-mounted mirror "made from reclaimed
+materials". The real piece is a **hand mirror**: hardboard cut to a drafted
+silhouette, black cotton pulled to rust with a bleach discharge dye, shisha
+mirror-work couched in red floss with gold beading on the front, and BEAUTY HAS
+NO SKIN TONE embroidered in yellow on the back. Every word of the current copy
+is read off the 21 scanned pages Dipali kept, and the eleven images are crops
+from them. `finalRatio` is `4/3` rather than the `16/9` the other projects use
+because the embroidered line runs diagonally across most of its frame and a
+16/9 band cuts TONE off the bottom.
+
+**The source scans are in git history, not in `images/`.**
+`images/Patel_Dipali_Phys.pdf.zip` was 87 MB of scanned pages sitting in a
+publicly-served directory under a one-year immutable cache — her physical
+portfolio, downloadable by anyone who guessed the path, and two thirds of the
+repository's weight. It is deleted from the tree; `git show <commit>^:images/Patel_Dipali_Phys.pdf.zip`
+still recovers it. **It is still in the history**, so the clone is still large;
+purging it needs a filter + force-push that nobody has asked for yet.
+
+**Passion step strips size their columns like the home grid.** The process and
+"the work" strips used `repeat(auto-fit, minmax(185px, 1fr))`, which picks the
+column count from the available width alone — so CREATE #2's six process steps
+laid out 5 + 1 and orphaned the last tile. `.stepgrid` now reads `--cols` /
+`--cols-tablet` / `--cols-phone` from `evenCols` at each breakpoint, the same
+mechanism `.worktiles` uses, so a strip of any length fills every row. Six
+steps go 6 / 3 / 2; three finals go 3 / 3 / 1.
+
+**The STAEDTLER packaging images are low-resolution, and that is issue #28.**
+Seventeen of the 28 images on `/work/retail-packaging/staedtler-packaging` are
+displayed larger than their source: the gallery frames are 562 CSS px (1124
+device px at 2x) and the files behind them run 435-836 px, so they are soft on
+any retina screen. `staedtler-pkg-gal-3-frame-0` is the worst at 435x544 in a
+562x562 frame. This is not a crop or a code problem — the files came in small
+from the builder export and no larger version exists anywhere in the repo, so
+it needs re-exported sources at roughly 1200 px on the long edge. The
+alternative, if new files never arrive, is to lay the gallery out 3-up so the
+frames drop to ~365 px and most of the existing sources are then adequate.
 
 **Dead template branch.** `isGenericCategory` can never be true — its condition
 excludes all five `WORK_CATEGORIES` slugs — so the block it guards never
