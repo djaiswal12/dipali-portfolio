@@ -71,11 +71,84 @@ script. Cost an hour. Same trap in XML comments with `--` (see `og-image.svg`).
 file exists. Adding a file is two steps: drop it in `images/`, then add the id to
 `SAVED_IMAGES`. Undeclared ids render an empty drop placeholder, not an error.
 
-### 6. `image-slot` alt text
+### 6. Cover crops are centred unless you say otherwise
+
+`image-slot` fills its frame and splits the overflow evenly, which cuts *both*
+ends off an image whose subject sits at one. Pass `align="top" | bottom | left |
+right` to keep that edge instead. The Amazon brand page is the case that needed
+it: a 771x858 portrait screenshot in a 4/3 browser viewport, where a centred
+crop removed the page header the frame exists to show.
+
+It seeds the pan at the extreme and lets `_clampView` pull it back once
+`naturalWidth`/`Height` are known, so the axis that doesn't overflow is
+unaffected. A crop the user has reframed and stored always wins.
+
+### 7. `image-slot` alt text
 
 The shadow-root `<img>` ships with a hardcoded `alt=""`. `image-slot.js` mirrors
 the host's `alt` through, falling back to the `placeholder` attribute. Pass
 `loading="eager"` on above-the-fold slots; everything else lazy-loads.
+
+---
+
+## Mobile and touch
+
+Most viewers arrive on a phone. The builder laid the page out for a cursor, so
+four classes of thing broke, and each has a mechanism that fixes it everywhere
+rather than one element at a time.
+
+**Hit areas.** Interactive text on this site is 12-17px tall — fine to click,
+impossible to thumb. `.taptarget` keeps the element's own size and hangs an
+invisible `::after` under it (40px, or 34px inside a `.tapstack`), so nothing
+moves and the target grows. **Every `.taptarget` must be an inline-block or a
+flex item**: on a block-level element the invisible bar spans the whole column
+and swallows taps meant for the whitespace beside it, which is why the `← All
+Work` links carry `display:inline-block`. The header gets the same treatment
+through contextual selectors instead of six more class attributes; its dropdown
+items opt out (`.navdrop::after { content: none }`) because they are already
+42px tall and sit directly under the Work button.
+
+**Vertical stacks widen before they grow targets.** Three contact rows 25px
+apart cannot each have a 40px target without overlapping. `.tapstack` goes to
+`gap: 20px` on `(pointer: coarse)` and its targets to 34px. Same idea for
+`.dotrow`, whose 7px frame-picker dots get a 30x34 target and a 26px gap on
+touch — 7px dots at a 7px gap leave a 14px pitch, and no useful target fits in
+that.
+
+**Grids with a hard column count.** `repeat(3, 1fr)` is a 113px column on a
+390px phone. `.tilegrid3` drops to two columns at 760px and one at 520px. The
+creator row is why this is a bug and not just cramped: `@ms.craft_kindergarten`
+is a single unbreakable token wider than its column, so it pushed the whole
+page sideways and gave every page a horizontal scrollbar. Square feed grids
+keep three columns — they read as a feed and need no caption room.
+
+**Hover must be gated.** `:hover` latches after a tap on a touch screen, so
+`.tilescale:hover` lives inside `@media (hover: hover)`; without it a tapped
+tile stays zoomed until you tap something else.
+
+**Form fields are 16px, deliberately.** iOS Safari zooms the viewport in on a
+focused field under 16px and never zooms back out. Don't set 15px here to save
+a pixel.
+
+**The growth chart's callout.** It is anchored from its right edge with
+`white-space: nowrap`, so on a narrow plot it ran off the left of the screen.
+Under 560px `.chartnote` wraps inside a 96px box and `.chartnote-long` — the
+sentence, which the copy above the chart already says — is hidden.
+
+**Verify with a real touch context.** Headless Chromium has no H.264, so every
+`video-slot` reports as an empty drop placeholder in a test run; that is the
+harness, not the site. `image-slot` uses shadow DOM, so probe
+`slot.shadowRoot.querySelector('.empty')`, not `slot.querySelector('img')`.
+And scroll the page in steps before measuring or screenshotting, or lazy images
+are still loading when you look.
+
+**The scripts must not be hard-cached.** `support.js`, `image-slot.js` and
+`video-slot.js` are hand-maintained files at fixed URLs, so the week-long
+`max-age` that covers the rest of the static assets meant a fix in any of them
+stayed invisible to returning visitors for a week — which is exactly what
+happened with the `image-slot` touch-scroll fix. They now revalidate
+(`max-age=0, must-revalidate`); images keep the year-long immutable cache
+because their names change when their contents do.
 
 ---
 

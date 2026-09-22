@@ -106,7 +106,9 @@
     ::selection { background: var(--plum); color: #FBFAF7; }
     a { color: #1F211C; }
     a:hover { color: var(--plum); }
-    .tilescale:hover { transform: scale(1.035); }
+    /* :hover latches after a tap on a touch screen — a tapped tile would
+       stay zoomed until you tapped something else. */
+    @media (hover: hover) { .tilescale:hover { transform: scale(1.035); } }
     .flip-item .flip-back { opacity: 0; transition: opacity 0.35s ease; }
     .flip-item:hover .flip-back { opacity: 1; }
     /* Count-aware gallery cycling: a 2- or 3-view tile must not run a 4-slot
@@ -223,6 +225,64 @@
       .splitcols { grid-template-columns: minmax(0,1fr) !important; }
       .chartwrap { padding-right: 72px !important; padding-left: 28px !important; }
     }
+    /* ---- Phone and touch ------------------------------------------------
+       The builder laid this page out for a cursor, and three things follow
+       from that on a phone: interactive text is 12-17px tall and impossible
+       to hit with a thumb, several grids keep their desktop column count
+       however narrow the screen gets, and one of those grids held content
+       wider than its column, which pushed the whole page sideways. */
+
+    /* Thumb-sized hit area with no layout change: the element keeps its own
+       size and an invisible pseudo-element under it carries the target. Only
+       applied where the neighbours are far enough away not to be swallowed —
+       vertical stacks widen their gap first (see .tapstack), and every
+       .taptarget is an inline-block or a flex item, so the target hugs the
+       text instead of spanning the column. */
+    .taptarget { position: relative; }
+    .taptarget::after {
+      content: ''; position: absolute; left: -8px; right: -8px;
+      top: 50%; height: var(--tap, 40px); transform: translateY(-50%);
+    }
+    /* Same for the header, without editing six inline styles. The dropdown
+       items are already 42px tall from their own padding and sit directly
+       below the Work button, so they opt out rather than overlap it. */
+    header nav button, header > div > button { position: relative; }
+    header nav button::after, header > div > button::after {
+      content: ''; position: absolute; left: -7px; right: -7px;
+      top: 50%; height: 42px; transform: translateY(-50%);
+    }
+    header nav .navdrop::after { content: none; }
+
+    /* Contact details read as a tight stack with a mouse; on a touch screen
+       the rows have to be far enough apart that their targets don't overlap.
+       Gap is set inline, hence the !important. */
+    .tapstack .taptarget { --tap: 34px; }
+    @media (pointer: coarse) { .tapstack { gap: 20px !important; } }
+
+    /* The frame-picker dots are 7px by design — a row of indicators, not
+       something anyone could hit with a thumb. Keep the dot, hang a target
+       off it, and spread the row out on touch so the targets stay apart. */
+    .dotrow > [role="button"] { position: relative; }
+    .dotrow > [role="button"]::after {
+      content: ''; position: absolute; left: 50%; top: 50%;
+      width: 30px; height: 34px; transform: translate(-50%, -50%);
+    }
+    @media (pointer: coarse) { .dotrow { gap: 26px !important; } }
+
+    /* Three columns at every width means a 113px column on a 390px phone —
+       too narrow for the captions, and narrower than the creator @handle,
+       which is a single unbreakable token and so overflowed the page. */
+    @media (max-width: 760px) { .tilegrid3 { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } }
+    @media (max-width: 520px) { .tilegrid3 { grid-template-columns: minmax(0,1fr) !important; } }
+
+    @media (max-width: 560px) {
+      /* The chart callout is anchored from its right edge and set nowrap, so
+         on a narrow plot it ran off the left of the screen. Its sentence is
+         already in the copy above the chart; the date is the part worth
+         keeping on a phone. */
+      .chartnote { white-space: normal !important; max-width: 96px; }
+      .chartnote-long { display: none; }
+    }
     input::placeholder, textarea::placeholder { color: #8A8C7E; }
   </style>
 </helmet>
@@ -275,8 +335,8 @@
           Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
         </div>
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
-          <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
-          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
+          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
         </div>
       </div>
 
@@ -301,10 +361,10 @@
             <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,32px);margin-bottom:14px;">Nearly five years turning strategy into shelf-ready, screen-ready creative.</div>
             <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">Currently Design Lead &amp; Marketing Specialist at Staedtler. OCAD University, Bachelor of Design. Based in Toronto.</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
-            <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
-            <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+          <div class="tapstack" style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
+            <a href="mailto:dipali11patel@gmail.com" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
+            <a href="tel:4165507557" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">416-550-7557</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">LinkedIn</a>
           </div>
         </div>
       </div>
@@ -376,12 +436,12 @@
         <div style="max-width:520px;">
           <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,30px);margin-bottom:14px;">Work with me</div>
           <div style="font-size:15px;line-height:1.7;color:#8A8C7E;">Looking for a designer who can hold a brand together across a hundred touchpoints — in fashion, apparel, or lifestyle? I'd love to hear from you.</div>
-          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
-          <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
-          <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
+        <div class="tapstack" style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+          <a href="mailto:dipali11patel@gmail.com" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
+          <a href="tel:4165507557" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">416-550-7557</a>
+          <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">LinkedIn</a>
         </div>
       </div>
 
@@ -401,7 +461,7 @@
     <div style="animation:fadeIn 0.6s ease;">
     <sc-if value="{{ isGenericCategory }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
@@ -491,8 +551,8 @@
       </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -509,7 +569,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
@@ -539,7 +599,7 @@
                   </sc-for>
                 </div>
                 <sc-if value="{{ s.multi }}">
-                  <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
+                  <div class="dotrow" style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                     <sc-for list="{{ s.frames }}" as="fr" hint-placeholder-count="3">
                       <div onClick="{{ fr.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="{{ fr.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ fr.dotColor }};animation-delay:{{ fr.delay }};transition:background 0.25s ease;"></div>
                     </sc-for>
@@ -562,7 +622,10 @@
                   </div>
                   <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">amazon.com/staedtler</div>
                 </div>
-                <image-slot id="stae-ecom-browser" src="/images/stae-ecom-browser.webp" shape="rect" placeholder="Amazon brand page" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
+                <!-- The screenshot is 771x858 portrait inside a 4/3 browser viewport, so a
+                     centred cover crop cut the top off the page — including the header this
+                     frame exists to show. align="top" keeps that edge. -->
+                <image-slot id="stae-ecom-browser" src="/images/stae-ecom-browser.webp" shape="rect" align="top" placeholder="Amazon brand page" alt="STAEDTLER brand page on Amazon" style="display:block;width:100%;aspect-ratio:4/3;"></image-slot>
               </div>
               <div style="margin-top:10px;font-size:12px;line-height:1.55;color:#8A8C7E;">Amazon brand page — artwork across the full catalog, shown as it appears live.</div>
             </div>
@@ -650,8 +713,8 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -667,7 +730,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">{{ currentCategory.title }}</h1>
         <div style="margin-top:14px;max-width:620px;font-size:clamp(16px,1.8vw,20px);font-style:italic;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;color:#8A8C7E;">{{ currentCategory.subtitle }}</div>
@@ -681,7 +744,7 @@
 
         <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:22px;">
           <sc-for list="{{ staeChannels }}" as="ch" hint-placeholder-count="3">
-            <a href="{{ ch.url }}" target="_blank" rel="noopener" style="font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;color:#1F211C;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:4px;">{{ ch.label }} →</a>
+            <a href="{{ ch.url }}" target="_blank" rel="noopener" class="taptarget" style="font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;color:#1F211C;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:4px;">{{ ch.label }} →</a>
           </sc-for>
         </div>
 
@@ -693,7 +756,7 @@
                   <image-slot id="stae-feed-{{ $index }}" src="/images/stae-feed-{{ $index }}.webp" shape="rect" placeholder="{{ p.label }}" style="width:100%;height:100%;"></image-slot>
                 </div>
               </a>
-              <a href="{{ p.url }}" target="_blank" rel="noopener" style="margin-top:7px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;color:#8A8C7E;text-decoration:none;">
+              <a href="{{ p.url }}" target="_blank" rel="noopener" style="margin-top:4px;padding:6px 0;display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;color:#8A8C7E;text-decoration:none;">
                 <span>{{ p.label }}</span>
                 <span style="letter-spacing:0.06em;text-transform:uppercase;">View →</span>
               </a>
@@ -734,9 +797,9 @@
                 <polyline points="0.0,300.0 43.5,293.4 87.0,287.1 130.4,280.3 173.9,264.3 217.4,247.8 260.9,238.7 304.3,233.1 347.8,228.9 391.3,223.1 434.8,203.9 478.3,183.6 521.7,179.0 565.2,173.2 608.7,161.3 652.2,152.5 695.7,148.9 739.1,142.8 782.6,130.2 826.1,111.5 869.6,98.0 913.0,54.1 956.5,33.2 1000.0,23.4" fill="none" stroke="#B5BE4A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline>
                 <circle cx="913" cy="54.1" r="4" fill="#B5BE4A" vector-effect="non-scaling-stroke"></circle>
               </svg>
-              <div style="position:absolute;left:91.3%;top:16.9%;transform:translate(-100%,-100%);padding-right:14px;text-align:right;white-space:nowrap;">
+              <div class="chartnote" style="position:absolute;left:91.3%;top:16.9%;transform:translate(-100%,-100%);padding-right:14px;text-align:right;white-space:nowrap;">
                 <div style="font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;">June 2026</div>
-                <div style="margin-top:3px;font-size:11px;color:#8A8C7E;">Growth accelerates &mdash; strongest month on record</div>
+                <div class="chartnote-long" style="margin-top:3px;font-size:11px;color:#8A8C7E;">Growth accelerates &mdash; strongest month on record</div>
               </div>
               <div style="position:absolute;left:calc(100% + 12px);top:7.3%;transform:translateY(-50%);white-space:nowrap;">
                 <div style="font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">Instagram</div>
@@ -819,8 +882,8 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -837,7 +900,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Integrated Digital Campaign</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">STAEDTLER Noris<span style="font-size:0.5em;vertical-align:super;">®</span> 122</div>
         <div style="margin-top:12px;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#8A8C7E;">STAEDTLER · North American product launch</div>
@@ -895,7 +958,7 @@
                 </sc-for>
               </div>
               <div style="margin-top:9px;font-size:12px;color:#8A8C7E;">Packaging — shot as printed pieces, real substrate and finish.</div>
-              <div onClick="{{ goProgression }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
+              <div onClick="{{ goProgression }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="margin-top:22px;cursor:pointer;display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:5px;">See the packaging progression, concept to final →</div></div>
 
             <div data-phase="retail">
               <div style="font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;">{{ nRetail }} — Retail &amp; print</div>
@@ -906,7 +969,7 @@
                 
               </div>
 
-              <div style="margin-top:clamp(28px,3.5vw,40px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,20px);align-items:start;">
+              <div class="tilegrid3" style="margin-top:clamp(28px,3.5vw,40px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,20px);align-items:start;">
                 <sc-for list="{{ norisPrintTiles }}" as="tile" hint-placeholder-count="3">
                   <div>
                     <div class="{{ tile.containerClass }}" style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;">
@@ -914,7 +977,7 @@
                         <div class="{{ side.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ side.pointerEvents }};"><image-slot id="{{ side.slotId }}" src="{{ side.src }}" shape="rect" placeholder="{{ side.label }}" style="width:100%;height:100%;"></image-slot></div>
                       </sc-for>
                     </div>
-                    <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
+                    <div class="dotrow" style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                       <sc-for list="{{ tile.frames }}" as="side" hint-placeholder-count="3">
                         <div onClick="{{ side.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ side.dotColor }};transition:background 0.25s ease;"></div>
                       </sc-for>
@@ -978,13 +1041,13 @@
 
               <div style="margin-top:clamp(32px,4vw,44px);">
                 <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:12px;">Creator partnerships</div>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,20px);align-items:start;">
+                <div class="tilegrid3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,20px);align-items:start;">
                   <sc-for list="{{ norisCreators }}" as="creator" hint-placeholder-count="3">
                     <div>
                       <div style="width:100%;aspect-ratio:9/16;overflow:hidden;background:#F1EEE9;">
                         <video-slot id="noris-creator-{{ $index }}" src="/videos/noris-creator-{{ $index }}.mp4" label="{{ creator.label }}"></video-slot>
                       </div>
-                      <div style="margin-top:10px;font-size:12.5px;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:2px;display:inline-block;">{{ creator.handle }}</div>
+                      <div style="margin-top:10px;font-size:12.5px;color:#1F211C;border-bottom:1px solid var(--accent);padding-bottom:2px;display:inline-block;max-width:100%;overflow-wrap:anywhere;">{{ creator.handle }}</div>
                       <div style="margin-top:7px;font-size:12px;line-height:1.55;color:#8A8C7E;">{{ creator.note }}</div>
                     </div>
                   </sc-for>
@@ -1029,8 +1092,8 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
-        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
+        <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
+        <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1047,7 +1110,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</h1>
         <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
@@ -1099,7 +1162,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Handmade accessories brand</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</h1>
         <div style="margin-top:18px;max-width:640px;font-size:clamp(16px,1.9vw,21px);line-height:1.6;font-style:italic;color:#8A8C7E;">Elevated totes carrying South Asian&ndash;inspired art — made by hand, from materials given a second life.</div>
@@ -1296,7 +1359,7 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
         <div onClick="{{ goColourism }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
@@ -1314,7 +1377,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
+        <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ pp.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</h1>
         <div style="margin-top:24px;max-width:700px;font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">{{ pp.concept }}</div>
@@ -1383,7 +1446,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</h1>
         <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
@@ -1461,7 +1524,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Four clients</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</h1>
       </div>
@@ -1524,7 +1587,7 @@
       </div>
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
-        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
         <sc-if value="{{ showVehicle }}">
           <div onClick="{{ goVehicle }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
         </sc-if>
@@ -1544,7 +1607,7 @@
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Wraps &amp; fleets</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</h1>
         <div style="margin-top:22px;max-width:720px;font-size:16px;line-height:1.8;color:#1F211C;">I led vehicle graphics end to end &mdash; measuring vehicles on site, working directly with clients on the brief, and preflighting artwork so the design survived the jump to a curved, paneled metal surface. A wrap is unforgiving: what looks right flat can break across a wheel arch or a door seam.</div>
@@ -1620,7 +1683,7 @@
 
       <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
         <div onClick="{{ goStorefront }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
-        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
+        <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1633,7 +1696,7 @@
     <!-- RETAIL + PACKAGING LANDING -->
     <sc-if value="{{ isRetailLanding }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
+        <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</h1>
         <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
@@ -1663,7 +1726,7 @@
     <!-- RETAIL SUBCATEGORY PAGES -->
     <sc-if value="{{ isRetailSubcat }}">
       <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
-        <div onClick="{{ backToRetailLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
+        <div onClick="{{ backToRetailLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
       </div>
 
       <sc-if value="{{ isStaedtlerPkg }}">
@@ -1704,10 +1767,10 @@
               <image-slot id="progression-{{ $index }}" src="/images/progression-{{ $index }}.webp" shape="rect" placeholder="{{ slide.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:{{ slide.opacity }};pointer-events:{{ slide.pointerEvents }};transition:opacity 0.5s ease;"></image-slot>
             </sc-for>
             <div style="position:absolute;left:20px;bottom:20px;font-size:12px;letter-spacing:0.06em;color:#1F211C;background:#FBFAF7;padding:6px 12px;">{{ progressionCaption }}</div>
-            <div onClick="{{ prevSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">‹</div>
-            <div onClick="{{ nextSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">›</div>
+            <div onClick="{{ prevSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:44px;height:44px;display:flex;align-items:center;justify-content:center;">‹</div>
+            <div onClick="{{ nextSlide }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:22px;color:#1F211C;background:#FBFAF7;width:44px;height:44px;display:flex;align-items:center;justify-content:center;">›</div>
           </div>
-          <div style="display:flex;gap:8px;margin-top:12px;">
+          <div class="dotrow" style="display:flex;gap:8px;margin-top:12px;">
             <sc-for list="{{ progressionSlides }}" as="slide" hint-placeholder-count="5">
               <div onClick="{{ slide.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;width:8px;height:8px;border-radius:50%;background:{{ slide.dotColor }};"></div>
             </sc-for>
@@ -1725,7 +1788,7 @@
                   </sc-for>
                 </div>
                 <sc-if value="{{ g.multi }}" hint-placeholder-val="{{ true }}">
-                  <div style="margin-top:10px;display:flex;align-items:center;gap:7px;">
+                  <div class="dotrow" style="margin-top:10px;display:flex;align-items:center;gap:7px;">
                     <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
                       <div onClick="{{ frame.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="{{ frame.dotClass }}" style="cursor:pointer;width:7px;height:7px;border-radius:50%;background:{{ frame.dotColor }};transition:background 0.25s ease;"></div>
                     </sc-for>
@@ -1811,8 +1874,8 @@
       </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,80px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(56px,8vw,80px);display:flex;justify-content:space-between;">
-        <div onClick="{{ prevSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
-        <div onClick="{{ nextSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
+        <div onClick="{{ prevSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
+        <div onClick="{{ nextSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
       </div>
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
@@ -1834,11 +1897,11 @@
         <div>
           <form onSubmit="{{ submitContact }}" novalidate style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
             <label class="vh" for="cf-name">Your name</label>
-            <input id="cf-name" name="name" required autocomplete="name" placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <input id="cf-name" name="name" required autocomplete="name" placeholder="Name" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
             <label class="vh" for="cf-email">Your email address</label>
-            <input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
+            <input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="Email" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;">
             <label class="vh" for="cf-message">Tell me about your project</label>
-            <textarea id="cf-message" name="message" required placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
+            <textarea id="cf-message" name="message" required placeholder="Tell me about your project" rows="5" style="font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;padding:14px 0;border:none;border-bottom:1px solid #dedad2;background:transparent;outline:none;resize:vertical;"></textarea>
 
             <!-- Honeypot: hidden from people, irresistible to bots. A filled
                  value makes the API return 200 and silently drop the message,
@@ -1857,15 +1920,15 @@
         <div style="display:flex;flex-direction:column;gap:22px;">
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Email</div>
-            <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali11patel@gmail.com</a>
+            <a href="mailto:dipali11patel@gmail.com" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;font-size:15px;">dipali11patel@gmail.com</a>
           </div>
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Phone</div>
-            <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;font-size:15px;">416-550-7557</a>
+            <a href="tel:4165507557" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;font-size:15px;">416-550-7557</a>
           </div>
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">LinkedIn</div>
-            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
+            <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
           </div>
           <!-- No resume download by design — the experience summary on /about
                carries that information instead. -->
