@@ -58,8 +58,7 @@
   "address": { "@type": "PostalAddress", "addressRegion": "Ontario", "addressCountry": "CA" },
   "worksFor": { "@type": "Organization", "name": "Staedtler" },
   "sameAs": [
-    "https://linkedin.com/in/dipali-patel-profile",
-    "https://instagram.com/dipali_11"
+    "https://linkedin.com/in/dipali-patel-profile"
   ],
   "knowsAbout": ["Brand Design", "Packaging Design", "Art Direction", "Marketing", "Retail Design"]
 }
@@ -305,7 +304,6 @@
           <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
             <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
             <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-            <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
             <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
           </div>
         </div>
@@ -383,7 +381,6 @@
         <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
           <a href="mailto:dipali11patel@gmail.com" style="color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
           <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;">416-550-7557</a>
-          <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">Instagram @dipali_11</a>
           <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;">LinkedIn</a>
         </div>
       </div>
@@ -609,7 +606,16 @@
 
       <div class="pagehero" style="padding:clamp(28px,4vw,40px) 0 0;">
         <image-slot id="stae-mockup-hero" src="{{ staeMockupHeroSrc }}" shape="rect" placeholder="Mockups in-hand, at scale" style="display:block;width:100%;aspect-ratio:2/1;"></image-slot>
-        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Production mockups — photographed in-hand, because that's how a buyer judges them.</div>
+        <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">One package redesign, left to right — the full cycle behind a single SKU update.</div>
+        <div class="hairgrid" style="margin-top:clamp(20px,2.6vw,28px);display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
+          <sc-for list="{{ packagingCycle }}" as="p" hint-placeholder-count="5">
+            <div style="background:#FBFAF7;padding:clamp(18px,2.2vw,24px);display:flex;flex-direction:column;gap:7px;grid-column:span {{ p.span }};">
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;color:var(--accent);line-height:1;">{{ p.n }}</div>
+              <div style="font-size:14.5px;letter-spacing:0.01em;color:#1F211C;">{{ p.title }}</div>
+              <div style="font-size:13px;line-height:1.6;color:#8A8C7E;">{{ p.body }}</div>
+            </div>
+          </sc-for>
+        </div>
       </div>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
@@ -1858,10 +1864,6 @@
             <a href="tel:4165507557" style="color:#1F211C;text-decoration:none;font-size:15px;">416-550-7557</a>
           </div>
           <div>
-            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Instagram</div>
-            <a href="https://instagram.com/dipali_11" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">@dipali_11</a>
-          </div>
-          <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">LinkedIn</div>
             <a href="https://linkedin.com/in/dipali-patel-profile" target="_blank" rel="noopener noreferrer" style="color:#1F211C;text-decoration:none;font-size:15px;">dipali-patel-profile</a>
           </div>
@@ -2097,7 +2099,7 @@ const SAVED_IMAGES = new Set([
   'noris-hero', 'noris-guidelines', 'noris-pullup-full', 'noris-pullup-detail',
   'noris-sample-0-front', 'noris-sample-0-back',
   'noris-sample-1-front', 'noris-sample-1-back', 'noris-sample-1-detail', 'noris-sample-1-detail-2',
-  'noris-pkg-0', 'noris-pkg-1', 'noris-pkg-2', 'noris-pkg-3',
+  'noris-pkg-0', 'noris-pkg-1', 'noris-pkg-2',
   'noris-launch-0', 'noris-launch-1',
   'noris-pr-0', 'noris-pr-1', 'noris-pr-2',
   'noris-merch-0', 'noris-merch-1', 'noris-merch-2', 'noris-merch-3',
@@ -2121,7 +2123,7 @@ const SAVED_IMAGES = new Set([
 ]);
 
 // Video files committed to videos/. Add an id only after the file is written.
-const SAVED_VIDEOS = new Set([]);
+const SAVED_VIDEOS = new Set(['stae-hsn-hero']);
 
 // True once an image id has a committed file behind it. Slots and sections that
 // would otherwise render an empty drop placeholder are gated on this, so the
@@ -2434,9 +2436,18 @@ class Component extends DCLogic {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
-      .then((r) => r.json().catch(() => ({})).then((body) => ({ ok: r.ok, body: body })))
+      .then((r) => r.json().catch(() => ({})).then((body) => ({ ok: r.ok, status: r.status, body: body })))
       .then((res) => {
-        if (!res.ok) throw new Error((res.body && res.body.error) || 'Request failed');
+        if (!res.ok) {
+          /* A 4xx is something the sender can act on — a malformed address, a
+             field left blank, too many sends. Showing the blanket "email me
+             directly" for those sends a fixable typo off to a mailbox instead
+             of letting them correct it. 5xx and network failures are not
+             theirs to fix, so those keep the fallback. */
+          const err = new Error((res.body && res.body.error) || 'Request failed');
+          err.actionable = res.status >= 400 && res.status < 500;
+          throw err;
+        }
         form.reset();
         this.setState({
           contactBusy: false, contactState: 'ok',
@@ -2444,10 +2455,12 @@ class Component extends DCLogic {
         });
         if (window.va) window.va('event', { name: 'contact_form_submit' });
       })
-      .catch(() => {
+      .catch((err) => {
         this.setState({
           contactBusy: false, contactState: 'error',
-          contactMsg: 'Something went wrong sending that. Please email me directly at dipali11patel@gmail.com and I will pick it up there.',
+          contactMsg: (err && err.actionable && err.message)
+            ? err.message
+            : 'Something went wrong sending that. Please email me directly at dipali11patel@gmail.com and I will pick it up there.',
         });
       });
   };
@@ -2693,6 +2706,9 @@ class Component extends DCLogic {
         { n: '03', title: 'Sales & retail materials', body: 'Promotional flyers for sales reps, brochures for active deals, and printed inserts for sample packs.' },
         { n: '04', title: 'E-commerce', body: 'Amazon product imagery and full brand-page artwork across the entire catalog.' },
         { n: '05', title: 'Email marketing', body: 'Promotional and event emails to the mailing list.' },
+        // Taken from the role summary in EXPERIENCE rather than invented — it is
+        // the one responsibility described on /about that the five above miss.
+        { n: '06', title: 'Brand system & guidelines', body: 'The template and guideline system the team works from, so seasonal launches move fast without the brand drifting.' },
       ]),
       socialCapabilities: spanLast([
         { n: '01', title: 'Social media', body: 'Instagram, Facebook, and LinkedIn: content creation, scheduling, and community engagement.' },
@@ -2701,6 +2717,15 @@ class Component extends DCLogic {
         { n: '04', title: 'Team leadership', body: 'Directing a design team producing product-based cards for HSN.' },
       ]),
       staeMockupHeroSrc: imgSrc('stae-mockup-hero'),
+      // The mockup hero is one SKU's redesign photographed end to end, left to
+      // right. Without the legend it reads as five unrelated packs.
+      packagingCycle: spanLast([
+        { n: '01', title: 'Old packaging', body: 'The pack as it sat on shelf before the update.' },
+        { n: '02', title: 'Physical mockup', body: 'The new design built as a production-accurate mockup for buyer approval.' },
+        { n: '03', title: 'Dieline sample', body: "The supplier's sample box, back from the dieline." },
+        { n: '04', title: 'Flat box', body: 'New packaging as a finished flat, before assembly.' },
+        { n: '05', title: 'On shelf', body: 'The new pack made up, with product inside.' },
+      ]),
       staeMockups: Array.from({ length: 3 }, (_, i) => ({ slotId: 'stae-mockup-' + i, src: imgSrc('stae-mockup-' + i) })),
       staeChannels: [
         { label: 'Instagram', url: 'https://www.instagram.com/staedtlernorthamerica/' },
@@ -2750,6 +2775,7 @@ class Component extends DCLogic {
       staeFeatured: [
         { key: 'retail', kicker: 'Case study', label: 'Retail + Packaging', note: 'Packaging artwork, mockups, and before/after updates.', go: () => this.selectCategory('retail-packaging') },
         { key: 'noris', kicker: 'Flagship launch', label: 'Noris 122', note: 'A North American product launch, start to finish.', go: () => this.selectCategory('digital-campaign') },
+        { key: 'staedtler-social', kicker: 'The other half', label: 'Social & Team', note: "Staedtler's channels, the growth behind them, and the HSN design team.", go: () => this.selectCategory('staedtler-social') },
       ],
       isDigitalCampaign,
       amazonFrameHeight: 660,
@@ -2773,7 +2799,7 @@ class Component extends DCLogic {
       norisGuidelinesSrc: imgSrc('noris-guidelines'),
       norisAmazonPageSrc: imgSrc('noris-amazon-page'),
       // 4 tiles: pack fronts, styled in-context, and the two dielines
-      norisPackaging: Array.from({ length: 4 }, (_, i) => ({ slotId: 'noris-pkg-' + i, src: imgSrc('noris-pkg-' + i) })),
+      norisPackaging: Array.from({ length: 3 }, (_, i) => ({ slotId: 'noris-pkg-' + i, src: imgSrc('noris-pkg-' + i) })),
       norisPrintTiles: [
         { key: 'sample-0', caption: 'Sample card', sides: ['front', 'back'] },
         { key: 'sample-1', caption: 'Insert Flyer', sides: ['front', 'back', 'detail', 'detail-2'] },
