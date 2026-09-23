@@ -2439,6 +2439,17 @@ const SAVED_IMAGES = new Set([
   // sitting in images/ but deliberately NOT declared: the DIDI and Colourism
   // project pages are still unshot, so SHOW_PASSION stays false and the whole
   // branch — CREATE #2 included — stays dark until they land.
+  // DIDI photography recovered from the original PNG uploads (converted to
+  // WebP, Sept 2026): feed posts, shop homepage, and styled product shots.
+  // Declared here so the slots resolve if SHOW_PASSION is ever flipped;
+  // the branch stays dark until then.
+  'didi-hero', 'didi-product-hero', 'passion-tile-didi', 'didi-shop',
+  'didi-feed-0', 'didi-feed-1', 'didi-feed-2', 'didi-feed-3', 'didi-feed-4',
+  'didi-feed-5', 'didi-feed-6', 'didi-feed-7', 'didi-feed-8',
+  'didi-photo-0', 'didi-photo-1', 'didi-photo-2',
+  // Passion landing/tiles already shot (branch still dark via SHOW_PASSION).
+  'passion-hero', 'passion-tile-colourism',
+  'passion-tile-create2', 'colourism-hero',
 ]);
 
 // Video files committed to videos/. Add an id only after the file is written.
