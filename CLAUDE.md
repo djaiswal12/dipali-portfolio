@@ -265,16 +265,25 @@ CREATE #2) has no photography at all, so the whole category is filtered out of
 prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
 unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-Currently outstanding: only the Passion set, and only two of its three
-projects. **CREATE #2 is fully shot** — all eleven of its slots are declared and
-filled (see "CREATE #2 was rebuilt from its build document" below), and
-`/work/passion/create-2` renders with nothing empty at either phone or desktop
-width. DIDI still has 31 empty slots and Decolonizing Colourism 9, and the
-Passion landing's own four tiles are converted but undeclared, so
-`SHOW_PASSION` stays `false` and the whole branch — CREATE #2 included — stays
-dark. Those slots are not individually gated on `hasImg`, so flipping the flag
-before DIDI and Colourism land would expose all forty. Declare the remaining
-ids and flip the flag together.
+Currently outstanding: only the Passion set. Rendered with the flag flipped:
+
+| page | filled | empty |
+|---|---|---|
+| Passion landing | 4 | 0 |
+| CREATE #2 | 11 | 0 |
+| DIDI | 15 | **16** — identity, product, craft, texture (four each) |
+| Decolonizing Colourism | 1 | **8** — process, finals |
+
+Everything with a file behind it is declared; #41 converted the 13 DIDI source
+PNGs that had been sitting unreferenced in `images/` and declared the landing
+tiles with them. The remaining 24 slots are not individually gated on `hasImg`,
+so `SHOW_PASSION` stays `false` and the whole branch — the two finished pages
+included — stays dark. Flip it only once DIDI and Colourism are filled, or gate
+their slots first.
+
+`didi-shop` is a 1200x3036 full-page screenshot in a 4:3 frame, so it carries
+`align="top"`: a centred crop showed only the middle 30% of the page and cut
+off the shop's header and wordmark — the same case as the Amazon brand page.
 
 To check the branch without shipping it, set `SHOW_PASSION = true` locally,
 render, and set it back — the router refuses `/work/passion` otherwise, so
