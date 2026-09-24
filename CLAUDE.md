@@ -265,16 +265,25 @@ CREATE #2) has no photography at all, so the whole category is filtered out of
 prev/next ring. `stateFromPath` also refuses `/work/passion`, so it is
 unreachable rather than merely unlinked. Flip to `true` once the assets land.
 
-Currently outstanding: only the Passion set, and only two of its three
-projects. **CREATE #2 is fully shot** — all eleven of its slots are declared and
-filled (see "CREATE #2 was rebuilt from its build document" below), and
-`/work/passion/create-2` renders with nothing empty at either phone or desktop
-width. DIDI still has 31 empty slots and Decolonizing Colourism 9, and the
-Passion landing's own four tiles are converted but undeclared, so
-`SHOW_PASSION` stays `false` and the whole branch — CREATE #2 included — stays
-dark. Those slots are not individually gated on `hasImg`, so flipping the flag
-before DIDI and Colourism land would expose all forty. Declare the remaining
-ids and flip the flag together.
+Currently outstanding: only the Passion set. Rendered with the flag flipped:
+
+| page | filled | empty |
+|---|---|---|
+| Passion landing | 4 | 0 |
+| CREATE #2 | 11 | 0 |
+| DIDI | 15 | **16** — identity, product, craft, texture (four each) |
+| Decolonizing Colourism | 1 | **8** — process, finals |
+
+Everything with a file behind it is declared; #41 converted the 13 DIDI source
+PNGs that had been sitting unreferenced in `images/` and declared the landing
+tiles with them. The remaining 24 slots are not individually gated on `hasImg`,
+so `SHOW_PASSION` stays `false` and the whole branch — the two finished pages
+included — stays dark. Flip it only once DIDI and Colourism are filled, or gate
+their slots first.
+
+`didi-shop` is a 1200x3036 full-page screenshot in a 4:3 frame, so it carries
+`align="top"`: a centred crop showed only the middle 30% of the page and cut
+off the shop's header and wordmark — the same case as the Amazon brand page.
 
 To check the branch without shipping it, set `SHOW_PASSION = true` locally,
 render, and set it back — the router refuses `/work/passion` otherwise, so
@@ -389,6 +398,44 @@ from the builder export and no larger version exists anywhere in the repo, so
 it needs re-exported sources at roughly 1200 px on the long edge. The
 alternative, if new files never arrive, is to lay the gallery out 3-up so the
 frames drop to ~365 px and most of the existing sources are then adequate.
+
+**The client roster is named on the home page.** `CLIENTS` drives a wrap row
+between the hero and Selected Work. Until now the landing page named Staedtler
+and nothing else, while PlayStation, MLB, Metrolinx, HSN, House of Rohl and the
+four storefront clients sat two and three clicks deep — the strongest signal on
+the site was the least visible thing on it.
+
+The heading is **"Brands I've worked with", not "Clients", deliberately**:
+PlayStation, MLB and Metrolinx were campaign partners on a STAEDTLER launch,
+not people who hired her. Text rather than logos, because there are no logo
+files and reproducing trademarked marks on a personal site is a fight not worth
+having. Each name is a real `<button>` that sets state like any other nav
+handler; the four storefront clients route through `goEnvCase` so they land on
+their own case rather than the top of a page holding four of them.
+
+**Challenge / Approach / Result had never rendered for anyone.** The one copy
+of that block lived inside `isGenericCategory`, the dead branch below — so the
+`challenge` / `approach` / `result` fields sitting in `WORK_CATEGORIES` since
+the STAEDTLER split were invisible on every page. The block is now repeated in
+each real category branch (`isStaedtlerBrand`, `isStaedtlerSocial`,
+`isDigitalCampaign`, `isEnvLanding`, `isRetailLanding`), because the builder has
+no partials. Each copy reads `currentCategory` and is gated on
+`currentCategory.hasResult`, so a category with nothing to say renders nothing
+and a Challenge never appears without a Result under it. The four storefront
+cases get the same treatment through `cs.outcome`.
+
+**`DRAFT_RESULTS` marks placeholder outcome copy so it cannot ship by
+accident.** Outcome sentences are the one thing on this site that cannot be
+written from the work itself — they need numbers only Dipali has. The draft
+ones carry `resultDraft` / `outcomeDraft`, render behind a visible `.draftchip`,
+and disappear entirely when the flag is `false` (the blocks are gated on having
+content, so nothing is left hanging). Two ways out of a draft: replace the
+string and delete its flag, or flip the constant and lose them all at once.
+
+Note that `staedtler-brand` and `digital-campaign` show **pre-existing** result
+copy with no chip — those sentences were already in the repo, they were simply
+never visible. They are qualitative and unverified; treat them as needing the
+same review as the drafts.
 
 **Dead template branch.** `isGenericCategory` can never be true — its condition
 excludes all five `WORK_CATEGORIES` slugs — so the block it guards never
