@@ -13,8 +13,8 @@
      so these tags must stay static HTML — they cannot be set at runtime.
      ========================================================================== -->
 
-<title>Dipali Patel — Brand Designer &amp; Marketing Specialist</title>
-<meta name="description" content="Brand designer and marketing specialist. Design Lead at Staedtler North America — packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<title>Dipali Patel: Brand Designer &amp; Marketing Specialist</title>
+<meta name="description" content="Brand designer and Design Lead at STAEDTLER North America: brand systems, launch campaigns, and social growth. 200+ monthly assets from one guideline system, Instagram up 7.5x since July 2024.">
 <meta name="author" content="Dipali Patel">
 <link rel="canonical" href="https://dipali-design.digital/">
 <meta name="theme-color" content="#FBFAF7">
@@ -22,8 +22,8 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dipali Patel">
-<meta property="og:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
-<meta property="og:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta property="og:title" content="Dipali Patel: Brand Designer &amp; Marketing Specialist">
+<meta property="og:description" content="Brand systems, launch campaigns, and social growth. Design Lead at STAEDTLER North America.">
 <meta property="og:url" content="https://dipali-design.digital/">
 <meta property="og:image" content="https://dipali-design.digital/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -33,8 +33,8 @@
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
-<meta name="twitter:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<meta name="twitter:title" content="Dipali Patel: Brand Designer &amp; Marketing Specialist">
+<meta name="twitter:description" content="Brand systems, launch campaigns, and social growth. Design Lead at STAEDTLER North America.">
 <meta name="twitter:image" content="https://dipali-design.digital/og-image.jpg">
 <meta name="twitter:image:alt" content="Dipali Patel — brand design portfolio">
 
@@ -50,7 +50,7 @@
   "@type": "Person",
   "name": "Dipali Patel",
   "jobTitle": "Brand Designer & Marketing Specialist",
-  "description": "Brand designer and marketing specialist working across packaging, retail presence, and integrated digital campaigns.",
+  "description": "Brand designer and Design Lead at STAEDTLER North America: brand systems, launch campaigns, and social growth.",
   "url": "https://dipali-design.digital/",
   "image": "https://dipali-design.digital/og-image.jpg",
   "email": "mailto:dipali11patel@gmail.com",
@@ -96,6 +96,24 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     html, body { margin: 0; padding: 0; background: #FBFAF7; }
     * { box-sizing: border-box; }
+    /* Shared type scale and spacing tokens. One clamp per job, used
+       everywhere — this replaces the ad hoc per-element sizes that drifted
+       across pages (88px here, 72px there). Ink #1F211C, never pure #000. */
+    :root {
+      --font-display: 'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;
+      --font-body: 'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+      --ink: #1F211C; --muted: #8A8C7E; --paper: #FBFAF7;
+      --text-hero: clamp(48px, 7vw, 96px);
+      --text-h1: clamp(36px, 5vw, 68px);
+      --text-h2: clamp(28px, 3.4vw, 44px);
+      --text-h3: clamp(21px, 2.4vw, 30px);
+      --text-lead: clamp(17px, 1.8vw, 20px);
+      --text-body: 16px;
+      --text-small: 14.5px;
+      --text-kicker: 12px;
+      --tracking-kicker: 0.12em;
+      --space-section: clamp(64px, 8vw, 96px);
+    }
     /* Visually hidden but still read by screen readers — used for the form
        labels and the honeypot, neither of which should be visible. */
     .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -411,18 +429,24 @@
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
     <div style="animation:fadeIn 0.6s ease;">
       <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(36px,6vw,72px) clamp(20px,4vw,48px) clamp(20px,3vw,32px);">
-        <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6.5vw,88px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</div>
-        <div style="margin-top: 18px; max-width: 640px; font-size: clamp(16px,2vw,20px); line-height: 1.6; color: #8A8C7E; font-style: italic; font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif">
-          Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
-        </div>
+        <div style="font-size:var(--text-kicker);font-weight:600;letter-spacing:var(--tracking-kicker);text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Toronto · Design Lead &amp; Marketing Specialist, STAEDTLER North America</div>
+        <h1 style="margin:0;font-family:var(--font-display);font-weight:500;font-size:var(--text-hero);line-height:1;letter-spacing:-0.01em;color:var(--ink);">Dipali Patel</h1>
+        <div style="margin-top:16px;font-family:var(--font-display);font-size:var(--text-h3);line-height:1.2;color:var(--ink);">Brand systems built to launch.</div>
+        <p style="margin:16px 0 0;max-width:640px;font-size:var(--text-lead);line-height:1.55;color:var(--ink);">I'm a Design Lead &amp; Marketing Specialist at STAEDTLER North America, where I own the brand guidelines behind 200+ monthly assets. I led the North American launch creative for Noris 122, and I run the social presence that has grown Instagram 7.5x and Facebook 2.7x since July 2024. Campaign partners include PlayStation, MLB, Metrolinx, HSN, and House of Rohl.</p>
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
-          <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
+          <div onClick="{{ goSelectedWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">View Selected Work</div>
           <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+        </div>
+        <div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px 32px;max-width:960px;">
+          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">200+</span> monthly assets from one guideline system</div>
+          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Noris 122</span> North American launch creative</div>
+          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Instagram 7.5x, Facebook 2.7x</span> since July 2024</div>
+          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">AI-assisted</span> production, same brand discipline</div>
         </div>
       </div>
 
       <div data-reveal style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(28px,4vw,44px);">
-        <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;">Brands I've worked with</div>
+        <div style="font-size:var(--text-kicker);font-weight:600;letter-spacing:var(--tracking-kicker);text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Brands I've worked with</div>
         <div class="clientmarquee">
           <div class="clientmarquee-track">
             <div class="clientmarquee-group">
@@ -440,7 +464,9 @@
       </div>
 
       <div data-anchor="selected-work" style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(60px,8vw,100px);">
-        <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
+        <div style="font-size:var(--text-kicker);font-weight:600;letter-spacing:var(--tracking-kicker);text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:8px;">Selected Work</div>
+        <div style="font-family:var(--font-display);font-size:var(--text-h2);line-height:1.1;color:var(--ink);margin-bottom:8px;">Work that had to ship.</div>
+        <div style="font-size:15px;line-height:1.6;color:var(--muted);margin-bottom:32px;max-width:60ch;">Five areas of practice, one discipline: the brand reads as itself everywhere it shows up.</div>
         <div class="featuredgrid">
           <sc-for list="{{ featuredCategories }}" as="cat" hint-placeholder-count="2">
             <div data-reveal>
@@ -450,13 +476,13 @@
                 <div class="spotglow" aria-hidden="true"></div>
               </div>
               <div style="margin-top:14px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(20px,1.8vw,26px);line-height:1.15;">{{ cat.label }}</div>
-              <div style="margin-top:6px;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
+              <div style="margin-top:6px;font-size:var(--text-kicker);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
               <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#8A8C7E;max-width:46ch;">{{ cat.subtitle }}</div>
             </div>
             </div>
           </sc-for>
         </div>
-        <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin:clamp(30px,4vw,48px) 0 16px;">More work</div>
+        <div style="font-size:var(--text-kicker);font-weight:600;letter-spacing:var(--tracking-kicker);text-transform:uppercase;color:var(--muted);margin:clamp(30px,4vw,48px) 0 16px;">More work</div>
         <div class="worktiles" style="display:grid;gap:clamp(14px,2vw,24px);--cols:{{ moreCols }};--cols-tablet:{{ moreColsTablet }};">
           <sc-for list="{{ moreCategories }}" as="cat" hint-placeholder-count="3">
             <div data-reveal style="grid-column:span {{ cat.span }};">
@@ -466,7 +492,7 @@
                 <div class="spotglow" aria-hidden="true"></div>
               </div>
               <div style="margin-top:12px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(17px,1.4vw,22px);line-height:1.15;">{{ cat.label }}</div>
-              <div style="margin-top:5px;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
+              <div style="margin-top:5px;font-size:var(--text-kicker);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;">{{ cat.kicker }}</div>
             </div>
             </div>
           </sc-for>
@@ -476,8 +502,8 @@
       <div style="border-top:1px solid #dedad2;">
         <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
           <div style="max-width:520px;">
-            <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,32px);margin-bottom:14px;">Nearly five years turning strategy into shelf-ready, screen-ready creative.</div>
-            <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">Currently Design Lead &amp; Marketing Specialist at Staedtler. OCAD University, Bachelor of Design. Based in Toronto.</div>
+            <div style="font-family:var(--font-display);font-size:var(--text-h3);line-height:1.2;margin-bottom:16px;color:var(--ink);">Nearly five years keeping one brand consistent, from the dieline to the launch deck.</div>
+            <div style="font-size:15px;line-height:1.7;color:var(--ink);">Design Lead &amp; Marketing Specialist at STAEDTLER North America. I build the guideline systems, launch campaigns, and executive presentation decks that keep a brand coherent across packaging, retail, and screen, and I build AI-assisted production into the workflow: faster comps and versioning, same discipline. OCAD University, Bachelor of Design. Based in Toronto.</div>
           </div>
           <div class="tapstack" style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
             <a href="mailto:dipali11patel@gmail.com" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
@@ -2262,7 +2288,7 @@ const WORK_CATEGORIES = [
     hasBeforeAfter: false, inProgress: false, showCaseStudy: false, showSocialFeed: true, galleryCount: 6,
   },
   {
-    slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Selected Work', span: 1, ratio: '4/5',
+    slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Packaging', span: 1, ratio: '4/5',
     title: 'Retail + Packaging', subtitle: 'Packaging artwork & production-accurate mockups',
     intro: "Packaging artwork, production-accurate physical mockups, and updates to existing lines — a selection of the packaging work I've designed and brought to shelf.",
     hasBeforeAfter: true, inProgress: false, showCaseStudy: true, galleryCount: 9,
@@ -2273,7 +2299,7 @@ const WORK_CATEGORIES = [
     resultDraft: true
   },
   {
-    slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Flagship Case Study', span: 1, ratio: '4/5',
+    slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Launch campaign', span: 1, ratio: '4/5',
     title: 'Integrated Digital Campaign', subtitle: 'Multi-channel launches, end to end',
     intro: "From promotional emails and social content to Amazon brand pages and product imagery, giveaways, and influencer & PR box launches — this is brand consistency stress-tested across every channel a campaign touches.",
     hasBeforeAfter: false, inProgress: false, showCaseStudy: true, galleryCount: 8,
@@ -2282,7 +2308,7 @@ const WORK_CATEGORIES = [
     result: "Cohesive multi-platform launches that scaled from a single hero image to dozens of channel-specific assets without diluting the brand."
   },
   {
-    slug: 'environmental-signage', label: 'Environmental / Signage', kicker: 'Selected Work', span: 1, ratio: '4/5',
+    slug: 'environmental-signage', label: 'Environmental / Signage', kicker: 'Environmental', span: 1, ratio: '4/5',
     title: 'Environmental / Signage', subtitle: 'Large-format & vehicle graphics',
     intro: "Signage and large-format work, including a 14-vehicle wrap program kept consistent across food trucks, commercial vehicles, and trailers — a selection of the environmental and vehicle work I've designed.",
     hasBeforeAfter: true, inProgress: false, showCaseStudy: true, galleryCount: 9,
@@ -2782,6 +2808,14 @@ class Component extends DCLogic {
     const top = el.getBoundingClientRect().top + window.pageYOffset - 110;
     window.scrollTo({ top, behavior: 'smooth' });
     this.setState({ activePhase: id });
+  };
+  /* Homepage hero CTA: scrolls to the Selected Work section on the same page.
+     Routes through window.scrollTo so Lenis animates it (see motion.js). */
+  goSelectedWork = () => {
+    const el = document.querySelector('[data-anchor="selected-work"]');
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top, behavior: 'smooth' });
   };
   progressionLabels = ['Concept', 'Design', 'Dieline', 'Mockups', 'Final Product'];
 
@@ -3421,6 +3455,7 @@ class Component extends DCLogic {
                      : this.state.contactState === 'ok' ? '#4A6B32' : '#8A8C7E',
 
       goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
+      goSelectedWork: this.goSelectedWork,
       goWorkDefault: this.goWorkDefault, goAllWork: this.goAllWork, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
       toggleWorkMenu: this.toggleWorkMenu, workMenuKeyDown: this.workMenuKeyDown,
       keyActivate: this.keyActivate,
