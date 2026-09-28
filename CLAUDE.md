@@ -388,16 +388,21 @@ laid out 5 + 1 and orphaned the last tile. `.stepgrid` now reads `--cols` /
 mechanism `.worktiles` uses, so a strip of any length fills every row. Six
 steps go 6 / 3 / 2; three finals go 3 / 3 / 1.
 
-**The STAEDTLER packaging images are low-resolution, and that is issue #28.**
-Seventeen of the 28 images on `/work/retail-packaging/staedtler-packaging` are
-displayed larger than their source: the gallery frames are 562 CSS px (1124
-device px at 2x) and the files behind them run 435-836 px, so they are soft on
-any retina screen. `staedtler-pkg-gal-3-frame-0` is the worst at 435x544 in a
-562x562 frame. This is not a crop or a code problem — the files came in small
-from the builder export and no larger version exists anywhere in the repo, so
-it needs re-exported sources at roughly 1200 px on the long edge. The
-alternative, if new files never arrive, is to lay the gallery out 3-up so the
-frames drop to ~365 px and most of the existing sources are then adequate.
+**The STAEDTLER packaging gallery is 3-up because its files are small (#28).**
+The six gallery tiles on `/work/retail-packaging/staedtler-packaging` were 2-up,
+a ~600 CSS px frame, and many of the files behind them run 435-836 px — soft on
+any retina screen. `.pkggal` now lays them 3 x 2 (~370 px frames, 740 device px
+at 2x) and one column on a phone. The first frame is the one on screen before
+any cycling, so `staedtlerPkgGallery` lists each tile's files in display order,
+and tiles 1-3 lead with their 1600 px view instead of the 435-544 px frame-0.
+Every lead image is now at or above its frame size on desktop and tablet; the
+small files remain as later frames. Re-exported sources at ~1200 px would still
+be the real fix.
+
+`staedtler-pkg-gal-6/7/8-*` exist in `images/` but are not in the gallery and
+never were. Most repeat views already shown; the 144 classpack and 40-pack
+dielines are the only new ones. Adding tiles means keeping the count a multiple
+of three.
 
 **The client roster is named on the home page.** `CLIENTS` drives a wrap row
 between the hero and Selected Work. Until now the landing page named Staedtler

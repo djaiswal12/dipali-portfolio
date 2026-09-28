@@ -13,8 +13,8 @@
      so these tags must stay static HTML — they cannot be set at runtime.
      ========================================================================== -->
 
-<title>Dipali Patel — Brand Designer &amp; Marketing Specialist</title>
-<meta name="description" content="Brand designer and marketing specialist. Design Lead at Staedtler North America — packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
+<title>Dipali Patel — Brand Designer &amp; Design Lead</title>
+<meta name="description" content="Brand designer and design lead. I lead creative for STAEDTLER North America — packaging, campaigns and brand systems, carried from first sketch to the shelf, the feed and the storefront window.">
 <meta name="author" content="Dipali Patel">
 <link rel="canonical" href="https://dipali-design.digital/">
 <meta name="theme-color" content="#FBFAF7">
@@ -22,7 +22,7 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dipali Patel">
-<meta property="og:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
+<meta property="og:title" content="Dipali Patel — Brand Designer &amp; Design Lead">
 <meta property="og:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
 <meta property="og:url" content="https://dipali-design.digital/">
 <meta property="og:image" content="https://dipali-design.digital/og-image.jpg">
@@ -33,7 +33,7 @@
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Dipali Patel — Brand Designer &amp; Marketing Specialist">
+<meta name="twitter:title" content="Dipali Patel — Brand Designer &amp; Design Lead">
 <meta name="twitter:description" content="Packaging artwork, retail systems, and integrated campaigns that hold together at every touchpoint.">
 <meta name="twitter:image" content="https://dipali-design.digital/og-image.jpg">
 <meta name="twitter:image:alt" content="Dipali Patel — brand design portfolio">
@@ -49,8 +49,8 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Dipali Patel",
-  "jobTitle": "Brand Designer & Marketing Specialist",
-  "description": "Brand designer and marketing specialist working across packaging, retail presence, and integrated digital campaigns.",
+  "jobTitle": "Brand Designer & Design Lead",
+  "description": "Brand designer and design lead working across packaging, campaigns and brand systems.",
   "url": "https://dipali-design.digital/",
   "image": "https://dipali-design.digital/og-image.jpg",
   "email": "mailto:dipali11patel@gmail.com",
@@ -281,6 +281,14 @@
        which is a single unbreakable token and so overflowed the page. */
     @media (max-width: 760px) { .tilegrid3 { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } }
     @media (max-width: 520px) { .tilegrid3 { grid-template-columns: minmax(0,1fr) !important; } }
+    /* The STAEDTLER packaging gallery is 3-up because its sources are small —
+       435-836px, exported that way by the builder. Two columns made each frame
+       ~600 CSS px, larger than most of the files behind it, so they upscaled
+       and went soft on retina. Three columns bring the frame under 400px, and
+       nine tiles fill three rows exactly. It goes straight to one column on a
+       phone, where a two-column step would orphan the ninth tile. */
+    .pkggal { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    @media (max-width: 560px) { .pkggal { grid-template-columns: minmax(0,1fr); } }
 
     @media (max-width: 560px) {
       /* The chart callout is anchored from its right edge and set nowrap, so
@@ -351,7 +359,7 @@
       <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px) clamp(24px,4vw,40px);">
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6.5vw,88px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</div>
         <div style="margin-top: 18px; max-width: 640px; font-size: clamp(16px,2vw,20px); line-height: 1.6; color: #8A8C7E; font-style: italic; font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif">
-          Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
+          Brand designer and design lead. I lead creative for STAEDTLER North America — packaging, campaigns and brand systems, carried from first sketch to the shelf, the feed and the storefront window.
         </div>
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
           <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
@@ -417,7 +425,7 @@
           <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
         </sc-if>
         <div style="font-size:16px;line-height:1.75;color:#1F211C;display:flex;flex-direction:column;gap:20px;max-width:640px;">
-          <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
+          <p style="margin:0;">I'm a Toronto-based brand designer and design lead with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
           <p style="margin:0;">My work turns marketing strategy into creative people actually respond to. I specialize in integrated product launches, seasonal campaigns, and high-volume asset production — all while keeping brand consistency tight. I work closely with marketing, product, and sales teams so the creative lines up with business goals and retail timelines, and I bring a production background that keeps things efficient, clear, and accurate right down to the file.</p>
           <p style="margin:0;">CPG and fashion ask for the same discipline: a seasonal calendar, a high volume of assets, retail timelines that don't move, and a brand that has to look like itself everywhere it shows up. My Staedtler and retail packaging work is proof I can run that — I'm looking to bring it to a fashion, apparel, or lifestyle brand next.</p>
           <p style="margin:0;font-size:13.5px;color:#8A8C7E;letter-spacing:0.02em;">Bachelor of Design, OCAD University · Toronto, ON</p>
@@ -1984,12 +1992,12 @@
 
         <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Gallery</div>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,20px);">
+          <div class="pkggal" style="display:grid;gap:clamp(14px,2vw,20px);">
             <sc-for list="{{ staedtlerPkgGallery }}" as="g" hint-placeholder-count="6">
               <div class="{{ g.containerClass }}">
                 <div class="{{ g.containerClass }}" style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">
                   <sc-for list="{{ g.frames }}" as="frame" hint-placeholder-count="4">
-                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}" src="/images/staedtler-pkg-gal-{{ g.index }}-frame-{{ $index }}.webp" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
+                    <div class="{{ frame.frameClass }}" style="position:absolute;inset:0;pointer-events:{{ frame.pointerEvents }};transition:opacity 0.3s ease;"><image-slot id="{{ frame.slotId }}" src="{{ frame.src }}" shape="rect" placeholder="{{ frame.label }}" style="width:100%;height:100%;"></image-slot></div>
                   </sc-for>
                 </div>
                 <sc-if value="{{ g.multi }}" hint-placeholder-val="{{ true }}">
@@ -2555,7 +2563,7 @@ function titleFromState(s) {
     const label = sub ? sub.label : (cat ? (cat.title || cat.label) : 'Work');
     return label + ' — Dipali Patel';
   }
-  return 'Dipali Patel — Brand Designer & Marketing Specialist';
+  return 'Dipali Patel — Brand Designer & Design Lead';
 }
 
 class Component extends DCLogic {
@@ -3226,10 +3234,15 @@ class Component extends DCLogic {
       nextSubcat: () => (subIdx !== -1 && subIdx < RETAIL_SUBCATS.length - 1)
         ? this.selectSubcat(RETAIL_SUBCATS[subIdx + 1].slug)
         : this.backToRetailLanding(),
-      // One entry per gallery tile = how many view files exist for it in
-      // images/. A tile never renders more frames than it has files, so an
-      // empty frame (broken image + dead cycle step) is impossible.
-      staedtlerPkgGallery: [3, 4, 2, 2, 4, 4].map((frameCount, i) => {
+      // One entry per gallery tile, listing its view files in images/ in the
+      // order they show. A tile never renders more frames than it has files, so
+      // an empty frame (broken image + dead cycle step) is impossible.
+      //
+      // Tiles 1-3 lead with frame 1, not 0: their frame-0 files are 435-544px,
+      // soft in a ~370px frame on a 2x screen, and the first frame is the one
+      // on screen before any cycling. Each has a 1600px view to lead with.
+      staedtlerPkgGallery: [[0, 1, 2], [1, 0, 2, 3], [1, 0], [1, 0], [0, 1, 2, 3], [0, 1, 2, 3]].map((order, i) => {
+        const frameCount = order.length;
         const sel = (this.state.frameSel || {})[i];
         const editing = sel !== undefined && sel !== null;
         return {
@@ -3243,6 +3256,8 @@ class Component extends DCLogic {
             return {
               label: `View ${f + 1} of ${frameCount}`,
               number: f + 1,
+              slotId: 'staedtler-pkg-gal-' + i + '-frame-' + order[f],
+              src: '/images/staedtler-pkg-gal-' + i + '-frame-' + order[f] + '.webp',
               frameClass: editing && sel === f ? 'cycle-img show-frame' : 'cycle-img',
               pointerEvents: active ? 'auto' : 'none',
               // Unpinned, the dot highlight is driven by the cycDotN CSS animation
