@@ -35,6 +35,35 @@
     document.querySelectorAll('[data-reveal]:not([data-reveal-done])').forEach(setupReveal);
   }
 
+  /* Spotlight + tilt for [data-spotcard] case-study cards. The glow position
+     is fed through --mx/--my; the tilt is a small perspective rotation plus a
+     3px lift, transform-only, eased by the CSS transition on .spotcard.
+     Skipped entirely on touch devices and under prefers-reduced-motion (the
+     CSS gates the visuals the same way). The tilt targets the inner card so it
+     never fights the GSAP reveal running on the outer [data-reveal] wrapper. */
+  var fineHover = window.matchMedia &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  function wireCards() {
+    if (reducedMotion || !fineHover) return;
+    document.querySelectorAll('[data-spotcard]:not([data-card-done])').forEach(function (card) {
+      card.setAttribute('data-card-done', 'true');
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        card.style.transform =
+          'perspective(1000px) rotateX(' + ((0.5 - y) * 5).toFixed(2) + 'deg)' +
+          ' rotateY(' + ((x - 0.5) * 5).toFixed(2) + 'deg) translateY(-3px)';
+      });
+      card.addEventListener('pointerleave', function () {
+        card.style.transform = '';
+      });
+    });
+  }
+
   function init() {
     if (reducedMotion || !window.Lenis || !window.gsap || !window.ScrollTrigger) {
       showAll();
@@ -67,18 +96,21 @@
     window.gsap.ticker.lagSmoothing(0);
 
     // componentDidUpdate (the router's single sync point) calls this after
-    // every render. Re-scan for new [data-reveal] nodes, drop triggers whose
-    // elements were unmounted by the route change, then recalc positions.
+    // every render. Re-scan for new [data-reveal] nodes, wire any new cards,
+    // drop triggers whose elements were unmounted by the route change, then
+    // recalc positions.
     window.Motion = {
       refresh: function () {
         window.ScrollTrigger.getAll().forEach(function (t) {
           if (t.trigger && !document.contains(t.trigger)) t.kill();
         });
         scan();
+        wireCards();
         window.ScrollTrigger.refresh();
       }
     };
     scan();
+    wireCards();
   }
 
   if (document.readyState === 'loading') {
