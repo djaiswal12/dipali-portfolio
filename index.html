@@ -382,6 +382,22 @@
       .clientmarquee-dot { display: none; }
       .clientmarquee-item { padding: 6px 26px 6px 0; }
     }
+    /* Homepage hero: editorial split with portrait, stats as a hairline band.
+       The primary CTA uses the site's solid plum button language; the
+       secondary stays a quiet underline link. */
+    .herogrid { display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:clamp(32px,5vw,72px); align-items:center; }
+    .herostats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(20px,3vw,36px); }
+    .btn-primary { transition: background-color 0.2s ease; }
+    @media (hover: hover) {
+      .btn-primary:hover { background-color:#472247; }
+    }
+    @media (max-width:900px) {
+      .herogrid { grid-template-columns:minmax(0,1fr); }
+      .heroportrait { max-width:440px; }
+    }
+    @media (max-width:640px) {
+      .herostats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
     input::placeholder, textarea::placeholder { color: #8A8C7E; }
   </style>
 </helmet>
@@ -429,19 +445,43 @@
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
     <div style="animation:fadeIn 0.6s ease;">
       <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(36px,6vw,72px) clamp(20px,4vw,48px) clamp(20px,3vw,32px);">
-        <div style="font-size:var(--text-kicker);font-weight:600;letter-spacing:var(--tracking-kicker);text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Toronto · Design Lead &amp; Marketing Specialist, STAEDTLER North America</div>
-        <h1 style="margin:0;font-family:var(--font-display);font-weight:500;font-size:var(--text-hero);line-height:1;letter-spacing:-0.01em;color:var(--ink);">Dipali Patel</h1>
-        <div style="margin-top:16px;font-family:var(--font-display);font-size:var(--text-h3);line-height:1.2;color:var(--ink);">Brand systems built to launch.</div>
-        <p style="margin:16px 0 0;max-width:640px;font-size:var(--text-lead);line-height:1.55;color:var(--ink);">I'm a Design Lead &amp; Marketing Specialist at STAEDTLER North America, where I own the brand guidelines behind 200+ monthly assets. I led the North American launch creative for Noris 122, and I run the social presence that has grown Instagram 7.5x and Facebook 2.7x since July 2024. Campaign partners include PlayStation, MLB, Metrolinx, HSN, and House of Rohl.</p>
-        <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
-          <div onClick="{{ goSelectedWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">View Selected Work</div>
-          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+        <div class="herogrid">
+          <div>
+            <div style="font-size:var(--text-kicker);font-weight:600;letter-spacing:var(--tracking-kicker);text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Toronto · Design Lead &amp; Marketing Specialist, STAEDTLER North America</div>
+            <h1 style="margin:0;font-family:var(--font-display);font-weight:500;font-size:var(--text-hero);line-height:1;letter-spacing:-0.01em;color:var(--ink);">Dipali Patel</h1>
+            <div style="margin-top:16px;font-family:var(--font-display);font-size:var(--text-h3);line-height:1.2;color:var(--ink);">Brand systems <em style="color:#5B2A5E;">built to launch.</em></div>
+            <p style="margin:16px 0 0;max-width:600px;font-size:var(--text-lead);line-height:1.55;color:var(--ink);">I'm a Design Lead &amp; Marketing Specialist at STAEDTLER North America, where I own the brand guidelines behind 200+ monthly assets. I led the North American launch creative for Noris 122, and I run the social presence that has grown Instagram 7.5x and Facebook 2.7x since July 2024. Campaign partners include PlayStation, MLB, Metrolinx, HSN, and House of Rohl.</p>
+            <div style="margin-top:32px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+              <div onClick="{{ goSelectedWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget btn-primary" style="cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:14px 32px;font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif;">View Selected Work</div>
+              <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+            </div>
+          </div>
+          <div class="heroportrait">
+            <sc-if value="{{ hasAboutPortrait }}">
+              <div style="position:relative;">
+                <image-slot id="hero-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali Patel" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;display:block;"></image-slot>
+                <div aria-hidden="true" style="position:absolute;inset:0;border:1px solid var(--accent);transform:translate(14px,14px);pointer-events:none;"></div>
+              </div>
+            </sc-if>
+          </div>
         </div>
-        <div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px 32px;max-width:960px;">
-          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">200+</span> monthly assets from one guideline system</div>
-          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Noris 122</span> North American launch creative</div>
-          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Instagram 7.5x, Facebook 2.7x</span> since July 2024</div>
-          <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">AI-assisted</span> production, same brand discipline</div>
+        <div class="herostats" style="margin-top:clamp(40px,5vw,64px);border-top:1px solid #dedad2;padding-top:clamp(24px,3vw,36px);">
+          <div>
+            <div style="font-family:var(--font-display);font-size:clamp(26px,2.8vw,36px);line-height:1;color:var(--ink);">200+</div>
+            <div style="font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5;">monthly assets from one guideline system</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:clamp(26px,2.8vw,36px);line-height:1;color:var(--ink);">Noris 122</div>
+            <div style="font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5;">North American launch creative</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:clamp(26px,2.8vw,36px);line-height:1;color:var(--ink);">Instagram 7.5x, Facebook 2.7x</div>
+            <div style="font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5;">social growth since July 2024</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:clamp(26px,2.8vw,36px);line-height:1;color:var(--ink);">AI-assisted</div>
+            <div style="font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5;">production, same brand discipline</div>
+          </div>
         </div>
       </div>
 
@@ -502,7 +542,7 @@
       <div style="border-top:1px solid #dedad2;">
         <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
           <div style="max-width:520px;">
-            <div style="font-family:var(--font-display);font-size:var(--text-h3);line-height:1.2;margin-bottom:16px;color:var(--ink);">Nearly five years keeping one brand consistent, from the dieline to the launch deck.</div>
+            <div style="font-family:var(--font-display);font-size:var(--text-h3);line-height:1.2;margin-bottom:16px;color:var(--ink);">Over five years keeping one brand consistent, from the dieline to the launch deck.</div>
             <div style="font-size:15px;line-height:1.7;color:var(--ink);">Design Lead &amp; Marketing Specialist at STAEDTLER North America. I build the guideline systems, launch campaigns, and executive presentation decks that keep a brand coherent across packaging, retail, and screen, and I build AI-assisted production into the workflow: faster comps and versioning, same discipline. OCAD University, Bachelor of Design. Based in Toronto.</div>
           </div>
           <div class="tapstack" style="display:flex;flex-direction:column;gap:10px;font-size:13px;letter-spacing:0.04em;">
@@ -533,7 +573,7 @@
           <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
         </sc-if>
         <div style="font-size:16px;line-height:1.75;color:#1F211C;display:flex;flex-direction:column;gap:20px;max-width:640px;">
-          <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with almost five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
+          <p style="margin:0;">I'm a Toronto-based brand designer and marketing specialist with over five years of experience helping consumer packaged goods and lifestyle brands show up consistently — across digital, retail, and multi-platform campaigns. Right now, I'm Design Lead &amp; Marketing Specialist at Staedtler.</p>
           <p style="margin:0;">My work turns marketing strategy into creative people actually respond to. I specialize in integrated product launches, seasonal campaigns, and high-volume asset production — all while keeping brand consistency tight. I work closely with marketing, product, and sales teams so the creative lines up with business goals and retail timelines, and I bring a production background that keeps things efficient, clear, and accurate right down to the file.</p>
           <p style="margin:0;">CPG and fashion ask for the same discipline: a seasonal calendar, a high volume of assets, retail timelines that don't move, and a brand that has to look like itself everywhere it shows up. My Staedtler and retail packaging work is proof I can run that — I'm looking to bring it to a fashion, apparel, or lifestyle brand next.</p>
           <p style="margin:0;font-size:13.5px;color:#8A8C7E;letter-spacing:0.02em;">Bachelor of Design, OCAD University · Toronto, ON</p>
@@ -2331,7 +2371,7 @@ const SKILLS = ['Illustrator','Photoshop','InDesign','After Effects','Premiere P
 
 /* Experience shown on /about, standing in for a resume download.
    Only the Staedtler role is filled in, because it is the one role actually
-   documented elsewhere on this site. The bio says "almost five years", so there
+   documented elsewhere on this site. The bio says "over five years", so there
    is earlier history that belongs here.
 
    ACTION REQUIRED: add the earlier roles below — real titles, employers, and
