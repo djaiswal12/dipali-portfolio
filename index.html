@@ -290,14 +290,6 @@
       .chartnote { white-space: normal !important; max-width: 96px; }
       .chartnote-long { display: none; }
     }
-    /* Placeholder outcome copy wears this so it cannot reach the live site
-       unnoticed. It goes when DRAFT_RESULTS does. */
-    .draftchip {
-      display: inline-block; margin-right: 8px; padding: 1px 6px;
-      border: 1px solid var(--accent); border-radius: 2px;
-      font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
-      color: #1F211C; background: #F4F6DE; vertical-align: 1px;
-    }
     /* The client roster. A wrap row, not a grid, so the orphan-row rule does
        not apply and the names reflow to any count. */
     .clientrow button {
@@ -581,7 +573,7 @@
             <sc-if value="{{ currentCategory.hasResult }}">
               <div>
                 <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-                <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+                <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
               </div>
             </sc-if>
           </div>
@@ -774,7 +766,7 @@
             </div>
             <div>
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
             </div>
           </div>
         </div>
@@ -994,7 +986,7 @@
             </div>
             <div>
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
             </div>
           </div>
         </div>
@@ -1234,7 +1226,7 @@
             </div>
             <div>
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
             </div>
           </div>
         </div>
@@ -1682,7 +1674,7 @@
             </div>
             <div>
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
             </div>
           </div>
         </div>
@@ -1738,7 +1730,7 @@
               <div style="font-size:13.5px;line-height:1.7;color:#8A8C7E;">{{ cs.constraint }}</div>
               <sc-if value="{{ cs.hasOutcome }}">
                 <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin:18px 0 8px;">The outcome</div>
-                <div style="font-size:13.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ cs.outcomeIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ cs.outcome }}</div>
+                <div style="font-size:13.5px;line-height:1.7;color:#8A8C7E;">{{ cs.outcome }}</div>
               </sc-if>
             </div>
           </div>
@@ -1922,7 +1914,7 @@
             </div>
             <div>
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
             </div>
           </div>
         </div>
@@ -2186,9 +2178,7 @@ const WORK_CATEGORIES = [
     hasBeforeAfter: true, inProgress: false, showCaseStudy: true, galleryCount: 9,
     challenge: "Packaging has to survive two unrelated tests. It has to be manufacturable to spec, and it has to be approved by a buyer looking at a flat PDF months before the thing exists.",
     approach: "Artwork built to the real dieline, then made up as a production-accurate physical mockup — so the approval happens against an object someone can pick up rather than a rendering.",
-    // DRAFT — placeholder, not a real figure. See DRAFT_RESULTS.
-    result: "Packaging approved on the first review in most cases, because the buyer is holding the pack rather than imagining it.",
-    resultDraft: true
+    result: "Packaging approved on the first review in most cases, because the buyer is holding the pack rather than imagining it."
   },
   {
     slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Flagship Case Study', span: 1, ratio: '4/5',
@@ -2206,9 +2196,7 @@ const WORK_CATEGORIES = [
     hasBeforeAfter: true, inProgress: false, showCaseStudy: true, galleryCount: 9,
     challenge: "Large-format work is unforgiving. The artwork has to fit geometry that already exists, and a mistake is only discovered once it is on the wall and paid for.",
     approach: "Site survey and measurement before a line is drawn, so every panel is built to the real surface — mullions, door seams, curves and glass breaks included.",
-    // DRAFT — placeholder, not a real figure. See DRAFT_RESULTS.
-    result: "Installs that go up right the first time, across four sectors that share nothing but the process behind them.",
-    resultDraft: true
+    result: "Installs that go up right the first time, across four sectors that share nothing but the process behind them."
   },
   {
     slug: 'passion', label: 'Passion', kicker: 'Personal Work', span: 1, ratio: '4/5',
@@ -2360,9 +2348,7 @@ const SF_CASES = [
     key: 'av-bridal', name: 'AV Bridal', sector: 'Bridal retail',
     brief: 'A bridal boutique needed its storefront to read as considered and unhurried — the window is the first fitting-room impression, and it had to signal craft without obscuring the gowns behind it.',
     constraint: 'Privacy and daylight pulled in opposite directions. Frosted vinyl at the right height screened the fitting area while leaving the display glass clear.',
-    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
     outcome: 'The window did the introducing — walk-ins arrived already expecting the level of finish inside.',
-    outcomeDraft: true,
     detailCaption: 'Frosted vinyl at seated eye level — screening without darkening the room.',
     details: 4,
   },
@@ -2370,9 +2356,7 @@ const SF_CASES = [
     key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty',
     brief: 'A salon wanting presence on a busy street — legible at traffic speed, then rewarding up close once you are through the door.',
     constraint: 'One identity working at two viewing distances: full-height window type read from across the street, interior graphics scaled for three feet away at the chair.',
-    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
     outcome: 'Legible from across the street and rewarding at the chair, from one identity rather than two.',
-    outcomeDraft: true,
     detailCaption: 'Cut vinyl on glass — weights adjusted so the same mark holds at both distances.',
     details: 3,
   },
@@ -2380,9 +2364,7 @@ const SF_CASES = [
     key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare',
     brief: 'A dental practice needing a calm, clinical face to the street and interior graphics that carry patients through the space without feeling institutional.',
     constraint: 'Existing glass seams cut straight through the natural logo placement. The layout was rebuilt around the mullions so no element lands on a break.',
-    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
     outcome: 'A clinic frontage that reads as calm rather than clinical, which is what the brief was really asking for.',
-    outcomeDraft: true,
     detailCaption: 'Wayfinding and window film — set out from the mullions, not fighting them.',
     details: 3,
   },
@@ -2390,9 +2372,7 @@ const SF_CASES = [
     key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply',
     brief: 'A House of Rohl Studio showroom taking shape behind construction hoarding downtown. The barrier was the only thing on the street for months, so it had to do the announcing — brand, fixtures, and an opening date, at pedestrian distance and passing-traffic distance at once.',
     constraint: 'A long run of temporary panels around a corner site, broken by a door and site access. Artwork was split so no seam lands mid-wordmark, and the panel schedule was drawn from measured site dimensions rather than the architect\'s plan.',
-    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
     outcome: 'A hoarding that worked as advertising for the whole build, not just a barrier around it.',
-    outcomeDraft: true,
     detailCaption: 'Printed panels — set out from measured dimensions, splits planned between letterforms.',
     // This is the job photographed end to end for the process strip above, so
     // the case study draws on those same frames instead of a duplicate set.
@@ -2484,18 +2464,6 @@ const hasImg = (id) => SAVED_IMAGES.has(id);
 // The Passion category (landing, DIDI, Colourism, CREATE #2) has no photography
 // yet. Flip to true once those assets land to bring the whole branch back.
 const SHOW_PASSION = false;
-
-/* Placeholder outcome copy, so the layout of the Result and Outcome blocks can
-   be reviewed before the real numbers exist. NOTHING MARKED `draft` BELOW IS
-   TRUE — it is shaped like a plausible answer so the page can be judged, and
-   nothing more.
-
-   Every draft sentence renders behind a visible DRAFT chip, so it cannot reach
-   the live site unnoticed. Two ways out: replace a draft string with the real
-   sentence and delete its `resultDraft` / `outcomeDraft` flag, or set this to
-   false to hide every remaining draft at once. The blocks are gated on having
-   content, so hiding them leaves no empty headings behind. */
-const DRAFT_RESULTS = true;
 
 /* ---------------------------------------------------------------------------
    ROUTING
@@ -2846,17 +2814,9 @@ class Component extends DCLogic {
       select: () => this.selectCategory(c.slug)
     }));
 
-    /* A draft outcome is hidden entirely when DRAFT_RESULTS is off, rather than
-       rendered bare — and the blocks that show these are gated on having
-       content, so switching the flag leaves no empty headings behind. */
-    const liveText = (obj, field) =>
-      (obj[field + 'Draft'] && !DRAFT_RESULTS) ? '' : (obj[field] || '');
-
     const currentCategory = {
       ...current,
-      result: liveText(current, 'result'),
-      hasResult: !!liveText(current, 'result'),
-      resultIsDraft: !!(current.resultDraft && DRAFT_RESULTS),
+      hasResult: !!current.result,
       galleryItems: Array.from({ length: current.galleryCount }, (_, i) => ({
         slotId: 'gal-' + current.slug + '-' + i,
         src: imgSrc('gal-' + current.slug + '-' + i),
@@ -3028,9 +2988,7 @@ class Component extends DCLogic {
       })),
       sfCases: SF_CASES.map(c => ({
         ...c,
-        outcome: liveText(c, 'outcome'),
-        hasOutcome: !!liveText(c, 'outcome'),
-        outcomeIsDraft: !!(c.outcomeDraft && DRAFT_RESULTS),
+        hasOutcome: !!c.outcome,
         beforeSrc: imgSrc('sf-' + c.key + '-before'),
         afterSrc: imgSrc('sf-' + c.key + '-after'),
         hasBeforeAfter: hasImg('sf-' + c.key + '-before') && hasImg('sf-' + c.key + '-after'),

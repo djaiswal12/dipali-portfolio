@@ -424,18 +424,19 @@ no partials. Each copy reads `currentCategory` and is gated on
 and a Challenge never appears without a Result under it. The four storefront
 cases get the same treatment through `cs.outcome`.
 
-**`DRAFT_RESULTS` marks placeholder outcome copy so it cannot ship by
-accident.** Outcome sentences are the one thing on this site that cannot be
-written from the work itself — they need numbers only Dipali has. The draft
-ones carry `resultDraft` / `outcomeDraft`, render behind a visible `.draftchip`,
-and disappear entirely when the flag is `false` (the blocks are gated on having
-content, so nothing is left hanging). Two ways out of a draft: replace the
-string and delete its flag, or flip the constant and lose them all at once.
+**Result and outcome copy is stand-in, shown as final.** Outcome sentences are
+the one thing on this site that cannot be written from the work itself. The
+`retail-packaging` and `environmental-signage` results and the four storefront
+`outcome` lines were written as placeholders; they briefly sat behind a flag
+and a visible label, and both were removed at the owner's
+request — the real figures are stronger, so the stand-ins understate rather
+than overstate. They render as ordinary copy now. Replace each with the real
+sentence as it arrives. Keep them qualitative until then: never put a number
+in one that Dipali has not supplied.
 
-Note that `staedtler-brand` and `digital-campaign` show **pre-existing** result
-copy with no chip — those sentences were already in the repo, they were simply
-never visible. They are qualitative and unverified; treat them as needing the
-same review as the drafts.
+`staedtler-brand` and `digital-campaign` carry result copy that predates this
+work — it was always in the repo, just never rendered. It is equally
+unverified and gets replaced the same way.
 
 **Dead template branch.** `isGenericCategory` can never be true — its condition
 excludes all five `WORK_CATEGORIES` slugs — so the block it guards never
