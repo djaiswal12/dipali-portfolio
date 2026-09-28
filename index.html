@@ -435,7 +435,7 @@
       <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:20px;">Brand systems, ready for fashion.</h1>
       <div style="display:inline-block;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;background:#5B2A5E;color:#FBFAF7;padding:11px 20px;margin-bottom:36px;">Open to brand design &amp; art direction — fashion, apparel, lifestyle</div>
 
-      <div class="splitcols" style="display:grid;grid-template-columns:{{ aboutCols }};gap:clamp(30px,5vw,64px);align-items:start;">
+      <div data-reveal class="splitcols" style="display:grid;grid-template-columns:{{ aboutCols }};gap:clamp(30px,5vw,64px);align-items:start;">
         <sc-if value="{{ hasAboutPortrait }}">
           <image-slot id="about-portrait" src="{{ aboutPortraitSrc }}" shape="rect" placeholder="Portrait of Dipali" alt="Portrait of Dipali Patel" loading="eager" style="width:100%;aspect-ratio:4/5;"></image-slot>
         </sc-if>
@@ -450,7 +450,7 @@
       <!-- EXPERIENCE. Stands in for the resume download, which was removed
            deliberately. Content lives in the EXPERIENCE array in the script
            block below. -->
-      <section style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);">
+      <section data-reveal style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Experience</div>
         <h2 style="margin:0 0 32px;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(28px,3.4vw,40px);">Where I've done it.</h2>
 
@@ -483,7 +483,7 @@
         </div>
       </section>
 
-      <div style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
+      <div data-reveal style="margin-top:clamp(60px,8vw,96px);border-top:1px solid #dedad2;padding-top:clamp(40px,6vw,56px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
         <div style="max-width:520px;">
           <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,30px);margin-bottom:14px;">Work with me</div>
           <div style="font-size:15px;line-height:1.7;color:#8A8C7E;">Looking for a designer who can hold a brand together across a hundred touchpoints — in fashion, apparel, or lifestyle? I'd love to hear from you.</div>
@@ -496,7 +496,7 @@
         </div>
       </div>
 
-      <div style="margin-top:clamp(50px,7vw,72px);">
+      <div data-reveal style="margin-top:clamp(50px,7vw,72px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:18px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Tools &amp; Craft</div>
         <div style="display:flex;flex-wrap:wrap;gap:10px;">
           <sc-for list="{{ skills }}" as="s" hint-placeholder-count="14">
@@ -511,7 +511,7 @@
   <sc-if value="{{ isWork }}">
     <div style="animation:fadeIn 0.6s ease;">
     <sc-if value="{{ isGenericCategory }}">
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">{{ currentCategory.title }}</h1>
@@ -535,7 +535,7 @@
         </div>
       </sc-if>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Gallery</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(14px,2vw,20px);">
           <sc-for list="{{ currentCategory.galleryItems }}" as="g" hint-placeholder-count="6">
@@ -603,7 +603,7 @@
         </div>
       </sc-if>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);display:flex;justify-content:space-between;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
@@ -621,7 +621,7 @@
         <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">{{ currentCategory.title }}</h1>
@@ -629,7 +629,7 @@
         <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">{{ currentCategory.intro }}</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Brand consistency</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;max-width:820px;">One brand, many surfaces.</div>
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">A flyer made for a sales rep and an Amazon brand page built three months later still have to read as the same company. That's the part of the job I'm judged on — here's the same brand across five very different surfaces.</div>
@@ -700,7 +700,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">What I do here</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">What I make.</div>
         <div class="hairgrid" style="display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
@@ -714,7 +714,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Production craft</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Mockups a buyer can hold.</div>
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Before anything goes to manufacturing, buyers see a physical mockup — correctly sized, correctly finished, close enough to production that the approval means something. Building these is a different skill from designing the artwork, and it's the part that keeps launches on schedule.</div>
@@ -734,7 +734,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:clamp(14px,2vw,20px);">
           <sc-for list="{{ staeMockups }}" as="m" hint-placeholder-count="3">
             <div style="width:100%;aspect-ratio:1/1;overflow:hidden;min-width:0;">
@@ -746,7 +746,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Featured work</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">Go deeper.</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
@@ -795,7 +795,7 @@
         </div>
       </sc-if>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
@@ -812,7 +812,7 @@
         <image-slot id="stae-hero" src="/images/stae-hero.webp" shape="rect" placeholder="STAEDTLER branding moment" alt="STAEDTLER branding — retail and packaging design by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ currentCategory.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">{{ currentCategory.title }}</h1>
@@ -820,7 +820,7 @@
         <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">{{ currentCategory.intro }}</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Social &amp; community</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The channels I run.</div>
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Instagram, Facebook, and LinkedIn — content creation, scheduling, and community engagement. Campaigns, giveaways, and drawing contests all run through here.</div>
@@ -849,7 +849,7 @@
         <div style="margin-top:14px;font-size:12px;color:#8A8C7E;">The feed — campaign, giveaway, and drawing-contest posts, read as one grid. Each tile links to the original post.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;padding-bottom:14px;border-bottom:1px solid #E5E2DA;">Growth — April 2024 to August 2026</div>
 
         <div style="margin-top:clamp(34px,4.5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(28px,4vw,52px);">
@@ -940,7 +940,7 @@
         <div style="margin-top:clamp(30px,4vw,44px);max-width:660px;font-size:14.5px;line-height:1.8;color:#1F211C;">I took over STAEDTLER's North American social channels in July 2024. Instagram has grown 7.5× since and Facebook 2.7×, without diluting engagement — and the growth is still accelerating. June 2026 was the strongest month on record, and the month Instagram passed Facebook.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Design team leadership</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The HSN card program.</div>
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">I direct a design team producing finished card projects made with STAEDTLER products, created for sale on HSN. I brief the team, set the creative direction for each release, hold the brand and quality standards, and review the output before it goes out. The work has to function as a sellable craft object first and a brand piece second — both, every time.</div>
@@ -958,7 +958,7 @@
         <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">HSN card program — the strongest piece, styled and shot as a finished object.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(14px,2vw,20px);">
           <sc-for list="{{ staeHsn }}" as="h" hint-placeholder-count="6">
             <div style="width:100%;aspect-ratio:4/5;overflow:hidden;">
@@ -971,7 +971,7 @@
         <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">The range — cards produced by the team under my direction.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">What I do here</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">What I run.</div>
         <div class="hairgrid" style="display:grid;gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
@@ -1015,7 +1015,7 @@
         </div>
       </sc-if>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
@@ -1033,7 +1033,7 @@
         <image-slot id="noris-hero" src="{{ norisHeroSrc }}" shape="rect" placeholder="Noris 122 key visual" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Integrated Digital Campaign</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.5vw,72px);line-height:1.02;">STAEDTLER Noris<span style="font-size:0.5em;vertical-align:super;">®</span> 122</div>
@@ -1041,7 +1041,7 @@
         <div style="margin-top:26px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">The Noris 122 brought STAEDTLER's most recognizable pencil to North America with an eraser tip and a sustainability story worth telling. The stripe is one of the most recognizable pencil liveries in the world, so the work was about earning the right to change anything at all — and the upcycled wood, under PEFC-certified sourcing, gave the launch its point of view. I led the creative from the first key visual through to the product arriving in teachers' hands.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(36px,5vw,52px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(36px,5vw,52px) clamp(20px,4vw,48px) 0;">
         <div style="border-top:1px solid #dedad2;border-bottom:1px solid #dedad2;padding:clamp(24px,3vw,32px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:24px;">
           <div>
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8A8C7E;margin-bottom:6px;">Role</div>
@@ -1067,7 +1067,7 @@
         <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Product design guidelines — the livery, proportions, and claim placement every piece below was built against.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;display:grid;grid-template-columns:1fr;gap:0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,4vw,48px) 0;display:grid;grid-template-columns:1fr;gap:0;">
         <div class="phasewrap" style="display:grid;grid-template-columns:170px minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:start;">
 
           <div class="phaserail" style="position:sticky;top:96px;display:flex;flex-direction:column;gap:2px;">
@@ -1218,7 +1218,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,96px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="border-top:1px solid #dedad2;padding-top:clamp(32px,4vw,44px);max-width:760px;">
           <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(22px,2.8vw,32px);line-height:1.25;margin-bottom:14px;">One product, one voice, every channel it touched.</div>
           <div style="font-size:15.5px;line-height:1.8;color:#8A8C7E;">The clearest example of how I work: hold the brand steady, build once and adapt deliberately, and stay with a product from the first visual through to someone opening a box on camera.</div>
@@ -1255,7 +1255,7 @@
         </div>
       </sc-if>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
         <div onClick="{{ nextCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextCategoryLabel }} →</div>
       </div>
@@ -1273,14 +1273,14 @@
         <image-slot id="passion-hero" src="{{ passionHeroSrc }}" shape="rect" placeholder="Personal work — strongest image, wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Personal work</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Passion</h1>
         <div style="margin-top:26px;max-width:720px;font-size:16.5px;line-height:1.85;color:#1F211C;text-wrap:pretty;">This is the work I make for myself. Across all of it runs the same thread: things made by hand, materials reused rather than bought new, and South Asian art and craft traditions I grew up with. My professional work lives inside other people's brand guidelines. This is where my own voice is.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(52px,7vw,88px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:grid;gap:clamp(36px,5vw,64px);">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(52px,7vw,88px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:grid;gap:clamp(36px,5vw,64px);">
         <div onClick="{{ goDidi }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
           <div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:#F1EEE9;">
             <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;">
@@ -1325,7 +1325,7 @@
         <image-slot id="didi-hero" src="{{ didiHeroSrc }}" shape="rect" placeholder="DIDI — hero product photograph, wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Handmade accessories brand</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1.0;">DIDI Tote Bags</h1>
@@ -1336,7 +1336,7 @@
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.8vw,52px);line-height:1.22;text-wrap:pretty;">&ldquo;Didi means sister. It's the name I've always been called &mdash; and, fittingly, what my sister calls me back.&rdquo;</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">01 &mdash; The brand</div>
         <div class="splitcols" style="margin-top:8px;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,400px);gap:clamp(28px,4.5vw,64px);align-items:start;">
           <div style="min-width:0;display:grid;gap:20px;">
@@ -1354,7 +1354,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">02 &mdash; Identity</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The system.</div>
         <div style="margin-top:14px;max-width:620px;font-size:15px;line-height:1.8;color:#8A8C7E;">Logo, wordmark, palette, and type — built as a system so it holds across a hangtag, a label, and a shopfront photo.</div>
@@ -1372,7 +1372,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">03 &mdash; Animation &amp; motion</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">The mark in motion.</div>
         <div style="margin-top:clamp(24px,3.5vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:clamp(16px,2.4vw,26px);">
@@ -1387,7 +1387,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">04 &mdash; The product</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Screen-printed, stitched, strung.</div>
       </div>
@@ -1397,7 +1397,7 @@
         <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Product lineup &mdash; each bag a different print, the format held constant so the range reads as one brand.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(14px,2vw,20px);">
           <sc-for list="{{ didiProduct }}" as="p" hint-placeholder-count="4">
             <div style="min-width:0;">
@@ -1445,7 +1445,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">06 &mdash; Video &amp; reels</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Shot vertical, shown vertical.</div>
         <div style="margin-top:14px;max-width:640px;font-size:15px;line-height:1.8;color:#8A8C7E;">Most of the process was documented as reels. They belong at 9:16, at the size they were made for.</div>
@@ -1464,12 +1464,12 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">07 &mdash; Photography</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Styled and shot myself.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:clamp(14px,2vw,22px);">
           <sc-for list="{{ didiPhotography }}" as="p" hint-placeholder-count="3">
             <div style="min-width:0;">
@@ -1484,7 +1484,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,360px);gap:clamp(24px,4vw,52px);align-items:start;">
           <div style="min-width:0;">
             <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">08 &mdash; The shop</div>
@@ -1522,7 +1522,7 @@
         <div style="font-size:clamp(17px,2.1vw,23px);line-height:1.75;color:#1F211C;text-wrap:pretty;">Building a brand alone means every decision is yours and every gap is yours too — there is no one to hand the packaging to, or the photography, or the shipping. It taught me how much of a brand lives in the parts nobody briefs: the weight of the paper, the way a label is sewn, what the box feels like when it arrives. I bring that back to client work, where the same details decide whether a brand feels considered or just designed.</div>
       </div>
 
-      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+      <div data-reveal style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
         <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Passion</div>
         <div onClick="{{ goColourism }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Decolonizing Colourism →</div>
       </div>
@@ -1540,14 +1540,14 @@
         <image-slot id="{{ pp.key }}-hero" src="{{ pp.heroSrc }}" shape="rect" placeholder="{{ pp.heroPlaceholder }}" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToPassion }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Passion</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">{{ pp.kicker }}</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">{{ pp.label }}</h1>
         <div style="margin-top:24px;max-width:700px;font-size:16px;line-height:1.85;color:#1F211C;text-wrap:pretty;">{{ pp.concept }}</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Process</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,44px);line-height:1.08;">{{ pp.processTitle }}</div>
         <div style="margin-top:14px;max-width:640px;font-size:15px;line-height:1.8;color:#8A8C7E;">{{ pp.processNote }}</div>
@@ -1566,7 +1566,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">The work</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,44px);line-height:1.08;">{{ pp.finalTitle }}</div>
       </div>
@@ -1576,7 +1576,7 @@
         <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">{{ pp.finalCaption }}</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,28px) clamp(20px,4vw,48px) 0;">
         <div class="stepgrid" style="display:grid;gap:clamp(14px,2vw,22px);--cols:{{ pp.finalCols }};--cols-tablet:{{ pp.finalColsTablet }};--cols-phone:{{ pp.finalColsPhone }};">
           <sc-for list="{{ pp.finals }}" as="f" hint-placeholder-count="3">
             <div style="min-width:0;">
@@ -1591,7 +1591,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+      <div data-reveal style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
         <div onClick="{{ pp.goPrev }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ pp.prevLabel }}</div>
         <div onClick="{{ pp.goNext }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ pp.nextLabel }} →</div>
       </div>
@@ -1609,14 +1609,14 @@
         <image-slot id="env-hero" src="{{ envHeroSrc }}" shape="rect" placeholder="Installed storefront graphics — wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental / Signage</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5.5vw,74px);line-height:1.02;">Design you can walk up to.</h1>
         <div style="margin-top:24px;max-width:760px;font-size:16.5px;line-height:1.8;color:#1F211C;">Environmental work is where design stops being a file and becomes an object. I've designed storefront and interior graphics for clients across industrial supply, beauty, healthcare, and bridal retail, and led vehicle graphics for food trucks, commercial fleets, trailers, and personal vehicles. Every project started with a tape measure and ended with vinyl on glass or metal.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Process</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;max-width:820px;">Tape measure to vinyl.</div>
         <div style="margin-top:16px;max-width:680px;font-size:15.5px;line-height:1.8;color:#1F211C;">The same six stages carry every project on this page, whether the surface is a shopfront window or the curved flank of a food truck. These frames follow one job the whole way through &mdash; the House of Rohl Studio hoarding for EMCO, which appears again below as a finished case.</div>
@@ -1637,7 +1637,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Client projects</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Four sectors, four visual languages.</div>
         <div style="margin-top:16px;max-width:660px;font-size:15px;line-height:1.75;color:#8A8C7E;">A bridal boutique and an industrial supplier ask for opposite things on the glass. The process behind them never changed.</div>
@@ -1717,7 +1717,7 @@
         <image-slot id="sf-hero" src="{{ sfHeroSrc }}" shape="rect" placeholder="Installed storefront — wide" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Four clients</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Storefront &amp; Interior Graphics</h1>
@@ -1771,7 +1771,7 @@
         </div>
       </sc-for>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Environmental craft</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">What the surface demands.</div>
         <div style="margin-top:clamp(28px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:1px;background:#E5E2DA;border:1px solid #E5E2DA;">
@@ -1784,7 +1784,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+      <div data-reveal style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
         <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Environmental / Signage</div>
         <sc-if value="{{ showVehicle }}">
           <div onClick="{{ goVehicle }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Vehicle Graphics →</div>
@@ -1804,14 +1804,14 @@
         <image-slot id="veh-hero" src="{{ vehHeroSrc }}" shape="rect" placeholder="Wrapped vehicle in its environment" style="width:100%;height:100%;"></image-slot>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(32px,5vw,48px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:22px;">← Environmental / Signage</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Wraps &amp; fleets</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5.2vw,70px);line-height:1.02;">Vehicle Graphics</h1>
         <div style="margin-top:22px;max-width:720px;font-size:16px;line-height:1.8;color:#1F211C;">I led vehicle graphics end to end &mdash; measuring vehicles on site, working directly with clients on the brief, and preflighting artwork so the design survived the jump to a curved, paneled metal surface. A wrap is unforgiving: what looks right flat can break across a wheel arch or a door seam.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Featured project</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(28px,3.8vw,50px);line-height:1.05;">The 14-vehicle fleet.</div>
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">Fourteen wraps across different vehicle types, one design system. The challenge wasn't drawing it once &mdash; it was holding it consistent across vehicles with different proportions, panel breaks, and surface geometry, so the fleet reads as one brand parked side by side.</div>
@@ -1822,7 +1822,7 @@
         <div style="margin-top:12px;font-size:12px;color:#8A8C7E;">Fleet lineup &mdash; the system as it reads across the full set.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;">One system, four body types</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,100%),1fr));gap:clamp(12px,1.8vw,18px);">
           <sc-for list="{{ fleetTypes }}" as="t" hint-placeholder-count="4">
@@ -1838,7 +1838,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(28px,4vw,40px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;">Where the system adapts</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:clamp(12px,1.8vw,18px);">
           <sc-for list="{{ fleetDetails }}" as="d" hint-placeholder-count="4">
@@ -1855,7 +1855,7 @@
         <div style="margin-top:clamp(24px,3vw,32px);max-width:700px;font-size:15px;line-height:1.8;color:#1F211C;">Fourteen vehicles meant fourteen measurement sets, fourteen preflight passes, and one install calendar. I sequenced the artwork so production was never waiting on approvals, tracked revisions per vehicle so nothing was applied from a stale file, and kept sales, client, and installers working from the same schedule. All fourteen delivered on time.</div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Project range</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;margin-bottom:clamp(28px,4vw,40px);">By vehicle type.</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,32px);">
@@ -1873,13 +1873,13 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,4vw,48px) 0;">
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Team leadership</div>
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(26px,3.6vw,46px);line-height:1.08;">Running the work, not just doing it.</div>
         <div style="margin-top:16px;max-width:700px;font-size:15.5px;line-height:1.8;color:#1F211C;">I managed a small team through this work &mdash; delegating projects, carrying my own workload alongside theirs, and keeping every job on schedule. I was the point of contact between sales, client, and production, which meant every change request, measurement correction, and install date came through me and went out documented.</div>
       </div>
 
-      <div style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
+      <div data-reveal style="max-width:1240px;margin:clamp(56px,8vw,80px) auto 0;padding:clamp(40px,6vw,56px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;display:flex;justify-content:space-between;gap:16px;">
         <div onClick="{{ goStorefront }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← Storefront &amp; Interior</div>
         <div onClick="{{ backToEnvLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Environmental / Signage →</div>
       </div>
@@ -1893,13 +1893,13 @@
 
     <!-- RETAIL + PACKAGING LANDING -->
     <sc-if value="{{ isRetailLanding }}">
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ goAllWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← All Work</div>
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Retail + Packaging</div>
         <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6vw,80px);line-height:1;">Retail + Packaging</h1>
         <div style="margin-top:14px;max-width:640px;font-size:15.5px;line-height:1.75;color:#1F211C;">Packaging artwork, production-accurate mockups, and updates that preserve brand consistency — spanning an ongoing body of work and a single named campaign launch.</div>
       </div>
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:clamp(40px,6vw,80px);">
           <sc-for list="{{ retailSubcats }}" as="sub" hint-placeholder-count="2">
             <div onClick="{{ sub.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;">
@@ -1953,7 +1953,7 @@
 
     <!-- RETAIL SUBCATEGORY PAGES -->
     <sc-if value="{{ isRetailSubcat }}">
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px) 0;">
         <div onClick="{{ backToRetailLanding }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;margin-bottom:20px;">← Retail + Packaging</div>
       </div>
 
@@ -2101,7 +2101,7 @@
 
       </sc-if>
 
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,80px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(56px,8vw,80px);display:flex;justify-content:space-between;">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,80px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);border-top:1px solid #dedad2;margin-top:clamp(56px,8vw,80px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevSubcatLabel }}</div>
         <div onClick="{{ nextSubcat }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="display:inline-block;cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">{{ nextSubcatLabel }} →</div>
       </div>
@@ -2121,7 +2121,7 @@
       <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:10px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Contact</div>
       <h1 style="margin:0;font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(36px,5vw,64px);margin-bottom:44px;">Let's talk.</h1>
 
-      <div class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(30px,5vw,64px);align-items:start;">
+      <div data-reveal class="splitcols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:clamp(30px,5vw,64px);align-items:start;">
         <div>
           <form onSubmit="{{ submitContact }}" novalidate style="display:flex;flex-direction:column;gap:18px;max-width:520px;">
             <label class="vh" for="cf-name">Your name</label>
