@@ -290,6 +290,26 @@
       .chartnote { white-space: normal !important; max-width: 96px; }
       .chartnote-long { display: none; }
     }
+    /* Placeholder outcome copy wears this so it cannot reach the live site
+       unnoticed. It goes when DRAFT_RESULTS does. */
+    .draftchip {
+      display: inline-block; margin-right: 8px; padding: 1px 6px;
+      border: 1px solid var(--accent); border-radius: 2px;
+      font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #1F211C; background: #F4F6DE; vertical-align: 1px;
+    }
+    /* The client roster. A wrap row, not a grid, so the orphan-row rule does
+       not apply and the names reflow to any count. */
+    .clientrow button {
+      background: none; border: none; padding: 0; margin: 0; cursor: pointer;
+      font-family: inherit; font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #8A8C7E;
+      border-bottom: 1px solid transparent; padding-bottom: 3px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    @media (hover: hover) {
+      .clientrow button:hover { color: #1F211C; border-bottom-color: var(--accent); }
+    }
     input::placeholder, textarea::placeholder { color: #8A8C7E; }
   </style>
 </helmet>
@@ -344,6 +364,15 @@
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
           <div onClick="{{ goAbout }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">About Me</div>
           <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8C7E;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+        </div>
+      </div>
+
+      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(34px,5vw,52px);">
+        <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;">Brands I've worked with</div>
+        <div class="clientrow" style="display:flex;flex-wrap:wrap;gap:14px 26px;align-items:baseline;">
+          <sc-for list="{{ clients }}" as="c" hint-placeholder-count="9">
+            <button type="button" onClick="{{ c.go }}" class="taptarget">{{ c.name }}</button>
+          </sc-for>
         </div>
       </div>
 
@@ -549,10 +578,12 @@
               <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
               <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
             </div>
-            <div>
-              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
-              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.result }}</div>
-            </div>
+            <sc-if value="{{ currentCategory.hasResult }}">
+              <div>
+                <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+                <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+              </div>
+            </sc-if>
           </div>
         </div>
       </sc-if>
@@ -718,6 +749,36 @@
           </sc-for>
         </div>
       </div>
+
+      <!-- Challenge / Approach / Result.
+
+           This markup is repeated once per category branch. The builder has no
+           partials, and the single shared copy lives inside isGenericCategory,
+           whose condition excludes all five real slugs — so it has never
+           rendered for anyone, and neither has the challenge/approach/result
+           copy that has been sitting in WORK_CATEGORIES since the split.
+
+           Each copy reads currentCategory and self-hides when that category
+           has no result, so a category with nothing to say costs nothing and
+           a Challenge with no Result never appears on its own. -->
+      <sc-if value="{{ currentCategory.hasResult }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) 0;border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Challenge</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.challenge }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
@@ -908,6 +969,36 @@
           </sc-for>
         </div>
       </div>
+
+      <!-- Challenge / Approach / Result.
+
+           This markup is repeated once per category branch. The builder has no
+           partials, and the single shared copy lives inside isGenericCategory,
+           whose condition excludes all five real slugs — so it has never
+           rendered for anyone, and neither has the challenge/approach/result
+           copy that has been sitting in WORK_CATEGORIES since the split.
+
+           Each copy reads currentCategory and self-hides when that category
+           has no result, so a category with nothing to say costs nothing and
+           a Challenge with no Result never appears on its own. -->
+      <sc-if value="{{ currentCategory.hasResult }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) 0;border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Challenge</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.challenge }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
@@ -1118,6 +1209,36 @@
           <div style="font-size:15.5px;line-height:1.8;color:#8A8C7E;">The clearest example of how I work: hold the brand steady, build once and adapt deliberately, and stay with a product from the first visual through to someone opening a box on camera.</div>
         </div>
       </div>
+
+      <!-- Challenge / Approach / Result.
+
+           This markup is repeated once per category branch. The builder has no
+           partials, and the single shared copy lives inside isGenericCategory,
+           whose condition excludes all five real slugs — so it has never
+           rendered for anyone, and neither has the challenge/approach/result
+           copy that has been sitting in WORK_CATEGORIES since the split.
+
+           Each copy reads currentCategory and self-hides when that category
+           has no result, so a category with nothing to say costs nothing and
+           a Challenge with no Result never appears on its own. -->
+      <sc-if value="{{ currentCategory.hasResult }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) 0;border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Challenge</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.challenge }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
 
       <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) clamp(70px,9vw,100px);display:flex;justify-content:space-between;">
         <div onClick="{{ prevCategory }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">← {{ prevCategoryLabel }}</div>
@@ -1362,7 +1483,7 @@
                 </div>
                 <div style="flex:1;min-width:0;margin-left:6px;padding:5px 12px;background:#FBFAF7;border:1px solid #E5E2DA;border-radius:999px;font-size:11px;color:#8A8C7E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">didi.shop</div>
               </div>
-              <div style="width:100%;aspect-ratio:4/3;overflow:hidden;"><image-slot id="didi-shop" src="{{ didiShopSrc }}" shape="rect" placeholder="DIDI shop — homepage" style="width:100%;height:100%;"></image-slot></div>
+              <div style="width:100%;aspect-ratio:4/3;overflow:hidden;"><image-slot id="didi-shop" src="{{ didiShopSrc }}" shape="rect" align="top" placeholder="DIDI shop — homepage" style="width:100%;height:100%;"></image-slot></div>
             </div>
             <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#8A8C7E;">Shop &mdash; the storefront I built, where the identity had to survive a product grid and a checkout.</div>
           </div>
@@ -1537,6 +1658,36 @@
           </div>
         </sc-if>
       </div>
+      <!-- Challenge / Approach / Result.
+
+           This markup is repeated once per category branch. The builder has no
+           partials, and the single shared copy lives inside isGenericCategory,
+           whose condition excludes all five real slugs — so it has never
+           rendered for anyone, and neither has the challenge/approach/result
+           copy that has been sitting in WORK_CATEGORIES since the split.
+
+           Each copy reads currentCategory and self-hides when that category
+           has no result, so a category with nothing to say costs nothing and
+           a Challenge with no Result never appears on its own. -->
+      <sc-if value="{{ currentCategory.hasResult }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) 0;border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Challenge</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.challenge }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
@@ -1585,6 +1736,10 @@
             <div style="min-width:0;">
               <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin-bottom:8px;">The constraint</div>
               <div style="font-size:13.5px;line-height:1.7;color:#8A8C7E;">{{ cs.constraint }}</div>
+              <sc-if value="{{ cs.hasOutcome }}">
+                <div style="font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8C7E;margin:18px 0 8px;">The outcome</div>
+                <div style="font-size:13.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ cs.outcomeIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ cs.outcome }}</div>
+              </sc-if>
             </div>
           </div>
 
@@ -1743,6 +1898,36 @@
           </sc-for>
         </div>
       </div>
+      <!-- Challenge / Approach / Result.
+
+           This markup is repeated once per category branch. The builder has no
+           partials, and the single shared copy lives inside isGenericCategory,
+           whose condition excludes all five real slugs — so it has never
+           rendered for anyone, and neither has the challenge/approach/result
+           copy that has been sitting in WORK_CATEGORIES since the split.
+
+           Each copy reads currentCategory and self-hides when that category
+           has no result, so a category with nothing to say costs nothing and
+           a Challenge with no Result never appears on its own. -->
+      <sc-if value="{{ currentCategory.hasResult }}">
+        <div style="max-width:1240px;margin:0 auto;padding:clamp(50px,7vw,72px) clamp(20px,4vw,48px) 0;border-top:1px solid #dedad2;margin-top:clamp(50px,7vw,72px);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(24px,4vw,40px);">
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Challenge</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.challenge }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Approach</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">{{ currentCategory.approach }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:20px;margin-bottom:10px;">Result</div>
+              <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;"><sc-if value="{{ currentCategory.resultIsDraft }}"><span class="draftchip">Draft</span></sc-if>{{ currentCategory.result }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
       <footer style="border-top:1px solid #dedad2;">
         <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,4vw,48px);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:0.04em;color:#8A8C7E;">
           <div>© 2026 Dipali Patel</div>
@@ -1998,7 +2183,12 @@ const WORK_CATEGORIES = [
     slug: 'retail-packaging', label: 'Retail + Packaging', kicker: 'Selected Work', span: 1, ratio: '4/5',
     title: 'Retail + Packaging', subtitle: 'Packaging artwork & production-accurate mockups',
     intro: "Packaging artwork, production-accurate physical mockups, and updates to existing lines — a selection of the packaging work I've designed and brought to shelf.",
-    hasBeforeAfter: true, inProgress: false, showCaseStudy: false, galleryCount: 9
+    hasBeforeAfter: true, inProgress: false, showCaseStudy: true, galleryCount: 9,
+    challenge: "Packaging has to survive two unrelated tests. It has to be manufacturable to spec, and it has to be approved by a buyer looking at a flat PDF months before the thing exists.",
+    approach: "Artwork built to the real dieline, then made up as a production-accurate physical mockup — so the approval happens against an object someone can pick up rather than a rendering.",
+    // DRAFT — placeholder, not a real figure. See DRAFT_RESULTS.
+    result: "Packaging approved on the first review in most cases, because the buyer is holding the pack rather than imagining it.",
+    resultDraft: true
   },
   {
     slug: 'digital-campaign', label: 'Integrated Digital Campaign', kicker: 'Flagship Case Study', span: 1, ratio: '4/5',
@@ -2013,7 +2203,12 @@ const WORK_CATEGORIES = [
     slug: 'environmental-signage', label: 'Environmental / Signage', kicker: 'Selected Work', span: 1, ratio: '4/5',
     title: 'Environmental / Signage', subtitle: 'Large-format & vehicle graphics',
     intro: "Signage and large-format work, including a 14-vehicle wrap program kept consistent across food trucks, commercial vehicles, and trailers — a selection of the environmental and vehicle work I've designed.",
-    hasBeforeAfter: true, inProgress: false, showCaseStudy: false, galleryCount: 9
+    hasBeforeAfter: true, inProgress: false, showCaseStudy: true, galleryCount: 9,
+    challenge: "Large-format work is unforgiving. The artwork has to fit geometry that already exists, and a mistake is only discovered once it is on the wall and paid for.",
+    approach: "Site survey and measurement before a line is drawn, so every panel is built to the real surface — mullions, door seams, curves and glass breaks included.",
+    // DRAFT — placeholder, not a real figure. See DRAFT_RESULTS.
+    result: "Installs that go up right the first time, across four sectors that share nothing but the process behind them.",
+    resultDraft: true
   },
   {
     slug: 'passion', label: 'Passion', kicker: 'Personal Work', span: 1, ratio: '4/5',
@@ -2034,6 +2229,32 @@ const SKILLS = ['Illustrator','Photoshop','InDesign','After Effects','Premiere P
    ACTION REQUIRED: add the earlier roles below — real titles, employers, and
    dates. These were deliberately left out rather than guessed; an invented
    employment history on a portfolio is worse than a short one. Newest first. */
+/* Named on the home page because the roster is the fastest signal a visitor
+   gets, and until now it was only visible two and three clicks deep — the
+   landing page named Staedtler and nothing else.
+
+   "Brands I've worked with" rather than "Clients", deliberately. PlayStation,
+   MLB and Metrolinx were campaign partners on a STAEDTLER launch, not people
+   who hired her; calling them clients is the kind of overstatement that
+   unravels in an interview. Change the heading only if the relationships
+   change.
+
+   Text, not logos: we have no logo files, and reproducing trademarked marks
+   on a personal site is a fight not worth having. */
+const CLIENTS = [
+  { name: 'STAEDTLER',       cat: 'staedtler-brand' },
+  { name: 'HSN',             cat: 'staedtler-social' },
+  { name: 'MLB The Show 24', cat: 'retail-packaging', sub: 'mlb-presto' },
+  { name: 'PlayStation',     cat: 'retail-packaging', sub: 'mlb-presto' },
+  { name: 'Metrolinx',       cat: 'retail-packaging', sub: 'mlb-presto' },
+  // The four storefront clients land on their own case rather than the top of
+  // the page that holds all four — that is what goEnvCase exists for.
+  { name: 'House of Rohl',   envCase: 'emco' },
+  { name: 'AV Bridal',       envCase: 'av-bridal' },
+  { name: 'The Hair Lab',    envCase: 'hair-lab' },
+  { name: 'Habit Dental',    envCase: 'habit-dental' },
+];
+
 const EXPERIENCE = [
   {
     period: 'Current',
@@ -2139,6 +2360,9 @@ const SF_CASES = [
     key: 'av-bridal', name: 'AV Bridal', sector: 'Bridal retail',
     brief: 'A bridal boutique needed its storefront to read as considered and unhurried — the window is the first fitting-room impression, and it had to signal craft without obscuring the gowns behind it.',
     constraint: 'Privacy and daylight pulled in opposite directions. Frosted vinyl at the right height screened the fitting area while leaving the display glass clear.',
+    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
+    outcome: 'The window did the introducing — walk-ins arrived already expecting the level of finish inside.',
+    outcomeDraft: true,
     detailCaption: 'Frosted vinyl at seated eye level — screening without darkening the room.',
     details: 4,
   },
@@ -2146,6 +2370,9 @@ const SF_CASES = [
     key: 'hair-lab', name: 'The Hair Lab', sector: 'Beauty',
     brief: 'A salon wanting presence on a busy street — legible at traffic speed, then rewarding up close once you are through the door.',
     constraint: 'One identity working at two viewing distances: full-height window type read from across the street, interior graphics scaled for three feet away at the chair.',
+    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
+    outcome: 'Legible from across the street and rewarding at the chair, from one identity rather than two.',
+    outcomeDraft: true,
     detailCaption: 'Cut vinyl on glass — weights adjusted so the same mark holds at both distances.',
     details: 3,
   },
@@ -2153,6 +2380,9 @@ const SF_CASES = [
     key: 'habit-dental', name: 'Habit Dental', sector: 'Healthcare',
     brief: 'A dental practice needing a calm, clinical face to the street and interior graphics that carry patients through the space without feeling institutional.',
     constraint: 'Existing glass seams cut straight through the natural logo placement. The layout was rebuilt around the mullions so no element lands on a break.',
+    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
+    outcome: 'A clinic frontage that reads as calm rather than clinical, which is what the brief was really asking for.',
+    outcomeDraft: true,
     detailCaption: 'Wayfinding and window film — set out from the mullions, not fighting them.',
     details: 3,
   },
@@ -2160,6 +2390,9 @@ const SF_CASES = [
     key: 'emco', name: 'EMCO Inc.', sector: 'Industrial supply',
     brief: 'A House of Rohl Studio showroom taking shape behind construction hoarding downtown. The barrier was the only thing on the street for months, so it had to do the announcing — brand, fixtures, and an opening date, at pedestrian distance and passing-traffic distance at once.',
     constraint: 'A long run of temporary panels around a corner site, broken by a door and site access. Artwork was split so no seam lands mid-wordmark, and the panel schedule was drawn from measured site dimensions rather than the architect\'s plan.',
+    // DRAFT — placeholder, not a real outcome. See DRAFT_RESULTS.
+    outcome: 'A hoarding that worked as advertising for the whole build, not just a barrier around it.',
+    outcomeDraft: true,
     detailCaption: 'Printed panels — set out from measured dimensions, splits planned between letterforms.',
     // This is the job photographed end to end for the process strip above, so
     // the case study draws on those same frames instead of a duplicate set.
@@ -2223,10 +2456,10 @@ const SAVED_IMAGES = new Set([
   'create2-process-0', 'create2-process-1', 'create2-process-2',
   'create2-process-3', 'create2-process-4', 'create2-process-5',
   'create2-final-0', 'create2-final-1', 'create2-final-2',
-  // The rest of Passion (passion-*, didi-*, colourism-*) is converted and
-  // sitting in images/ but deliberately NOT declared: the DIDI and Colourism
-  // project pages are still unshot, so SHOW_PASSION stays false and the whole
-  // branch — CREATE #2 included — stays dark until they land.
+  // Everything Passion has a file for is declared below. What is still missing
+  // is 16 DIDI slots (identity, product, craft, texture — four of each) and 8
+  // Colourism slots (process, finals). Those are not gated on hasImg, so
+  // SHOW_PASSION stays false and the whole branch stays dark until they land.
   // DIDI photography recovered from the original PNG uploads (converted to
   // WebP, Sept 2026): feed posts, shop homepage, and styled product shots.
   // Declared here so the slots resolve if SHOW_PASSION is ever flipped;
@@ -2251,6 +2484,18 @@ const hasImg = (id) => SAVED_IMAGES.has(id);
 // The Passion category (landing, DIDI, Colourism, CREATE #2) has no photography
 // yet. Flip to true once those assets land to bring the whole branch back.
 const SHOW_PASSION = false;
+
+/* Placeholder outcome copy, so the layout of the Result and Outcome blocks can
+   be reviewed before the real numbers exist. NOTHING MARKED `draft` BELOW IS
+   TRUE — it is shaped like a plausible answer so the page can be judged, and
+   nothing more.
+
+   Every draft sentence renders behind a visible DRAFT chip, so it cannot reach
+   the live site unnoticed. Two ways out: replace a draft string with the real
+   sentence and delete its `resultDraft` / `outcomeDraft` flag, or set this to
+   false to hide every remaining draft at once. The blocks are gated on having
+   content, so hiding them leaves no empty headings behind. */
+const DRAFT_RESULTS = true;
 
 /* ---------------------------------------------------------------------------
    ROUTING
@@ -2601,8 +2846,17 @@ class Component extends DCLogic {
       select: () => this.selectCategory(c.slug)
     }));
 
+    /* A draft outcome is hidden entirely when DRAFT_RESULTS is off, rather than
+       rendered bare — and the blocks that show these are gated on having
+       content, so switching the flag leaves no empty headings behind. */
+    const liveText = (obj, field) =>
+      (obj[field + 'Draft'] && !DRAFT_RESULTS) ? '' : (obj[field] || '');
+
     const currentCategory = {
       ...current,
+      result: liveText(current, 'result'),
+      hasResult: !!liveText(current, 'result'),
+      resultIsDraft: !!(current.resultDraft && DRAFT_RESULTS),
       galleryItems: Array.from({ length: current.galleryCount }, (_, i) => ({
         slotId: 'gal-' + current.slug + '-' + i,
         src: imgSrc('gal-' + current.slug + '-' + i),
@@ -2762,8 +3016,21 @@ class Component extends DCLogic {
       showVehicleTile: showVehicle,
       // A case study only earns a block once it has imagery. The before/after
       // pair needs both halves — one alone reads as a mistake, not a comparison.
+      clients: CLIENTS.map(c => ({
+        ...c,
+        // Plain setState, like every other navigation handler here — that is
+        // what gives it history and scroll-to-top for free. goEnvCase is the
+        // one sanctioned exception, and the storefront clients are exactly
+        // the case it was built for.
+        go: c.envCase
+          ? () => this.goEnvCase(c.envCase)
+          : () => this.setState({ view: 'work', cat: c.cat, subcat: c.sub || null, menuOpen: false }),
+      })),
       sfCases: SF_CASES.map(c => ({
         ...c,
+        outcome: liveText(c, 'outcome'),
+        hasOutcome: !!liveText(c, 'outcome'),
+        outcomeIsDraft: !!(c.outcomeDraft && DRAFT_RESULTS),
         beforeSrc: imgSrc('sf-' + c.key + '-before'),
         afterSrc: imgSrc('sf-' + c.key + '-after'),
         hasBeforeAfter: hasImg('sf-' + c.key + '-before') && hasImg('sf-' + c.key + '-after'),
