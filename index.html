@@ -333,17 +333,36 @@
       font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
       color: #1F211C; background: #F4F6DE; vertical-align: 1px;
     }
-    /* The client roster. A wrap row, not a grid, so the orphan-row rule does
-       not apply and the names reflow to any count. */
-    .clientrow button {
-      background: none; border: none; padding: 0; margin: 0; cursor: pointer;
-      font-family: inherit; font-size: 11px; letter-spacing: 0.12em;
-      text-transform: uppercase; color: #8A8C7E;
-      border-bottom: 1px solid transparent; padding-bottom: 3px;
-      transition: color 0.2s ease, border-color 0.2s ease;
+    /* The client roster. A slow marquee of brand names set in the display
+       serif — text, not logos: we have no logo files, and reproducing
+       trademarked marks on a personal site is a fight not worth having.
+       Two identical groups translate -50% for a seamless loop; the second
+       group is aria-hidden so assistive tech and the tab order see each
+       brand once. Pauses on hover/focus so the names stay clickable.
+       Transform-only animation; a static wrapped row under
+       prefers-reduced-motion. */
+    .clientmarquee { overflow: hidden; }
+    .clientmarquee-track { display: flex; width: max-content; animation: clientmarquee 38s linear infinite; }
+    .clientmarquee:hover .clientmarquee-track,
+    .clientmarquee:focus-within .clientmarquee-track { animation-play-state: paused; }
+    .clientmarquee-group { display: flex; align-items: center; }
+    .clientmarquee-item {
+      background: none; border: none; margin: 0; cursor: pointer;
+      padding: 6px 26px; font-family: 'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;
+      font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; color: #1F211C;
+      white-space: nowrap; transition: color 0.2s ease;
     }
+    .clientmarquee-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
     @media (hover: hover) {
-      .clientrow button:hover { color: #1F211C; border-bottom-color: var(--accent); }
+      .clientmarquee-item:hover { color: #5B2A5E; }
+    }
+    @keyframes clientmarquee { to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) {
+      .clientmarquee-track { animation: none; display: block; width: auto; }
+      .clientmarquee-group { flex-wrap: wrap; }
+      .clientmarquee-group[aria-hidden="true"] { display: none; }
+      .clientmarquee-dot { display: none; }
+      .clientmarquee-item { padding: 6px 26px 6px 0; }
     }
     input::placeholder, textarea::placeholder { color: #8A8C7E; }
   </style>
@@ -404,10 +423,19 @@
 
       <div data-reveal style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(28px,4vw,44px);">
         <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;">Brands I've worked with</div>
-        <div class="clientrow" style="display:flex;flex-wrap:wrap;gap:14px 26px;align-items:baseline;">
-          <sc-for list="{{ clients }}" as="c" hint-placeholder-count="9">
-            <button type="button" onClick="{{ c.go }}" class="taptarget">{{ c.name }}</button>
-          </sc-for>
+        <div class="clientmarquee">
+          <div class="clientmarquee-track">
+            <div class="clientmarquee-group">
+              <sc-for list="{{ clients }}" as="c" hint-placeholder-count="9">
+                <button type="button" onClick="{{ c.go }}" class="taptarget clientmarquee-item">{{ c.name }}</button><span class="clientmarquee-dot" aria-hidden="true"></span>
+              </sc-for>
+            </div>
+            <div class="clientmarquee-group" aria-hidden="true">
+              <sc-for list="{{ clients }}" as="c" hint-placeholder-count="9">
+                <button type="button" onClick="{{ c.go }}" tabindex="-1" class="taptarget clientmarquee-item">{{ c.name }}</button><span class="clientmarquee-dot" aria-hidden="true"></span>
+              </sc-for>
+            </div>
+          </div>
         </div>
       </div>
 
