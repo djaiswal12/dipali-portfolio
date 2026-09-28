@@ -75,6 +75,12 @@
   function wireShowreel() {
     document.querySelectorAll('#showreel-video:not([data-reel-done])').forEach(function (video) {
       video.setAttribute('data-reel-done', 'true');
+      /* The SPA runtime re-creates this node from the template and the muted
+         content attribute alone does not guarantee the media element's muted
+         IDL state (the classic muted-autoplay pitfall). Set the property
+         directly so muted autoplay is allowed before any user gesture —
+         otherwise play() is rejected until the visitor clicks something. */
+      try { video.muted = true; video.defaultMuted = true; } catch (e) {}
       var src = video.getAttribute('data-src');
       function load() {
         if (src && !video.getAttribute('src')) video.setAttribute('src', src);
