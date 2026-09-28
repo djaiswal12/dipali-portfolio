@@ -64,11 +64,14 @@
     });
   }
 
-  /* Showreel: the 2.5MB video never loads until the section is near the
+  /* Showreel: the video never loads until the section is near the
      viewport (preload="none" + data-src). One observer pre-loads it 600px
      early; a second starts playback when visible and pauses it off-screen so
      it costs nothing while unread. Under prefers-reduced-motion there is no
-     autoplay — the visitor gets native controls and the poster frame. */
+     autoplay — the visitor gets native controls and the poster frame.
+     Playback state is read from the video itself (video.paused), never from
+     a flag: if a play() attempt is rejected, nothing is marked, so the next
+     intersection simply retries instead of stranding the reel on its poster. */
   function wireShowreel() {
     document.querySelectorAll('#showreel-video:not([data-reel-done])').forEach(function (video) {
       video.setAttribute('data-reel-done', 'true');
@@ -81,24 +84,25 @@
         load();
         return;
       }
-      var playing = false;
       function play() {
         load();
-        if (playing) return;
-        var p = video.play();
-        if (p && p.catch) p.catch(function () {});
-        playing = true;
-        /* First playback only. play() fires on visibility-autoplay, so this
+        if (!video.paused || video.ended) return;
+        /* First playback attempt only. Fires on visibility-autoplay, so this
            measures reel reach: how many visitors scrolled it into view. */
         if (!video.hasAttribute('data-reel-tracked')) {
           video.setAttribute('data-reel-tracked', 'true');
           try { window.va('event', { name: 'showreel_play' }); } catch (e) {}
         }
+        try {
+          var p = video.play();
+          /* A rejected play() (e.g. autoplay policy) leaves the video paused,
+             so the next intersection retries — no stuck state. */
+          if (p && p.catch) p.catch(function () {});
+        } catch (e) {}
       }
       function pause() {
-        if (!playing) return;
+        if (video.paused) return;
         video.pause();
-        playing = false;
       }
       if (!('IntersectionObserver' in window)) { play(); return; }
       var loadIO = new window.IntersectionObserver(function (entries) {
@@ -114,6 +118,18 @@
       loadIO.observe(video);
       playIO.observe(video);
     });
+  }
+
+  /* The SPA boots asynchronously (React loads from CDN after
+     DOMContentLoaded), so the #showreel-video node present when motion.js
+     first runs is the pre-render template — the live node gets mounted or
+     replaced later, and observers attached to the old node die with it.
+     Watch for the live node and wire it whenever it appears. Idempotent:
+     wireShowreel() only touches nodes without [data-reel-done]. */
+  function watchShowreelMounts() {
+    if (!('MutationObserver' in window)) return;
+    var mo = new window.MutationObserver(function () { wireShowreel(); });
+    mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 
   /* Contact link clicks (email / phone / LinkedIn). Delegated on document so
@@ -136,6 +152,7 @@
   function init() {
     // No dependencies — runs on every boot even if the animation libs fail.
     wireShowreel();
+    watchShowreelMounts();
     wireContactLinkTracking();
 
     // Defined unconditionally so the showreel re-wires after route changes
