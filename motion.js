@@ -176,8 +176,18 @@
         top = a.top || 0;
         smooth = a.behavior === 'smooth';
       } else if (typeof a === 'number') {
-        top = a;
-        smooth = b === 'smooth';
+        if (typeof b === 'number') {
+          // Two-number form scrollTo(x, y). GSAP ScrollTrigger's scroller
+          // setter calls this on every refresh() to re-assert the scroll
+          // position; the old code read x as the target and dropped y, so
+          // every Motion.refresh() snapped the page to the top (the Noris
+          // scroll-spy re-renders on scroll, which made it rubber-band).
+          // This site scrolls vertically only, so y is the target.
+          top = b;
+        } else {
+          top = a;
+          smooth = b === 'smooth';
+        }
       }
       if (smooth) lenis.scrollTo(top);
       else lenis.scrollTo(top, { immediate: true });
