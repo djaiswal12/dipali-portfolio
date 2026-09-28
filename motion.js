@@ -64,7 +64,75 @@
     });
   }
 
+  /* Showreel: the 2.5MB video never loads until the section is near the
+     viewport (preload="none" + data-src). One observer pre-loads it 600px
+     early; a second starts playback when visible and pauses it off-screen so
+     it costs nothing while unread. Under prefers-reduced-motion there is no
+     autoplay — the visitor gets native controls and the poster frame. */
+  function wireShowreel() {
+    document.querySelectorAll('#showreel-video:not([data-reel-done])').forEach(function (video) {
+      video.setAttribute('data-reel-done', 'true');
+      var src = video.getAttribute('data-src');
+      function load() {
+        if (src && !video.getAttribute('src')) video.setAttribute('src', src);
+      }
+      if (reducedMotion) {
+        video.setAttribute('controls', '');
+        load();
+        return;
+      }
+      var playing = false;
+      function play() {
+        load();
+        if (playing) return;
+        var p = video.play();
+        if (p && p.catch) p.catch(function () {});
+        playing = true;
+      }
+      function pause() {
+        if (!playing) return;
+        video.pause();
+        playing = false;
+      }
+      if (!('IntersectionObserver' in window)) { play(); return; }
+      var loadIO = new window.IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { load(); loadIO.disconnect(); }
+        });
+      }, { rootMargin: '600px 0px' });
+      var playIO = new window.IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) play(); else pause();
+        });
+      });
+      loadIO.observe(video);
+      playIO.observe(video);
+    });
+  }
+
   function init() {
+    // No dependencies — runs on every boot even if the animation libs fail.
+    wireShowreel();
+
+    // Defined unconditionally so the showreel re-wires after route changes
+    // even when the animation libs failed to load; the gsap-dependent parts
+    // of refresh no-op in that case.
+    window.Motion = {
+      refresh: function () {
+        if (window.gsap && window.ScrollTrigger) {
+          window.ScrollTrigger.getAll().forEach(function (t) {
+            if (t.trigger && !document.contains(t.trigger)) t.kill();
+          });
+          scan();
+          window.ScrollTrigger.refresh();
+        } else {
+          showAll();
+        }
+        wireCards();
+        wireShowreel();
+      }
+    };
+
     if (reducedMotion || !window.Lenis || !window.gsap || !window.ScrollTrigger) {
       showAll();
       return;
@@ -95,20 +163,8 @@
     window.gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
     window.gsap.ticker.lagSmoothing(0);
 
-    // componentDidUpdate (the router's single sync point) calls this after
-    // every render. Re-scan for new [data-reveal] nodes, wire any new cards,
-    // drop triggers whose elements were unmounted by the route change, then
-    // recalc positions.
-    window.Motion = {
-      refresh: function () {
-        window.ScrollTrigger.getAll().forEach(function (t) {
-          if (t.trigger && !document.contains(t.trigger)) t.kill();
-        });
-        scan();
-        wireCards();
-        window.ScrollTrigger.refresh();
-      }
-    };
+    // componentDidUpdate (the router's single sync point) calls
+    // window.Motion.refresh() after every render — see the definition above.
     scan();
     wireCards();
   }
