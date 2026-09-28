@@ -88,6 +88,12 @@
         var p = video.play();
         if (p && p.catch) p.catch(function () {});
         playing = true;
+        /* First playback only. play() fires on visibility-autoplay, so this
+           measures reel reach: how many visitors scrolled it into view. */
+        if (!video.hasAttribute('data-reel-tracked')) {
+          video.setAttribute('data-reel-tracked', 'true');
+          try { window.va('event', { name: 'showreel_play' }); } catch (e) {}
+        }
       }
       function pause() {
         if (!playing) return;
@@ -110,9 +116,27 @@
     });
   }
 
+  /* Contact link clicks (email / phone / LinkedIn). Delegated on document so
+     it survives the router's re-renders without touching builder templates.
+     Pure observation — never prevents the default navigation. */
+  function wireContactLinkTracking() {
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest
+        ? e.target.closest('a[href^="mailto:"], a[href^="tel:"], a[href*="linkedin.com"]')
+        : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      var type = href.indexOf('mailto:') === 0 ? 'email'
+        : href.indexOf('tel:') === 0 ? 'phone' : 'linkedin';
+      try { window.va('event', { name: 'contact_link_click', data: { type: type } }); }
+      catch (err) {}
+    });
+  }
+
   function init() {
     // No dependencies — runs on every boot even if the animation libs fail.
     wireShowreel();
+    wireContactLinkTracking();
 
     // Defined unconditionally so the showreel re-wires after route changes
     // even when the animation libs failed to load; the gsap-dependent parts

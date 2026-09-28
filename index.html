@@ -439,7 +439,7 @@
         <p style="margin:16px 0 0;max-width:640px;font-size:var(--text-lead);line-height:1.55;color:var(--ink);">I'm a Design Lead &amp; Marketing Specialist at STAEDTLER North America, where I own the brand guidelines behind 200+ monthly assets. I led the North American launch creative for Noris 122, and I run the social presence that has grown Instagram 7.5x and Facebook 2.7x since July 2024. Campaign partners include PlayStation, MLB, Metrolinx, HSN, and House of Rohl.</p>
         <div style="margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
           <div onClick="{{ goSelectedWork }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">View Selected Work</div>
-          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#6B6D5F;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goContactCta }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="cursor:pointer;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#6B6D5F;border-bottom:1px solid var(--accent);padding-bottom:4px;">Get In Touch</div>
         </div>
         <div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px 32px;max-width:960px;">
           <div style="font-size:14px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">200+</span> monthly assets from one guideline system</div>
@@ -584,7 +584,7 @@
         <div style="max-width:520px;">
           <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,30px);margin-bottom:14px;">Work with me</div>
           <div style="font-size:15px;line-height:1.7;color:#6B6D5F;">Looking for a designer who can hold a brand together across a hundred touchpoints? I'd love to hear from you.</div>
-          <div onClick="{{ goContact }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
+          <div onClick="{{ goContactCta }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" class="taptarget" style="margin-top:18px;cursor:pointer;display:inline-block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1F211C;padding-bottom:4px;">Get In Touch</div>
         </div>
         <div class="tapstack" style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
           <a href="mailto:dipali11patel@gmail.com" class="taptarget" style="display:inline-block;color:#1F211C;text-decoration:none;">dipali11patel@gmail.com</a>
@@ -2834,6 +2834,13 @@ class Component extends DCLogic {
   goHome = () => this.setState({ view: 'home', menuOpen: false });
   goAbout = () => this.setState({ view: 'about', menuOpen: false });
   goContact = () => this.setState({ view: 'contact', menuOpen: false });
+  /* The two "Get In Touch" CTAs (hero, about teaser) are the primary
+     conversion path — tracked separately from the nav Contact button so the
+     funnel reads cleanly: cta click -> contact view -> form submit / link. */
+  goContactCta = () => {
+    this.trackEvent('contact_cta_click');
+    this.goContact();
+  };
   goWorkDefault = () => this.setState({ view: 'work', cat: this.state.cat || DEFAULT_CATEGORY, subcat: null, menuOpen: false });
 
   /* "← All Work" was wired to goWorkDefault, which sets view:'work' with the
@@ -2861,7 +2868,24 @@ class Component extends DCLogic {
     }
   };
   workMenuKeyDown = (e) => { if (e && e.key === 'Escape') this.setState({ menuOpen: false }); };
-  selectCategory = (slug) => this.setState({ view: 'work', cat: slug, subcat: null, menuOpen: false });
+
+  /* Vercel custom events for the conversion funnel. window.va is a queueing
+     stub until the analytics script loads (see <head>), so this never throws
+     and never blocks rendering. Payloads stay tiny on purpose. */
+  trackEvent = (name, data) => {
+    try {
+      if (data) window.va('event', { name: name, data: data });
+      else window.va('event', { name: name });
+    } catch (e) { /* analytics must never break the site */ }
+  };
+
+  /* Every work-card click on the site funnels through here (homepage tiles,
+     nav dropdown, work-section cards, prev/next), so one hook measures which
+     case studies recruiters actually open. */
+  selectCategory = (slug) => {
+    this.trackEvent('work_card_click', { slug: slug });
+    this.setState({ view: 'work', cat: slug, subcat: null, menuOpen: false });
+  };
   selectSubcat = (slug) => this.setState({ view: 'work', cat: 'retail-packaging', subcat: slug, menuOpen: false });
   backToRetailLanding = () => this.setState({ subcat: null });
   selectEnvSubcat = (slug) => this.setState({ view: 'work', cat: 'environmental-signage', subcat: slug, menuOpen: false });
@@ -3492,6 +3516,7 @@ class Component extends DCLogic {
                      : this.state.contactState === 'ok' ? '#4A6B32' : '#6B6D5F',
 
       goHome: this.goHome, goAbout: this.goAbout, goContact: this.goContact,
+      goContactCta: this.goContactCta,
       goSelectedWork: this.goSelectedWork,
       goWorkDefault: this.goWorkDefault, goAllWork: this.goAllWork, openWorkMenu: this.openWorkMenu, closeWorkMenu: this.closeWorkMenu,
       toggleWorkMenu: this.toggleWorkMenu, workMenuKeyDown: this.workMenuKeyDown,
