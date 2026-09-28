@@ -73,6 +73,15 @@
 <script defer src="/_vercel/speed-insights/script.js"></script>
 
 <script src="/support.js"></script>
+
+<!-- Motion foundation (PR: motion). Lenis smooth scroll + GSAP scroll reveals,
+     vendored so the site has no third-party runtime dependency. motion.js is
+     hand-maintained: content is never hidden by CSS, only animated from JS,
+     and everything is gated on prefers-reduced-motion. -->
+<script defer src="/vendor/lenis-1.1.18.min.js"></script>
+<script defer src="/vendor/gsap-3.12.5.min.js"></script>
+<script defer src="/vendor/ScrollTrigger-3.12.5.min.js"></script>
+<script defer src="/motion.js"></script>
 </head>
 <body>
 <x-dc>
@@ -103,6 +112,12 @@
       *, *::before, *::after { animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
     }
+    /* Lenis recommended styles: keep native height, never fight its wheel
+       smoothing with CSS smooth-scroll, and stop scroll when it is stopped. */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
     ::selection { background: var(--plum); color: #FBFAF7; }
     a { color: #1F211C; }
     a:hover { color: var(--plum); }
@@ -356,7 +371,7 @@
   <!-- HOME -->
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
     <div style="animation:fadeIn 0.6s ease;">
-      <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px) clamp(24px,4vw,40px);">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px) clamp(24px,4vw,40px);">
         <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(38px,6.5vw,88px);line-height:0.98;letter-spacing:-0.01em;">Dipali Patel</div>
         <div style="margin-top: 18px; max-width: 640px; font-size: clamp(16px,2vw,20px); line-height: 1.6; color: #8A8C7E; font-style: italic; font-family:'Work Sans','Helvetica Neue',Helvetica,Arial,sans-serif">
           Brand designer &amp; marketing specialist with an eye for the fashion, apparel &amp; lifestyle categories — lookbooks, campaigns, and brand systems that hold together at every touchpoint.
@@ -367,7 +382,7 @@
         </div>
       </div>
 
-      <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(34px,5vw,52px);">
+      <div data-reveal style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(34px,5vw,52px);">
         <div style="font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:14px;">Brands I've worked with</div>
         <div class="clientrow" style="display:flex;flex-wrap:wrap;gap:14px 26px;align-items:baseline;">
           <sc-for list="{{ clients }}" as="c" hint-placeholder-count="9">
@@ -380,7 +395,7 @@
         <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A8C7E;margin-bottom:16px;display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:7px;">Selected Work</div>
         <div class="worktiles" style="display:grid;gap:clamp(14px,2vw,24px);--cols:{{ tileCols }};--cols-tablet:{{ tileColsTablet }};">
           <sc-for list="{{ workCategories }}" as="cat" hint-placeholder-count="5">
-            <div onClick="{{ cat.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
+            <div data-reveal onClick="{{ cat.select }}" role="button" tabindex="0" onKeyDown="{{ keyActivate }}" style="cursor:pointer;grid-column:span {{ cat.span }};">
               <div style="aspect-ratio:{{ cat.ratio }};overflow:hidden;">
                 <div class="tilescale" style="width:100%;height:100%;transition:transform 0.6s ease;"><image-slot id="home-tile-{{ cat.slug }}" src="/images/home-tile-{{ cat.slug }}.webp" shape="rect" placeholder="{{ cat.label }}" alt="{{ cat.label }} — selected work by Dipali Patel" loading="eager" style="width:100%;height:100%;"></image-slot></div>
               </div>
@@ -392,7 +407,7 @@
       </div>
 
       <div style="border-top:1px solid #dedad2;">
-        <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
+        <div data-reveal style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(20px,4vw,48px);display:flex;gap:60px;flex-wrap:wrap;justify-content:space-between;">
           <div style="max-width:520px;">
             <div style="font-family:'Abril Fatface','Playfair Display',Georgia,'Times New Roman',serif;font-size:clamp(24px,2.6vw,32px);margin-bottom:14px;">Nearly five years turning strategy into shelf-ready, screen-ready creative.</div>
             <div style="font-size:14.5px;line-height:1.7;color:#8A8C7E;">Currently Design Lead &amp; Marketing Specialist at Staedtler. OCAD University, Bachelor of Design. Based in Toronto.</div>
@@ -2677,6 +2692,10 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     this._syncUrl(false);
+    // Motion system (Lenis + GSAP reveals): re-scan for [data-reveal] nodes
+    // after every render and recalc trigger positions. No-op if motion.js
+    // failed to load or the visitor prefers reduced motion.
+    if (window.Motion) { window.Motion.refresh(); }
     /* Nothing used to clear the contact status, so submitting, navigating away
        and coming back left a stale "your message is on its way" (or a red
        validation error) sitting under an empty form, as if it had just been
