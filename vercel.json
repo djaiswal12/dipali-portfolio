@@ -44,6 +44,12 @@
       ]
     },
     {
+      "source": "/motion.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/(.*)\\.(js|css|svg|ico|png|jpg|webp|woff2)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800" }
