@@ -88,9 +88,12 @@
           }
           .note[hidden] { display: none; }
           input { display: none; }
+          /* The page's global :focus-visible rule does not pierce shadow DOM,
+             so the upload button gets its own visible focus style. */
+          button:focus-visible { outline: 2px solid #5B2A5E; outline-offset: 2px; }
         </style>
         <div class="frame">
-          <video hidden muted loop playsinline autoplay preload="metadata"
+          <video hidden muted loop playsinline autoplay preload="metadata" aria-hidden="true"
                  ${poster ? `poster="${poster}"` : ''}></video>
           <div class="empty">
             <div class="glyph"></div>
